@@ -153,6 +153,7 @@ class _HomePageState extends State<HomePage> {
                 },
                 icon: const Icon(Icons.remove),
                 iconSize: 30,
+                color: Color.fromARGB(255, 255, 255, 255),
               ),
               const SizedBox(
                 width: 20,
@@ -163,6 +164,7 @@ class _HomePageState extends State<HomePage> {
                 },
                 icon: const Icon(Icons.add),
                 iconSize: 30,
+                color: Color.fromARGB(255, 255, 255, 255),
               ),
             ],
           ),
@@ -198,6 +200,39 @@ class _HomePageState extends State<HomePage> {
             height: 20,
           ),
           _buildElevationDoughnutChart(displayOkter, _goal),
+          const SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 40, right: 40),
+            child: RichText(
+              text: TextSpan(
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                  children: <TextSpan>[
+                    TextSpan(
+                        text: "For å nå ${_goal} økter innen ",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text: DateFormat.yMMMEd()
+                            .format(_endDate.toDate())
+                            .toString()),
+                    TextSpan(
+                        text: " må du trene " +
+                            ((_goal - displayOkter) / getWeeksLeft())
+                                .toStringAsFixed(1) +
+                            " ganger i uken, eller ",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text: ((_goal - displayOkter) / getDaysLeft())
+                                .toStringAsFixed(1) +
+                            " ganger per dag",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                  ]),
+            ),
+          )
         ]));
   }
 
@@ -265,13 +300,20 @@ class _HomePageState extends State<HomePage> {
       });
     });
   }
-}
 
-class _SalesData {
-  _SalesData(this.year, this.sales);
+  num getDaysLeft() {
+    var now = DateTime.now();
+    var end = _endDate.toDate();
+    var difference = end.difference(now).inDays;
+    return difference;
+  }
 
-  final String year;
-  final double sales;
+  num getWeeksLeft() {
+    var now = DateTime.now();
+    var end = _endDate.toDate();
+    var difference = end.difference(now).inDays;
+    return difference / 7;
+  }
 }
 
 SfCircularChart _buildElevationDoughnutChart(okter, goal) {
@@ -293,8 +335,11 @@ SfCircularChart _buildElevationDoughnutChart(okter, goal) {
                   color: Color.fromRGBO(0, 0, 0, 0.5), fontSize: 25)))
     ],
     title: ChartTitle(
-        text: false ? '' : 'Progress',
-        textStyle: const TextStyle(fontSize: 20)),
+        text: false ? '' : 'Fremgang',
+        textStyle: const TextStyle(
+          fontSize: 20,
+          color: Colors.white,
+        )),
     series: _getElevationDoughnutSeries(okter, goal),
   );
 }

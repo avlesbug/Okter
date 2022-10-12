@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
       auth: AuthService(),
       child: MaterialApp(
         title: 'Flutter Demo',
+        themeMode: ThemeMode.dark,
         theme: MyTheme.lightTheme,
         darkTheme: MyTheme.darkTheme,
         home: const HomeController(),

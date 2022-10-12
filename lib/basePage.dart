@@ -85,13 +85,17 @@ Widget homePageDrawer(context, name, username) {
                       padding: const EdgeInsets.only(top: 16.0),
                       child: Text("@" + username,
                           style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w300)),
+                              fontSize: 18,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.white)),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Text(name,
                           style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.normal)),
+                              fontSize: 20,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.white)),
                     ),
                   ]),
             ),
@@ -111,7 +115,7 @@ Widget homePageDrawer(context, name, username) {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    icon: const Icon(Icons.settings)),
+                    icon: const Icon(Icons.settings, color: Colors.white)),
                 const Spacer(),
                 IconButton(
                     alignment: Alignment.bottomRight,
@@ -122,7 +126,8 @@ Widget homePageDrawer(context, name, username) {
                           MaterialPageRoute(
                               builder: (context) => const SignInPage()));
                     },
-                    icon: const Icon(Icons.exit_to_app_outlined)),
+                    icon: const Icon(Icons.exit_to_app_outlined,
+                        color: Colors.white)),
               ],
             ),
           ],
