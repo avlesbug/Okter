@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "341692543128",
+    "firebase_url": "https://okter-7f509-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "okter-7f509",
+    "storage_bucket": "okter-7f509.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:341692543128:android:36b08859f5b88ed83460ed",
+        "android_client_info": {
+          "package_name": "com.example.okter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "341692543128-j1ch1ogerobevlnrcrbqkptogauhlil4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzs7TI9TNouJYBmSsHL3k0p1_7PnqiPv4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "341692543128-j1ch1ogerobevlnrcrbqkptogauhlil4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "341692543128-r3kouoshd3i0b5e22lf28bitirpit960.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.okter"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
