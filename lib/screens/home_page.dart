@@ -4,12 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:okter/auth_provider.dart';
 import 'package:okter/basePage.dart';
 import 'package:okter/reusable_widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -43,6 +41,7 @@ class _HomePageState extends State<HomePage> {
     //super.initState();
     users = FirebaseFirestore.instance.collection('UserData');
     userId = FirebaseAuth.instance.currentUser!.uid.toString();
+    print("User ID: $userId");
     //userId = Provider.of(context).auth.getCurrentUID();
     ref = FirebaseDatabase.instance.ref("UserData");
   }
@@ -109,7 +108,7 @@ class _HomePageState extends State<HomePage> {
     initState();
     getUserData();
     initOkter();
-    return okterScaffold(
+    return okterDrawerScaffold(
         context,
         _name,
         _username,
@@ -326,13 +325,13 @@ SfCircularChart _buildElevationDoughnutChart(okter, goal) {
           widget: PhysicalModel(
             shape: BoxShape.circle,
             elevation: 10,
-            color: const Color.fromRGBO(230, 230, 230, 1),
+            color: const Color.fromRGBO(225, 225, 225, 1),
             child: Container(),
           )),
       CircularChartAnnotation(
           widget: Text(((okter / goal) * 100).toStringAsFixed(1) + "%",
               style: const TextStyle(
-                  color: Color.fromRGBO(0, 0, 0, 0.5), fontSize: 25)))
+                  color: Color.fromRGBO(0, 0, 0, 0.5), fontSize: 25))),
     ],
     title: ChartTitle(
         text: false ? '' : 'Fremgang',
@@ -353,11 +352,11 @@ List<DoughnutSeries<ChartSampleData, String>> _getElevationDoughnutSeries(
           ChartSampleData(
               x: 'A',
               y: (okter / goal) * 100,
-              pointColor: const Color.fromARGB(255, 93, 87, 168)),
+              pointColor: const Color.fromARGB(255, 32, 30, 58)),
           ChartSampleData(
               x: 'B',
               y: 100 - ((okter / goal) * 100),
-              pointColor: const Color.fromARGB(33, 98, 141, 144))
+              pointColor: const Color.fromARGB(255, 98, 141, 144))
         ],
         animationDuration: 0,
         xValueMapper: (ChartSampleData data, _) => data.x as String,

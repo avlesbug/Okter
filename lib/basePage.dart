@@ -2,9 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:okter/color_utils.dart';
+import 'package:okter/screens/friends_page.dart';
+import 'package:okter/screens/home_page.dart';
 import 'package:okter/screens/login_page.dart';
+import 'package:okter/screens/personalBest_page.dart';
 
-Widget okterScaffold(context, name, username, bodycontent) {
+Widget okterDrawerScaffold(context, name, username, bodycontent) {
   return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -19,8 +22,10 @@ Widget okterScaffold(context, name, username, bodycontent) {
           width: constraints.maxWidth,
           decoration: BoxDecoration(
               gradient: LinearGradient(colors: [
-            hexStringtoColor("0F464D"),
-            hexStringtoColor("0A3237")
+            hexStringtoColor("041416"),
+            hexStringtoColor("041416"),
+            hexStringtoColor("020A0B")
+
             //hexStringtoColor("1d8a99") //hexStringtoColor("7c77b9")
           ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
           child: Padding(
@@ -30,7 +35,7 @@ Widget okterScaffold(context, name, username, bodycontent) {
       }));
 }
 
-Widget okterSignInUpScaffold(context, bodycontent) {
+Widget okterScaffold(context, bodycontent) {
   return Scaffold(body: LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
     return Container(
@@ -38,8 +43,9 @@ Widget okterSignInUpScaffold(context, bodycontent) {
       width: constraints.maxWidth,
       decoration: BoxDecoration(
           gradient: LinearGradient(colors: [
-        hexStringtoColor("0F464D"),
-        hexStringtoColor("0A3237")
+        hexStringtoColor("041416"),
+        hexStringtoColor("041416"),
+        hexStringtoColor("020A0B")
         //hexStringtoColor("1d8a99") //hexStringtoColor("7c77b9")
       ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
       child: Padding(
@@ -56,9 +62,9 @@ Widget homePageDrawer(context, name, username) {
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
-          hexStringtoColor("0A3237"),
-          hexStringtoColor("0A3237"),
-          hexStringtoColor("0F464D")
+          hexStringtoColor("041416"),
+          hexStringtoColor("041416"),
+          hexStringtoColor("020A0B")
           //hexStringtoColor("1d8a99") //hexStringtoColor("7c77b9")
         ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
         padding: const EdgeInsets.only(top: 40),
@@ -83,19 +89,35 @@ Widget homePageDrawer(context, name, username) {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 16.0),
-                      child: Text("@" + username,
-                          style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.white)),
+                      child: TextButton(
+                        child: Text("@" + username,
+                            style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w300,
+                                color: Colors.white)),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const HomePage()));
+                        },
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
-                      child: Text(name,
-                          style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.white)),
+                      child: TextButton(
+                        child: Text(name,
+                            style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.white)),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const HomePage()));
+                        },
+                      ),
                     ),
                   ]),
             ),
@@ -106,6 +128,38 @@ Widget homePageDrawer(context, name, username) {
                 thickness: 1,
               ),
             ),
+            Padding(
+                padding: EdgeInsets.only(left: 14.0, right: 14.0, top: 16),
+                child: TextButton(
+                  child: Text("Friends",
+                      style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.white)),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const FriendsPage()));
+                  },
+                )),
+            Padding(
+                padding: EdgeInsets.only(left: 14.0, right: 14.0, top: 16),
+                child: TextButton(
+                  child: Text("Rekorder",
+                      style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.white)),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const PersonalBestPage()));
+                  },
+                )),
             Spacer(),
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,

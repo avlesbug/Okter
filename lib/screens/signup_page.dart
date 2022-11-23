@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:okter/basePage.dart';
 import 'package:okter/screens/home_page.dart';
+import 'package:okter/screens/login_page.dart';
 
 import '../reusable_widgets.dart';
 
@@ -22,7 +23,7 @@ class _SignUpPageState extends State<SignUpPage> {
     TextEditingController passwordReController = TextEditingController();
     TextEditingController emailController = TextEditingController();
     TextEditingController usernameController = TextEditingController();
-    return okterSignInUpScaffold(
+    return okterScaffold(
       context,
       Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -47,8 +48,29 @@ class _SignUpPageState extends State<SignUpPage> {
                 passwordReController.text,
                 usernameController.text);
           })),
+          signInRow(),
         ],
       ),
+    );
+  }
+
+  Row signInRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text(
+          "Already have an account?",
+          style: TextStyle(color: Colors.white),
+        ),
+        TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text(
+              "Sign In",
+              style: TextStyle(color: Colors.white),
+            ))
+      ],
     );
   }
 }

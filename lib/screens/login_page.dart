@@ -29,7 +29,7 @@ class _SignInPageState extends State<SignInPage> {
     });
     return signedIn
         ? const HomePage()
-        : okterSignInUpScaffold(
+        : okterScaffold(
             context,
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -115,8 +115,6 @@ class _SignInPageState extends State<SignInPage> {
       ],
     );
   }
-
-  void signIn() {}
 }
 
 class AuthService {

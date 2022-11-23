@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:auth_service/auth_service.dart';
 import 'package:okter/screens/login_page.dart';
 
 class Provider extends InheritedWidget {
