@@ -202,34 +202,39 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(
             height: 20,
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 40, right: 40),
-            child: RichText(
-              text: TextSpan(
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                  ),
-                  children: <TextSpan>[
-                    TextSpan(
-                        text: "For å nå ${_goal} økter innen ",
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    TextSpan(
-                        text: DateFormat.yMMMEd()
-                            .format(_endDate.toDate())
-                            .toString()),
-                    TextSpan(
-                        text: " må du trene " +
-                            ((_goal - displayOkter) / getWeeksLeft())
-                                .toStringAsFixed(1) +
-                            " ganger i uken, eller ",
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    TextSpan(
-                        text: ((_goal - displayOkter) / getDaysLeft())
-                                .toStringAsFixed(1) +
-                            " ganger per dag",
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                  ]),
+          GestureDetector(
+            onLongPress: () {
+              openEndDatePicker();
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(left: 40, right: 40),
+              child: RichText(
+                text: TextSpan(
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: "For å nå ${_goal} økter innen ",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      TextSpan(
+                          text: DateFormat.yMMMEd()
+                              .format(_endDate.toDate())
+                              .toString()),
+                      TextSpan(
+                          text: " må du trene " +
+                              ((_goal - displayOkter) / getWeeksLeft())
+                                  .toStringAsFixed(1) +
+                              " ganger i uken, eller ",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      TextSpan(
+                          text: ((_goal - displayOkter) / getDaysLeft())
+                                  .toStringAsFixed(1) +
+                              " ganger per dag",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ]),
+              ),
             ),
           )
         ]));
@@ -296,6 +301,20 @@ class _HomePageState extends State<HomePage> {
       _lastWorkout = Timestamp.fromDate(value!);
       FirebaseFirestore.instance.collection("UserData").doc(userId).update({
         'lastWorkout': _lastWorkout,
+      });
+    });
+  }
+
+  void openEndDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2050),
+    ).then((value) {
+      _endDate = Timestamp.fromDate(value!);
+      FirebaseFirestore.instance.collection("UserData").doc(userId).update({
+        'endDate': _endDate,
       });
     });
   }
