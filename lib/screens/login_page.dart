@@ -14,10 +14,11 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    TextEditingController passwordController = TextEditingController();
-    TextEditingController emailController = TextEditingController();
     bool signedIn = false;
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user == null) {

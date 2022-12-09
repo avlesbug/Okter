@@ -16,13 +16,13 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController passwordReController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    TextEditingController nameController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
-    TextEditingController passwordReController = TextEditingController();
-    TextEditingController emailController = TextEditingController();
-    TextEditingController usernameController = TextEditingController();
     return okterScaffold(
       context,
       Column(
