@@ -38,12 +38,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    //super.initState();
     users = FirebaseFirestore.instance.collection('UserData');
     userId = FirebaseAuth.instance.currentUser!.uid.toString();
     print("User ID: $userId");
     //userId = Provider.of(context).auth.getCurrentUID();
     ref = FirebaseDatabase.instance.ref("UserData");
+    //super.initState();
   }
 
   Future<void> initOkter() async {

@@ -41,6 +41,8 @@ class _FriendsPageState extends State<FriendsPage> {
   Future<void> initFriends() async {
     print("Called initFriends");
     var childRef = ref.child(userId);
+    final friendsRef = users.doc(userId).collection('friends');
+    final friendsSnapshot = await friendsRef.get();
     DatabaseEvent event = await childRef.once();
     FirebaseFirestore.instance
         .collection('UserData')
