@@ -10,29 +10,30 @@ import 'package:okter/color_utils.dart';
 import 'package:okter/screens/addFriend_page.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class FriendsPage extends StatefulWidget {
-  const FriendsPage({super.key});
+class GroupsPage extends StatefulWidget {
+  const GroupsPage({super.key});
 
   @override
-  State<FriendsPage> createState() => _FriendsPageState();
+  State<GroupsPage> createState() => _GroupsPageState();
 }
 
-class _FriendsPageState extends State<FriendsPage> {
+class _GroupsPageState extends State<GroupsPage> {
   final DateFormat formatter = DateFormat('yyyy-MM-dd');
   late CollectionReference users;
+  late CollectionReference groups;
   late String userId;
   late DatabaseReference ref;
-
-  var _name = "Name";
-  var _username = "UserName";
+//
   var _friends = [];
+  var _groups = [];
+  var _groupMembers = [];
+  var _groupMap = [];
   var _friendMap = [];
-
-  String _frindname = "Friend Name";
 
   @override
   void initState() {
     //super.initState();
+    groups = FirebaseFirestore.instance.collection('Groups');
     users = FirebaseFirestore.instance.collection('UserData');
     userId = FirebaseAuth.instance.currentUser!.uid.toString();
     //userId = Provider.of(context).auth.getCurrentUID();
@@ -46,7 +47,8 @@ class _FriendsPageState extends State<FriendsPage> {
       docRef.get().then((DocumentSnapshot doc) {
         if (!mounted) return;
         setState(() {
-          _friends = doc["friendList"];
+          _groups = doc["groups"];
+          //print(_groups);
         });
       });
     } on FirebaseException catch (e) {
@@ -54,22 +56,22 @@ class _FriendsPageState extends State<FriendsPage> {
     }
   }
 
-  Future<void> getFriendMap() async {
-    for (var reference in _friends) {
-      var snapshot = reference.get();
+  Future<void> getGroupMap() async {
+    for (var reference in _groups) {
+      var snapshot = reference["group"].get();
       snapshot.then((DocumentSnapshot docuSnap) {
         if (docuSnap.exists) {
           Map<String, dynamic> data = docuSnap.data() as Map<String, dynamic>;
           bool added = false;
-          for (var friend in _friendMap) {
-            if (friend["email"] == data["email"]) {
+          for (var group in _groupMap) {
+            if (group["id"] == data["id"]) {
               added = true;
             }
           }
           if (!mounted) return;
           setState(() {
             if (!added) {
-              _friendMap.add(data);
+              _groupMap.add(data);
             }
           });
         }
@@ -81,9 +83,9 @@ class _FriendsPageState extends State<FriendsPage> {
   Widget build(BuildContext context) {
     initState();
     getUserData();
-    getFriendMap();
+    getGroupMap();
     return okterAddButtonScaffold(
-        "Friends",
+        "Groups",
         IconButton(
             onPressed: (() {
               Navigator.push(
@@ -99,16 +101,11 @@ class _FriendsPageState extends State<FriendsPage> {
             Container(
               height: 1000,
               child: ListView.builder(
-                itemCount: _friendMap.length,
+                itemCount: _groupMap.length,
                 itemBuilder: (context, index) {
                   return Card(
                     color: hexStringtoColor("1A2123"),
-                    child: ListTile(
-                      title: Text(_friendMap[index]["name"]),
-                      subtitle: Text(_friendMap[index]["workouts"].toString() +
-                          " / " +
-                          _friendMap[index]["goal"].toString()),
-                    ),
+                    child: ListTile(title: Text(_groupMap[index]["name"])),
                   );
                 },
               ),

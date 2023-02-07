@@ -24,6 +24,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return okterScaffold(
+      "",
       context,
       Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -117,6 +118,11 @@ void writeFirebaseDb(String uid) {
   ref.set(0);
 }
 
+DateTime getLastDayOfCurrentYear() {
+  var now = DateTime.now();
+  return DateTime(now.year, 12, 31);
+}
+
 void writeFirestore(String uid, String email, String name, String username) {
   FirebaseFirestore.instance.collection('UserData').doc(uid).set({
     'name': name,
@@ -124,6 +130,7 @@ void writeFirestore(String uid, String email, String name, String username) {
     'email': email,
     'lastWorkout': DateTime.now(),
     'goal': 0,
-    'endDate': DateTime.now(),
+    'endDate': getLastDayOfCurrentYear(),
+    'workouts': 0,
   });
 }

@@ -31,6 +31,7 @@ class _AddFriendsPageState extends State<AddFriendsPage> {
   Widget build(BuildContext context) {
     initState();
     return okterScaffold(
+        "Add Friends",
         context,
         Column(
           children: [
@@ -47,6 +48,32 @@ class _AddFriendsPageState extends State<AddFriendsPage> {
               ],
             ),
             const SizedBox(height: 20),
+            Container(
+              height: 1000,
+              child: StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection("UserData")
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  return ListView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onLongPress: (() {
+                          print("long press");
+                        }),
+                        child: ListTile(
+                          title: Text(snapshot.data!.docs[index].get("name")),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            )
           ],
         ));
   }

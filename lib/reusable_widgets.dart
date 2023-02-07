@@ -8,19 +8,28 @@ import 'package:okter/color_utils.dart';
 TextField inputField(
     TextEditingController inputController, bool isPassword, String labelText) {
   return TextField(
+      cursorColor: Colors.white,
       autofocus: true,
       style: const TextStyle(color: Colors.white),
       obscureText: isPassword,
       controller: inputController,
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
-          labelText: labelText,
-          labelStyle: const TextStyle(color: Colors.white)));
+        labelText: labelText,
+        labelStyle: const TextStyle(color: Colors.white),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: hexStringtoColor("08282D")),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: hexStringtoColor("092E33")),
+        ),
+      ));
 }
 
 TextField numInputField(
     TextEditingController inputController, String labelText) {
   return TextField(
+      cursorColor: Colors.white,
       keyboardType: TextInputType.number,
       autofocus: true,
       style: const TextStyle(color: Colors.white),
@@ -33,8 +42,15 @@ TextField numInputField(
         FilteringTextInputFormatter.digitsOnly
       ],
       decoration: InputDecoration(
-          labelText: labelText,
-          labelStyle: const TextStyle(color: Colors.white)));
+        labelText: labelText,
+        labelStyle: const TextStyle(color: Colors.white),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: hexStringtoColor("08282D")),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: hexStringtoColor("092E33")),
+        ),
+      ));
 }
 
 Container signInSignUpButton(
@@ -61,6 +77,38 @@ Container signInSignUpButton(
       }),
       child: Text(
         isLogin ? "Sign In" : "Sign Up",
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 18,
+        ),
+      ),
+    ),
+  );
+}
+
+Container defaultButton(BuildContext context, String text, Function onTap) {
+  return Container(
+    width: MediaQuery.of(context).size.width / 2,
+    height: 50,
+    child: ElevatedButton(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.pressed)) {
+            return hexStringtoColor("0A2E33");
+          }
+          return hexStringtoColor("0A2E33");
+        }),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18.0),
+          ),
+        ),
+      ),
+      onPressed: (() {
+        onTap();
+      }),
+      child: Text(
+        text,
         style: const TextStyle(
           color: Colors.white,
           fontSize: 18,

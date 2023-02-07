@@ -3,9 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:okter/color_utils.dart';
 import 'package:okter/screens/friends_page.dart';
+import 'package:okter/screens/groups_page.dart';
 import 'package:okter/screens/home_page.dart';
 import 'package:okter/screens/login_page.dart';
 import 'package:okter/screens/personalBest_page.dart';
+import 'package:okter/screens/settings_page.dart';
 
 Widget okterDrawerScaffold(context, name, username, bodycontent) {
   return Scaffold(
@@ -35,24 +37,88 @@ Widget okterDrawerScaffold(context, name, username, bodycontent) {
       }));
 }
 
-Widget okterScaffold(context, bodycontent) {
-  return Scaffold(body: LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-    return Container(
-      height: constraints.maxHeight,
-      width: constraints.maxWidth,
-      decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [
-        hexStringtoColor("041416"),
-        hexStringtoColor("041416"),
-        hexStringtoColor("020A0B")
-        //hexStringtoColor("1d8a99") //hexStringtoColor("7c77b9")
-      ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
-      child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: SingleChildScrollView(child: bodycontent)),
-    );
-  }));
+Widget okterScaffold(name, context, bodycontent) {
+  final currentWidth = MediaQuery.of(context).size.width;
+  double paddingWidth = 6.0;
+  if (currentWidth > 540) {
+    paddingWidth = currentWidth / 5;
+  }
+  if (currentWidth > 700) {
+    paddingWidth = currentWidth / 4;
+  }
+  return Scaffold(
+      appBar: AppBar(
+        backgroundColor: hexStringtoColor("041416"),
+        elevation: 0,
+        title: Text(
+          name,
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      body: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+        return Container(
+          padding: EdgeInsets.only(left: paddingWidth, right: paddingWidth),
+          height: constraints.maxHeight,
+          width: constraints.maxWidth,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [
+            hexStringtoColor("041416"),
+            hexStringtoColor("041416"),
+            hexStringtoColor("020A0B")
+            //hexStringtoColor("1d8a99") //hexStringtoColor("7c77b9")
+          ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+          child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: SingleChildScrollView(child: bodycontent)),
+        );
+      }));
+}
+
+Widget okterAddButtonScaffold(
+    name, IconButton iconButton, context, bodycontent) {
+  final currentWidth = MediaQuery.of(context).size.width;
+  double paddingWidth = 6.0;
+  if (currentWidth > 540) {
+    paddingWidth = currentWidth / 5;
+  }
+  if (currentWidth > 700) {
+    paddingWidth = currentWidth / 4;
+  }
+  return Scaffold(
+      appBar: AppBar(
+        backgroundColor: hexStringtoColor("041416"),
+        elevation: 0,
+        actions: [iconButton],
+        title: Text(
+          name,
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      body: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+        return Container(
+          padding: EdgeInsets.only(left: paddingWidth, right: paddingWidth),
+          height: constraints.maxHeight,
+          width: constraints.maxWidth,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [
+            hexStringtoColor("041416"),
+            hexStringtoColor("041416"),
+            hexStringtoColor("020A0B")
+            //hexStringtoColor("1d8a99") //hexStringtoColor("7c77b9")
+          ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+          child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: SingleChildScrollView(child: bodycontent)),
+        );
+      }));
 }
 
 Widget homePageDrawer(context, name, username) {
@@ -112,6 +178,7 @@ Widget homePageDrawer(context, name, username) {
                                 fontWeight: FontWeight.normal,
                                 color: Colors.white)),
                         onPressed: () {
+                          Navigator.pop(context);
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -131,7 +198,7 @@ Widget homePageDrawer(context, name, username) {
             Padding(
                 padding: EdgeInsets.only(left: 14.0, right: 14.0, top: 16),
                 child: TextButton(
-                  child: Text("Friends",
+                  child: Text("Venner",
                       style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.normal,
@@ -160,28 +227,54 @@ Widget homePageDrawer(context, name, username) {
                             builder: (context) => const PersonalBestPage()));
                   },
                 )),
+            Padding(
+                padding: EdgeInsets.only(left: 14.0, right: 14.0, top: 16),
+                child: TextButton(
+                  child: Text("Grupper",
+                      style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.white)),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const GroupsPage()));
+                  },
+                )),
             Spacer(),
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                IconButton(
-                    alignment: Alignment.bottomLeft,
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(Icons.settings, color: Colors.white)),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: IconButton(
+                      alignment: Alignment.bottomLeft,
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SettingsPage()));
+                      },
+                      icon: const Icon(Icons.settings, color: Colors.white)),
+                ),
                 const Spacer(),
-                IconButton(
-                    alignment: Alignment.bottomRight,
-                    onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SignInPage()));
-                    },
-                    icon: const Icon(Icons.exit_to_app_outlined,
-                        color: Colors.white)),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: IconButton(
+                      alignment: Alignment.bottomRight,
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SignInPage()));
+                      },
+                      icon: const Icon(Icons.exit_to_app_outlined,
+                          color: Colors.white)),
+                ),
               ],
             ),
           ],

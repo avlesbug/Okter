@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:okter/basePage.dart';
+import 'package:okter/color_utils.dart';
 import 'package:okter/reusable_widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -23,8 +24,9 @@ class _HomePageState extends State<HomePage> {
   late DatabaseReference ref;
 
   num displayOkter = 0;
-  num displayGoalOkter = 99;
-  num _goal = 99;
+  num displayGoalOkter = 0;
+  num _goal = 0;
+  num _workout = 0;
 
   var _name = "Name";
   var _username = "UserName";
@@ -40,38 +42,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     users = FirebaseFirestore.instance.collection('UserData');
     userId = FirebaseAuth.instance.currentUser!.uid.toString();
-    print("User ID: $userId");
-    //userId = Provider.of(context).auth.getCurrentUID();
-    ref = FirebaseDatabase.instance.ref("UserData");
-    //super.initState();
-  }
-
-  Future<void> initOkter() async {
-    var childRef = ref.child(userId);
-    DatabaseEvent event = await childRef.once();
-    if (!mounted) return;
-    setState(() {
-      displayOkter = event.snapshot.value as num;
-    });
-  }
-
-  Future<void> increaseOkter() async {
-    final ref = FirebaseDatabase.instance.ref("UserData").child(userId);
-    try {
-      if (!mounted) return;
-      final docRef =
-          FirebaseFirestore.instance.collection("UserData").doc(userId);
-      await docRef.update({
-        'lastWorkout': Timestamp.now(),
-      });
-      ref.set(displayOkter + 1);
-      DatabaseEvent event = await ref.once();
-      setState(() {
-        displayOkter = event.snapshot.value as num;
-      });
-    } on FirebaseException catch (e) {
-      print(e);
-    }
   }
 
   Future<void> getUserData() async {
@@ -86,6 +56,7 @@ class _HomePageState extends State<HomePage> {
           _lastWorkout = doc.get("lastWorkout");
           _goal = doc.get("goal");
           _endDate = doc.get("endDate");
+          displayOkter = doc.get("workouts");
         });
       });
     } on FirebaseException catch (e) {
@@ -93,21 +64,11 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> decreaseOkter() async {
-    final ref = FirebaseDatabase.instance.ref("UserData").child(userId);
-    ref.set(displayOkter - 1);
-    DatabaseEvent event = await ref.once();
-    if (!mounted) return;
-    setState(() {
-      displayOkter = event.snapshot.value as num;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     initState();
     getUserData();
-    initOkter();
+    //initOkter();
     return okterDrawerScaffold(
         context,
         _name,
@@ -148,7 +109,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               IconButton(
                 onPressed: () {
-                  decreaseOkter();
+                  decreaseWorkouts();
                 },
                 icon: const Icon(Icons.remove),
                 iconSize: 30,
@@ -159,7 +120,7 @@ class _HomePageState extends State<HomePage> {
               ),
               IconButton(
                 onPressed: () {
-                  increaseOkter();
+                  increaseWorkouts();
                 },
                 icon: const Icon(Icons.add),
                 iconSize: 30,
@@ -244,19 +205,33 @@ class _HomePageState extends State<HomePage> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text("Økter"),
+          backgroundColor: hexStringtoColor("041416"),
           content: numInputField(_okterController, "Skriv antall økter"),
-          actions: [TextButton(onPressed: submit, child: const Text("Submit"))],
+          actions: [
+            TextButton(
+                onPressed: submit,
+                child: const Text(
+                  "Submit",
+                  style: TextStyle(color: Colors.white),
+                ))
+          ],
         ),
       );
 
   void submit() async {
-    final ref = FirebaseDatabase.instance.ref("UserData").child(userId);
     var okterNum = int.parse(_okterController.text);
-    ref.set(okterNum);
-    DatabaseEvent event = await ref.once();
-    if (!mounted) return;
+    FirebaseFirestore.instance.collection("UserData").doc(userId).update({
+      'workouts': okterNum,
+    });
+    final docRef =
+        FirebaseFirestore.instance.collection("UserData").doc(userId);
+    docRef.get().then(
+      (DocumentSnapshot doc) {
+        _workout = doc.get("workouts");
+      },
+    );
     setState(() {
-      displayOkter = event.snapshot.value as num;
+      displayOkter = _workout;
     });
     Navigator.pop(context);
   }
@@ -279,20 +254,57 @@ class _HomePageState extends State<HomePage> {
     Navigator.pop(context);
   }
 
+  void increaseWorkouts() async {
+    FirebaseFirestore.instance.collection("UserData").doc(userId).update({
+      'workouts': displayOkter + 1,
+      'lastWorkout': Timestamp.now(),
+    });
+  }
+
+  void decreaseWorkouts() async {
+    FirebaseFirestore.instance.collection("UserData").doc(userId).update({
+      'workouts': displayOkter - 1,
+    });
+  }
+
   Future openGoalDialog() => showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: const Text("Mål"),
+          backgroundColor: hexStringtoColor("041416"),
           content: numInputField(
               _okterGoalController, "Skriv antall økter du ønsker å nå"),
           actions: [
-            TextButton(onPressed: submitGoal, child: const Text("Submit"))
+            TextButton(
+                onPressed: submitGoal,
+                child: const Text(
+                  "Submit",
+                  style: TextStyle(color: Colors.white),
+                ))
           ],
         ),
       );
 
   void openDatePicker() {
     showDatePicker(
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: hexStringtoColor("041416"), // <-- SEE HERE
+              onPrimary: Colors.white, // <-- SEE HERE
+              onSurface: Colors.white, // <-- SEE HERE
+            ),
+            dialogBackgroundColor: Colors.black,
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                primary: Colors.white, // button text color
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
@@ -307,6 +319,24 @@ class _HomePageState extends State<HomePage> {
 
   void openEndDatePicker() {
     showDatePicker(
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: hexStringtoColor("041416"), // <-- SEE HERE
+              onPrimary: Colors.white, // <-- SEE HERE
+              onSurface: Colors.white, // <-- SEE HERE
+            ),
+            dialogBackgroundColor: Colors.black,
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                primary: Colors.white, // button text color
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),

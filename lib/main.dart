@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
     return Provider(
       auth: AuthService(),
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Økter',
         themeMode: ThemeMode.dark,
         theme: MyTheme.lightTheme,
         darkTheme: MyTheme.darkTheme,
@@ -56,8 +56,9 @@ class HomeController extends StatelessWidget {
             width: constraints.maxWidth,
             decoration: BoxDecoration(
                 gradient: LinearGradient(colors: [
-              hexStringtoColor("14fff7"),
-              hexStringtoColor("0bc9cd")
+              hexStringtoColor("041416"),
+              hexStringtoColor("041416"),
+              hexStringtoColor("020A0B")
               //hexStringtoColor("1d8a99") //hexStringtoColor("7c77b9")
             ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
             child: Column(

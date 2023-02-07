@@ -31,6 +31,7 @@ class _SignInPageState extends State<SignInPage> {
     return signedIn
         ? const HomePage()
         : okterScaffold(
+            "",
             context,
             Column(
               mainAxisAlignment: MainAxisAlignment.center,

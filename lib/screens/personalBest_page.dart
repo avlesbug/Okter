@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:okter/basePage.dart';
 
+import '../color_utils.dart';
 import '../reusable_widgets.dart';
 
 class PersonalBestPage extends StatefulWidget {
@@ -29,7 +30,6 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
     //super.initState();
     users = FirebaseFirestore.instance.collection('UserData');
     userId = FirebaseAuth.instance.currentUser!.uid.toString();
-    print("User ID: $userId");
     //userId = Provider.of(context).auth.getCurrentUID();
     ref = FirebaseDatabase.instance.ref("UserData");
   }
@@ -37,28 +37,15 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
   @override
   Widget build(BuildContext context) {
     initState();
-    return okterScaffold(
+    return okterAddButtonScaffold(
+        "Personal Bests",
+        IconButton(onPressed: dialog, icon: const Icon(Icons.add)),
         context,
         Column(
           children: [
             const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  "Rekorder",
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Spacer(),
-                IconButton(onPressed: dialog, icon: const Icon(Icons.add))
-              ],
-            ),
             Container(
-              height: 500,
-              width: 500,
+              height: 1000,
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection("UserData")
@@ -121,8 +108,9 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
     showDialog(
         context: context,
         builder: (context) => Padding(
-              padding: const EdgeInsets.fromLTRB(48.0, 200.0, 48.0, 200.0),
+              padding: const EdgeInsets.fromLTRB(48.0, 60.0, 48.0, 450.0),
               child: Card(
+                color: hexStringtoColor("041416"),
                 elevation: 20,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
@@ -158,7 +146,10 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
                               _ovelseController.text, _vektController.text);
                           Navigator.pop(context);
                         },
-                        child: const Text("Legg til"),
+                        child: const Text(
+                          "Legg til",
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
                   ],
@@ -175,8 +166,9 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
     showDialog(
       context: context,
       builder: (context) => Padding(
-        padding: const EdgeInsets.fromLTRB(48.0, 200.0, 48.0, 200.0),
+        padding: const EdgeInsets.fromLTRB(48.0, 60.0, 48.0, 450),
         child: Card(
+          color: hexStringtoColor("041416"),
           elevation: 20,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
@@ -218,7 +210,8 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
                           addRekord(ovelseController.text, vektController.text);
                           Navigator.pop(context);
                         },
-                        child: const Text("Legg til"),
+                        child: const Text("Legg til",
+                            style: TextStyle(color: Colors.white)),
                       ),
                       Spacer(),
                       TextButton(
@@ -226,7 +219,8 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
                           deleteRekord(param1, param2.toString());
                           Navigator.pop(context);
                         },
-                        child: const Text("Slett"),
+                        child: const Text("Slett",
+                            style: TextStyle(color: Colors.white)),
                       ),
                     ],
                   ),
