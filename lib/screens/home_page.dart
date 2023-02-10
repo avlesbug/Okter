@@ -63,6 +63,7 @@ class _HomePageState extends State<HomePage> {
       });
     } on FirebaseException catch (e) {
       print(e);
+      print("test commit");
     }
   }
 
