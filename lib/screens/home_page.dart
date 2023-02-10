@@ -30,6 +30,7 @@ class _HomePageState extends State<HomePage> {
 
   var _name = "Name";
   var _username = "UserName";
+  var profileUrl = "";
 
   Timestamp _endDate = Timestamp.fromDate(DateTime.utc(2022, 12, 31));
   Timestamp _lastWorkout = Timestamp.now();
@@ -57,6 +58,7 @@ class _HomePageState extends State<HomePage> {
           _goal = doc.get("goal");
           _endDate = doc.get("endDate");
           displayOkter = doc.get("workouts");
+          profileUrl = doc.get("profileImage");
         });
       });
     } on FirebaseException catch (e) {
@@ -73,8 +75,9 @@ class _HomePageState extends State<HomePage> {
         context,
         _name,
         _username,
+        profileUrl,
         Column(children: [
-          const SizedBox(height: 120),
+          const SizedBox(height: 40),
           const Text("Økter i år:",
               style: TextStyle(
                   color: Colors.white,

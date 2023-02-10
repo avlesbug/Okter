@@ -97,21 +97,50 @@ class _FriendsPageState extends State<FriendsPage> {
           children: [
             const SizedBox(height: 20),
             Container(
-              height: 1000,
-              child: ListView.builder(
-                itemCount: _friendMap.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    color: hexStringtoColor("1A2123"),
-                    child: ListTile(
-                      title: Text(_friendMap[index]["name"]),
-                      subtitle: Text(_friendMap[index]["workouts"].toString() +
-                          " / " +
-                          _friendMap[index]["goal"].toString()),
-                    ),
-                  );
-                },
-              ),
+              height: MediaQuery.of(context).size.height - 100,
+              child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection("UserData")
+                      .doc(userId)
+                      .collection("friendList")
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    return ListView.builder(
+                      itemCount: _friendMap.length,
+                      itemBuilder: (context, index) {
+                        return Material(
+                          color: Colors.transparent,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ListTile(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              title: Text(_friendMap[index]["name"]),
+                              subtitle: Text(
+                                  _friendMap[index]["workouts"].toString() +
+                                      " / " +
+                                      _friendMap[index]["goal"].toString()),
+                              tileColor: hexStringtoColor("061E21"),
+                              leading: CircleAvatar(
+                                backgroundColor:
+                                    Color.fromARGB(255, 29, 138, 153),
+                                radius: 30,
+                                child: Icon(
+                                  Icons.person,
+                                  size: 40,
+                                  color: Color.fromARGB(255, 11, 201, 205),
+                                ),
+                              ),
+                              onTap: () {
+                                openFriendDialog();
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }),
             ),
           ],
         ));
@@ -170,5 +199,26 @@ class _FriendsPageState extends State<FriendsPage> {
     }
     return myData;
     // Use myData to build your UI
+  }
+
+  void openFriendDialog() {
+    showDialog(
+        context: context,
+        builder: (context) => Padding(
+              padding: const EdgeInsets.fromLTRB(48.0, 60.0, 48.0, 450),
+              child: Card(
+                  color: hexStringtoColor("041416"),
+                  elevation: 20,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Text("Test")),
+            ));
+  }
+
+  void deleteFriend(index) {
+    FirebaseFirestore.instance.collection("UserData").doc(userId).update({
+      "friendList": FieldValue.arrayRemove([_friends[index]])
+    });
   }
 }

@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:okter/color_utils.dart';
 import 'package:okter/screens/friends_page.dart';
 import 'package:okter/screens/groups_page.dart';
@@ -9,14 +13,14 @@ import 'package:okter/screens/login_page.dart';
 import 'package:okter/screens/personalBest_page.dart';
 import 'package:okter/screens/settings_page.dart';
 
-Widget okterDrawerScaffold(context, name, username, bodycontent) {
+Widget okterDrawerScaffold(context, name, username, profileUrl, bodycontent) {
   return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      drawer: homePageDrawer(context, name, username),
+      drawer: homePageDrawer(context, name, username, profileUrl),
       body: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
         return Container(
@@ -121,7 +125,10 @@ Widget okterAddButtonScaffold(
       }));
 }
 
-Widget homePageDrawer(context, name, username) {
+Widget homePageDrawer(context, name, username, profileUrl) {
+  var userId = FirebaseAuth.instance.currentUser!.uid.toString();
+  var docRef = FirebaseFirestore.instance.collection("UserData").doc(userId);
+
   return Drawer(
     child: SingleChildScrollView(
       child: Container(
@@ -144,13 +151,27 @@ Widget homePageDrawer(context, name, username) {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const CircleAvatar(
-                      backgroundColor: Color.fromARGB(255, 29, 138, 153),
-                      radius: 30,
-                      child: Icon(
-                        Icons.person,
-                        size: 54,
-                        color: Color.fromARGB(255, 11, 201, 205),
+                    GestureDetector(
+                      onLongPress: (() async {
+                        ImagePicker imagePicker = ImagePicker();
+                        XFile? image = await imagePicker.pickImage(
+                            source: ImageSource.gallery);
+
+                        Reference storageReference = FirebaseStorage.instance
+                            .ref()
+                            .child('profileImages/' + userId);
+
+                        try {
+                          storageReference.putFile(File(image!.path));
+                          var url = await storageReference.getDownloadURL();
+                          docRef.update({"profileImage": url});
+                          print(url);
+                        } catch (e) {
+                          print(e);
+                        }
+                      }),
+                      child: CircleAvatar(
+                        foregroundImage: NetworkImage(profileUrl),
                       ),
                     ),
                     Padding(
