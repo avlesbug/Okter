@@ -90,16 +90,26 @@ class _AddFriendsPageState extends State<AddFriendsPage> {
                                   Text(snapshot.data!.docs[index].get("name")),
                               subtitle: Text(
                                   snapshot.data!.docs[index].get("username")),
-                              leading: CircleAvatar(
-                                backgroundColor:
-                                    Color.fromARGB(255, 29, 138, 153),
-                                radius: 30,
-                                child: Icon(
-                                  Icons.person,
-                                  size: 40,
-                                  color: Color.fromARGB(255, 11, 201, 205),
-                                ),
-                              ),
+                              leading: snapshot.data!.docs[index]
+                                          .get("profileImage") !=
+                                      ""
+                                  ? CircleAvatar(
+                                      radius: 30,
+                                      foregroundImage: NetworkImage(
+                                          snapshot.data!.docs[index]
+                                              .get("profileImage"),
+                                          scale: 0.5),
+                                    )
+                                  : CircleAvatar(
+                                      backgroundColor:
+                                          Color.fromARGB(255, 29, 138, 153),
+                                      radius: 30,
+                                      child: Icon(
+                                        Icons.person,
+                                        size: 30,
+                                        color:
+                                            Color.fromARGB(255, 11, 201, 205),
+                                      )),
                               onTap: () {
                                 openAddFriendDialog();
                               },

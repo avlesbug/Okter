@@ -55,6 +55,12 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
                   if (!snapshot.hasData) {
                     return const Center(child: CircularProgressIndicator());
                   }
+                  if (snapshot.data!.get("rekorder").length == 0) {
+                    return const Text(
+                      "No personal bests added yet",
+                      style: TextStyle(fontSize: 16),
+                    );
+                  }
                   return ListView.builder(
                     itemCount: snapshot.data!.get("rekorder").length,
                     itemBuilder: (context, index) {

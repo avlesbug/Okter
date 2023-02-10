@@ -108,36 +108,63 @@ class _FriendsPageState extends State<FriendsPage> {
                     return ListView.builder(
                       itemCount: _friendMap.length,
                       itemBuilder: (context, index) {
-                        return Material(
-                          color: Colors.transparent,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ListTile(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              title: Text(_friendMap[index]["name"]),
-                              subtitle: Text(
-                                  _friendMap[index]["workouts"].toString() +
-                                      " / " +
-                                      _friendMap[index]["goal"].toString()),
-                              tileColor: hexStringtoColor("061E21"),
-                              leading: CircleAvatar(
-                                backgroundColor:
-                                    Color.fromARGB(255, 29, 138, 153),
-                                radius: 30,
-                                child: Icon(
-                                  Icons.person,
-                                  size: 40,
-                                  color: Color.fromARGB(255, 11, 201, 205),
+                        if (_friendMap[index]["profileImage"] != "") {
+                          return Material(
+                            color: Colors.transparent,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ListTile(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
+                                title: Text(_friendMap[index]["name"]),
+                                subtitle: Text(
+                                    _friendMap[index]["workouts"].toString() +
+                                        " / " +
+                                        _friendMap[index]["goal"].toString()),
+                                tileColor: hexStringtoColor("061E21"),
+                                leading: CircleAvatar(
+                                  foregroundImage: NetworkImage(
+                                      _friendMap[index]["profileImage"]),
+                                ),
+                                onTap: () {
+                                  openFriendDialog();
+                                },
                               ),
-                              onTap: () {
-                                openFriendDialog();
-                              },
                             ),
-                          ),
-                        );
+                          );
+                        } else {
+                          return Material(
+                            color: Colors.transparent,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ListTile(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                title: Text(_friendMap[index]["name"]),
+                                subtitle: Text(
+                                    _friendMap[index]["workouts"].toString() +
+                                        " / " +
+                                        _friendMap[index]["goal"].toString()),
+                                tileColor: hexStringtoColor("061E21"),
+                                leading: CircleAvatar(
+                                  backgroundColor:
+                                      Color.fromARGB(255, 29, 138, 153),
+                                  radius: 30,
+                                  child: Icon(
+                                    Icons.person,
+                                    size: 40,
+                                    color: Color.fromARGB(255, 11, 201, 205),
+                                  ),
+                                ),
+                                onTap: () {
+                                  openFriendDialog();
+                                },
+                              ),
+                            ),
+                          );
+                        }
                       },
                     );
                   }),

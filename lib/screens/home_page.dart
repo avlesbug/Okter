@@ -63,7 +63,6 @@ class _HomePageState extends State<HomePage> {
       });
     } on FirebaseException catch (e) {
       print(e);
-      print("test commit");
     }
   }
 
@@ -78,7 +77,7 @@ class _HomePageState extends State<HomePage> {
         _username,
         profileUrl,
         Column(children: [
-          const SizedBox(height: 40),
+          const SizedBox(height: 100),
           const Text("Økter i år:",
               style: TextStyle(
                   color: Colors.white,

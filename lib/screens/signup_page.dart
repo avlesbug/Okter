@@ -132,5 +132,6 @@ void writeFirestore(String uid, String email, String name, String username) {
     'goal': 0,
     'endDate': getLastDayOfCurrentYear(),
     'workouts': 0,
+    'profileImage': "",
   });
 }
