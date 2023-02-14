@@ -86,14 +86,16 @@ class _GroupsPageState extends State<GroupsPage> {
     getGroupMap();
     return okterAddButtonScaffold(
         "Groups",
-        IconButton(
-            onPressed: (() {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const AddFriendsPage()));
-            }),
-            icon: const Icon(Icons.add)),
+        [
+          IconButton(
+              onPressed: (() {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AddFriendsPage()));
+              }),
+              icon: const Icon(Icons.add))
+        ],
         context,
         Column(
           children: [

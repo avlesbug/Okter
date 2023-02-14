@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> {
   var _name = "Name";
   var _username = "UserName";
   var profileUrl = "";
+  bool _isLoaded = false;
 
   Timestamp _endDate = Timestamp.fromDate(DateTime.utc(2022, 12, 31));
   Timestamp _lastWorkout = Timestamp.now();
@@ -59,6 +60,7 @@ class _HomePageState extends State<HomePage> {
           _endDate = doc.get("endDate");
           displayOkter = doc.get("workouts");
           profileUrl = doc.get("profileImage");
+          _isLoaded = true;
         });
       });
     } on FirebaseException catch (e) {
@@ -73,9 +75,6 @@ class _HomePageState extends State<HomePage> {
     //initOkter();
     return okterDrawerScaffold(
         context,
-        _name,
-        _username,
-        profileUrl,
         Column(children: [
           const SizedBox(height: 100),
           const Text("Økter i år:",
@@ -85,28 +84,33 @@ class _HomePageState extends State<HomePage> {
                   fontWeight: FontWeight.bold)),
           const SizedBox(height: 20),
           //firestoreFutureBuilder("name", TextStyle(fontSize: 20)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                  onLongPress: () {
-                    openDialog();
-                  },
-                  child: Text(displayOkter.toString() + " / ",
-                      style: const TextStyle(
-                          fontSize: 30,
-                          color: Color.fromARGB(255, 255, 255, 255)))),
-              GestureDetector(
-                  onLongPress: () {
-                    openGoalDialog();
-                  },
-                  child: Text("$_goal",
-                      style: const TextStyle(
-                          color: Color.fromARGB(255, 93, 87, 168),
-                          fontSize: 30,
-                          fontWeight: FontWeight.w300))),
-            ],
-          ),
+          _isLoaded
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                        onLongPress: () {
+                          openDialog();
+                        },
+                        child: Text(displayOkter.toString() + " / ",
+                            style: const TextStyle(
+                                fontSize: 30,
+                                color: Color.fromARGB(255, 255, 255, 255)))),
+                    GestureDetector(
+                        onLongPress: () {
+                          openGoalDialog();
+                        },
+                        child: Text("$_goal",
+                            style: const TextStyle(
+                                color: Color.fromARGB(255, 93, 87, 168),
+                                fontSize: 30,
+                                fontWeight: FontWeight.w300))),
+                  ],
+                )
+              : CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      Color.fromARGB(255, 93, 87, 168)),
+                ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:okter/basePage.dart';
+import 'package:okter/reusable_widgets.dart';
 
 import '../color_utils.dart';
 
@@ -20,6 +21,8 @@ class _AddFriendsPageState extends State<AddFriendsPage> {
   late String userId;
   late DatabaseReference ref;
   String search = "";
+  double height = 700;
+  double width = 300;
 
   @override
   void initState() {
@@ -32,6 +35,8 @@ class _AddFriendsPageState extends State<AddFriendsPage> {
 
   @override
   Widget build(BuildContext context) {
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
     initState();
     return okterScaffold(
         "Add Friends",
@@ -111,7 +116,8 @@ class _AddFriendsPageState extends State<AddFriendsPage> {
                                             Color.fromARGB(255, 11, 201, 205),
                                       )),
                               onTap: () {
-                                openAddFriendDialog();
+                                openAddFriendDialog(
+                                    snapshot.data!.docs[index].reference);
                               },
                             ),
                           ),
@@ -146,7 +152,8 @@ class _AddFriendsPageState extends State<AddFriendsPage> {
                                 ),
                               ),
                               onTap: () {
-                                openAddFriendDialog();
+                                openAddFriendDialog(
+                                    snapshot.data!.docs[index].reference);
                               },
                             ),
                           ),
@@ -162,25 +169,43 @@ class _AddFriendsPageState extends State<AddFriendsPage> {
         ));
   }
 
-  void openAddFriendDialog() {
+  void openAddFriendDialog(DocumentReference userRef) {
     showDialog(
-        context: context,
-        builder: (context) => Padding(
-              padding: const EdgeInsets.fromLTRB(48.0, 60.0, 48.0, 450),
-              child: Card(
-                  color: hexStringtoColor("041416"),
-                  elevation: 20,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Text("Test")),
-            ));
+      context: context,
+      builder: (context) => Padding(
+        padding: EdgeInsets.fromLTRB(
+            width * 0.1, height * 0.23, width * 0.1, height * 0.6),
+        child: Container(
+            color: hexStringtoColor("041416"),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(32.0, 38.0, 32.0, 38.0),
+              child: TextButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        hexStringtoColor("061E21"))),
+                onPressed: () {
+                  sendFriendRequest(userRef);
+                  Navigator.pop(context);
+                  showToastMessage("Friend Request Sent");
+                },
+                child: Text("Send Friend Request",
+                    style: TextStyle(color: Colors.white, fontSize: 16)),
+              ),
+            )),
+      ),
+    );
   }
 
-  void addFriends(String ovelse, String vekt) {
-    FirebaseFirestore.instance
-        .collection("UserData")
-        .doc(userId)
-        .update({"friendList": FieldValue.arrayUnion([])});
+  void addFriends(DocumentReference userRef) {
+    FirebaseFirestore.instance.collection("UserData").doc(userId).update({
+      "friendList": FieldValue.arrayUnion([userRef])
+    });
+  }
+
+  void sendFriendRequest(DocumentReference userRef) {
+    userRef.update({
+      "friendRequests": FieldValue.arrayUnion(
+          [FirebaseFirestore.instance.collection("UserData").doc(userId)])
+    });
   }
 }

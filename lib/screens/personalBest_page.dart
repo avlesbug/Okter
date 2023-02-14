@@ -39,7 +39,7 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
     initState();
     return okterAddButtonScaffold(
         "Personal Bests",
-        IconButton(onPressed: dialog, icon: const Icon(Icons.add)),
+        [IconButton(onPressed: dialog, icon: const Icon(Icons.add))],
         context,
         Column(
           children: [

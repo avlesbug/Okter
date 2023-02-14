@@ -8,6 +8,7 @@ import 'package:okter/basePage.dart';
 import 'package:intl/intl.dart';
 import 'package:okter/color_utils.dart';
 import 'package:okter/screens/addFriend_page.dart';
+import 'package:okter/screens/friendRequests_page.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class FriendsPage extends StatefulWidget {
@@ -22,11 +23,14 @@ class _FriendsPageState extends State<FriendsPage> {
   late CollectionReference users;
   late String userId;
   late DatabaseReference ref;
+  double height = 700;
+  double width = 300;
 
   var _name = "Name";
   var _username = "UserName";
   var _friends = [];
   var _friendMap = [];
+  var _counter = 0;
 
   String _frindname = "Friend Name";
 
@@ -47,6 +51,7 @@ class _FriendsPageState extends State<FriendsPage> {
         if (!mounted) return;
         setState(() {
           _friends = doc["friendList"];
+          _counter = doc["friendRequests"].length;
         });
       });
     } on FirebaseException catch (e) {
@@ -79,19 +84,59 @@ class _FriendsPageState extends State<FriendsPage> {
 
   @override
   Widget build(BuildContext context) {
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
+    print("h: " + height.toString() + " w: " + width.toString());
     initState();
     getUserData();
     getFriendMap();
     return okterAddButtonScaffold(
         "Friends",
-        IconButton(
-            onPressed: (() {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const AddFriendsPage()));
-            }),
-            icon: const Icon(Icons.add)),
+        [
+          Stack(children: [
+            IconButton(
+                onPressed: (() {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const FriendRequestsPage()));
+                }),
+                icon: const Icon(Icons.notifications)),
+            _counter != 0
+                ? Positioned(
+                    right: 5,
+                    top: 5,
+                    child: new Container(
+                      padding: EdgeInsets.all(2),
+                      decoration: new BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: 14,
+                        minHeight: 14,
+                      ),
+                      child: Text(
+                        '$_counter',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 8,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  )
+                : Container(),
+          ]),
+          IconButton(
+              onPressed: (() {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AddFriendsPage()));
+              }),
+              icon: const Icon(Icons.add)),
+        ],
         context,
         Column(
           children: [
@@ -124,11 +169,12 @@ class _FriendsPageState extends State<FriendsPage> {
                                         _friendMap[index]["goal"].toString()),
                                 tileColor: hexStringtoColor("061E21"),
                                 leading: CircleAvatar(
+                                  radius: 30,
                                   foregroundImage: NetworkImage(
                                       _friendMap[index]["profileImage"]),
                                 ),
                                 onTap: () {
-                                  openFriendDialog();
+                                  openFriendDialog(_friends[index]);
                                 },
                               ),
                             ),
@@ -159,7 +205,7 @@ class _FriendsPageState extends State<FriendsPage> {
                                   ),
                                 ),
                                 onTap: () {
-                                  openFriendDialog();
+                                  openFriendDialog(_friends[index]);
                                 },
                               ),
                             ),
@@ -173,79 +219,45 @@ class _FriendsPageState extends State<FriendsPage> {
         ));
   }
 
-  /*
-  snapshot.data!
-  .get("friends")[index]["name"]
-  */
-
-  SfCircularChart _buildElevationDoughnutChart(okter, goal) {
-    return SfCircularChart(
-      /// It used to set the annotation on circular chart.
-      annotations: <CircularChartAnnotation>[
-        CircularChartAnnotation(
-            height: '100%',
-            width: '100%',
-            widget: PhysicalModel(
-              shape: BoxShape.circle,
-              elevation: 10,
-              color: const Color.fromRGBO(225, 225, 225, 1),
-              child: Container(),
+  void openFriendDialog(DocumentReference userRef) {
+    showDialog(
+      context: context,
+      builder: (context) => Padding(
+        padding: EdgeInsets.fromLTRB(
+            width * 0.1, height * 0.23, width * 0.1, height * 0.6),
+        child: Container(
+            color: hexStringtoColor("041416"),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(32.0, 38.0, 32.0, 38.0),
+              child: TextButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        hexStringtoColor("061E21"))),
+                onPressed: () {
+                  Navigator.pop(context);
+                  deleteFriend(userRef);
+                },
+                child: Text("Remove friend",
+                    style: TextStyle(color: Colors.white, fontSize: 16)),
+              ),
             )),
-        CircularChartAnnotation(
-            widget: Text(((okter / goal) * 100).toStringAsFixed(1) + "%",
-                style: const TextStyle(
-                    color: Color.fromRGBO(0, 0, 0, 0.5), fontSize: 25))),
-      ],
+      ),
     );
   }
 
-  void friendDialog(param0, param1) {}
+  void deleteFriend(DocumentReference userRef) {
+    var currentUserRef =
+        FirebaseFirestore.instance.collection("UserData").doc(userId);
 
-  getProgressFromDocRef(DocumentReference docRef) async {
-    var _goal = 0;
-    var progress = 0;
-    try {
-      docRef.get().then((DocumentSnapshot doc) {
-        if (!mounted) return;
-        setState(() {
-          _goal = doc.get("goal");
-        });
-      });
-    } on FirebaseException catch (e) {
-      print(e);
-    }
+    var friendUserRef =
+        FirebaseFirestore.instance.collection("UserData").doc(userRef.id);
 
-    return _goal.toString();
-  }
+    currentUserRef.update({
+      "friendList": FieldValue.arrayRemove([userRef])
+    });
 
-  Future<List> getData(myArray) async {
-    var myData = [];
-    for (var reference in myArray) {
-      var snapshot = await reference.get();
-      myData.add(snapshot.data);
-    }
-    return myData;
-    // Use myData to build your UI
-  }
-
-  void openFriendDialog() {
-    showDialog(
-        context: context,
-        builder: (context) => Padding(
-              padding: const EdgeInsets.fromLTRB(48.0, 60.0, 48.0, 450),
-              child: Card(
-                  color: hexStringtoColor("041416"),
-                  elevation: 20,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Text("Test")),
-            ));
-  }
-
-  void deleteFriend(index) {
-    FirebaseFirestore.instance.collection("UserData").doc(userId).update({
-      "friendList": FieldValue.arrayRemove([_friends[index]])
+    friendUserRef.update({
+      "friendList": FieldValue.arrayRemove([currentUserRef])
     });
   }
 }
