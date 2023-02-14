@@ -10,6 +10,8 @@ import 'package:okter/color_utils.dart';
 import 'package:okter/screens/addFriend_page.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import '../reusable_widgets.dart';
+
 class FriendRequestsPage extends StatefulWidget {
   const FriendRequestsPage({super.key});
 
@@ -191,6 +193,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage> {
         IconButton(
           onPressed: () {
             answerRequest(_friendRequests[index], true);
+            updataPage(context, super.widget);
           },
           icon: Icon(
             Icons.check,
@@ -204,6 +207,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage> {
         IconButton(
           onPressed: () {
             answerRequest(_friendRequests[index], false);
+            updataPage(context, super.widget);
           },
           icon: Icon(
             Icons.clear,

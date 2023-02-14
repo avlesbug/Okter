@@ -137,7 +137,15 @@ Widget homePageDrawer(context) {
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Container();
+            return Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+              colors: [
+                hexStringtoColor("041416"),
+                hexStringtoColor("041416"),
+                hexStringtoColor("020A0B")
+              ],
+            )));
           }
           return SingleChildScrollView(
             child: Container(

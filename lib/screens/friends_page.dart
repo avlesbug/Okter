@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:okter/basePage.dart';
 import 'package:intl/intl.dart';
 import 'package:okter/color_utils.dart';
+import 'package:okter/reusable_widgets.dart';
 import 'package:okter/screens/addFriend_page.dart';
 import 'package:okter/screens/friendRequests_page.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -259,5 +260,7 @@ class _FriendsPageState extends State<FriendsPage> {
     friendUserRef.update({
       "friendList": FieldValue.arrayRemove([currentUserRef])
     });
+
+    updataPage(context, super.widget);
   }
 }

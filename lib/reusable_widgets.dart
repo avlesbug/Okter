@@ -128,3 +128,25 @@ void showToastMessage(String message) {
       textColor: Colors.white,
       fontSize: 16.0);
 }
+
+void updataPage(context, page) {
+  Navigator.pushReplacement(
+    context,
+    PageRouteBuilder(
+        pageBuilder: (BuildContext context, Animation<double> animation,
+            Animation<double> secondaryAnimation) {
+          return page;
+        },
+        transitionsBuilder: (BuildContext context, Animation<double> animation,
+            Animation<double> secondaryAnimation, Widget child) {
+          return Align(
+            child: SizeTransition(
+              sizeFactor: animation,
+              child: child,
+            ),
+          );
+        },
+        transitionDuration: Duration(milliseconds: 00),
+        reverseTransitionDuration: Duration(milliseconds: 00)),
+  );
+}
