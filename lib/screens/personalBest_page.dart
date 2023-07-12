@@ -38,7 +38,7 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
   Widget build(BuildContext context) {
     initState();
     return okterAddButtonScaffold(
-        "Personal Bests",
+        "Personlige rekorder",
         [IconButton(onPressed: dialog, icon: const Icon(Icons.add))],
         context,
         Column(
@@ -72,11 +72,14 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
                         }),
                         child: ListTile(
                           title: Text(
-                              snapshot.data!.get("rekorder")[index]["ovelse"]),
-                          subtitle: Text(snapshot.data!
-                                  .get("rekorder")[index]["vekt"]
-                                  .toString() +
-                              " kg"),
+                              snapshot.data!.get("rekorder")[index]["ovelse"],
+                              style: const TextStyle(fontSize: 20)),
+                          subtitle: Text(
+                              snapshot.data!
+                                      .get("rekorder")[index]["vekt"]
+                                      .toString() +
+                                  " kg",
+                              style: const TextStyle(fontSize: 16)),
                         ),
                       );
                     },

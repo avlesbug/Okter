@@ -223,25 +223,28 @@ class _FriendsPageState extends State<FriendsPage> {
   void openFriendDialog(DocumentReference userRef) {
     showDialog(
       context: context,
-      builder: (context) => Padding(
-        padding: EdgeInsets.fromLTRB(
-            width * 0.1, height * 0.23, width * 0.1, height * 0.6),
-        child: Container(
-            color: hexStringtoColor("041416"),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(32.0, 38.0, 32.0, 38.0),
-              child: TextButton(
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        hexStringtoColor("061E21"))),
-                onPressed: () {
-                  Navigator.pop(context);
-                  deleteFriend(userRef);
-                },
-                child: Text("Remove friend",
-                    style: TextStyle(color: Colors.white, fontSize: 16)),
-              ),
-            )),
+      builder: (context) => AlertDialog(
+        backgroundColor: hexStringtoColor("041416"),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(26.0)),
+        content: Container(
+          height: 70,
+          width: 200,
+          child: TextButton(
+            style: ButtonStyle(
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0))),
+                backgroundColor: MaterialStateProperty.all<Color>(
+                    hexStringtoColor("061E21"))),
+            onPressed: () {
+              Navigator.pop(context);
+              deleteFriend(userRef);
+            },
+            child: Text("Remove friend",
+                style: TextStyle(color: Colors.white, fontSize: 16)),
+          ),
+        ),
       ),
     );
   }

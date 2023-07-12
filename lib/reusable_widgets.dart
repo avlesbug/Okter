@@ -26,6 +26,26 @@ TextField inputField(
       ));
 }
 
+TextField largerInputField(
+    TextEditingController inputController, String labelText) {
+  return TextField(
+      cursorColor: Colors.white,
+      autofocus: true,
+      style: const TextStyle(color: Colors.white, fontSize: 20),
+      controller: inputController,
+      textInputAction: TextInputAction.next,
+      decoration: InputDecoration(
+        labelText: labelText,
+        labelStyle: const TextStyle(color: Colors.white),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: hexStringtoColor("08282D")),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: hexStringtoColor("092E33")),
+        ),
+      ));
+}
+
 TextField numInputField(
     TextEditingController inputController, String labelText) {
   return TextField(

@@ -2,6 +2,7 @@ import 'dart:core';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:okter/basePage.dart';
@@ -9,6 +10,7 @@ import 'package:okter/color_utils.dart';
 import 'package:okter/reusable_widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -27,10 +29,9 @@ class _HomePageState extends State<HomePage> {
   num displayGoalOkter = 0;
   num _goal = 0;
   num _workout = 0;
+  List<dynamic> _workouts = [];
+  List<dynamic> _programs = [];
 
-  var _name = "Name";
-  var _username = "UserName";
-  var profileUrl = "";
   bool _isLoaded = false;
 
   Timestamp _endDate = Timestamp.fromDate(DateTime.utc(2022, 12, 31));
@@ -44,34 +45,53 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     users = FirebaseFirestore.instance.collection('UserData');
     userId = FirebaseAuth.instance.currentUser!.uid.toString();
+    getUserData();
   }
 
   Future<void> getUserData() async {
-    final docRef =
-        FirebaseFirestore.instance.collection("UserData").doc(userId);
     try {
-      docRef.get().then((DocumentSnapshot doc) {
-        if (!mounted) return;
-        setState(() {
-          _name = doc.get("name");
-          _username = doc.get("username");
-          _lastWorkout = doc.get("lastWorkout");
-          _goal = doc.get("goal");
-          _endDate = doc.get("endDate");
-          displayOkter = doc.get("workouts");
-          profileUrl = doc.get("profileImage");
-          _isLoaded = true;
-        });
+      final docSnapshot = await FirebaseFirestore.instance
+          .collection('UserData')
+          .doc(userId)
+          .get();
+
+      if (!docSnapshot.exists) {
+        // Document does not exist
+        return;
+      }
+
+      final userData = docSnapshot.data() as Map<String, dynamic>;
+      //final workoutData =
+      //    workoutDocRef.docs.first.data() as Map<String, dynamic>;
+
+      setState(() {
+        _goal = userData['goal'];
+        _endDate = userData['endDate'] ??
+            Timestamp.fromDate(DateTime.utc(2023, 12, 31));
+        displayOkter = userData['workouts'];
+        _isLoaded = true;
+
+        try {
+          _workouts = userData['detailedWorkouts'] as List<dynamic>;
+          _workouts.sort((a, b) => b['date'].compareTo(a['date']));
+        } catch (e) {
+          print(e);
+        }
+
+        try {
+          _programs = userData['workoutPrograms'] as List<dynamic>;
+        } catch (e) {
+          print(e);
+        }
       });
-    } on FirebaseException catch (e) {
-      print(e);
+    } catch (error) {
+      print('Error fetching user data: $error');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     initState();
-    getUserData();
     //initOkter();
     return okterDrawerScaffold(
         context,
@@ -117,6 +137,7 @@ class _HomePageState extends State<HomePage> {
               IconButton(
                 onPressed: () {
                   decreaseWorkouts();
+                  //getLastWorkout();
                 },
                 icon: const Icon(Icons.remove),
                 iconSize: 30,
@@ -125,13 +146,19 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(
                 width: 20,
               ),
-              IconButton(
-                onPressed: () {
-                  increaseWorkouts();
+              GestureDetector(
+                onLongPress: () {
+                  workoutProgramDialog();
                 },
-                icon: const Icon(Icons.add),
-                iconSize: 30,
-                color: Color.fromARGB(255, 255, 255, 255),
+                child: IconButton(
+                  onPressed: () {
+                    increaseWorkouts();
+                    //getLastWorkout();
+                  },
+                  icon: const Icon(Icons.add),
+                  iconSize: 30,
+                  color: Color.fromARGB(255, 255, 255, 255),
+                ),
               ),
             ],
           ),
@@ -150,17 +177,48 @@ class _HomePageState extends State<HomePage> {
                     color: Color.fromARGB(255, 255, 255, 255)),
               ),
               GestureDetector(
-                onLongPress: () {
-                  openDatePicker();
-                },
-                child: Text(
-                  DateFormat.yMMMEd().format(_lastWorkout.toDate()).toString(),
-                  style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w300,
-                      color: Color.fromARGB(255, 93, 87, 168)),
-                ),
-              ),
+                  onLongPress: () {
+                    //openDatePicker();
+                    DatePicker.showDateTimePicker(context,
+                        showTitleActions: true,
+                        minTime: DateTime(2000, 1, 1),
+                        maxTime: DateTime(2010, 1, 1),
+                        theme: DatePickerTheme(
+                            headerColor: Color(0xFF020A0B),
+                            backgroundColor: Color(0xFF020A0B),
+                            itemStyle: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18),
+                            doneStyle:
+                                TextStyle(color: Colors.white, fontSize: 16)),
+                        onChanged: (date) {
+                      //print('change $date');
+                    }, onConfirm: (date) {
+                      setLastWorkout(date);
+                    }, currentTime: DateTime.now(), locale: LocaleType.no);
+                  },
+                  child: _workouts.length > 0
+                      ? Text(
+                          DateFormat.yMMMEd()
+                                  .format(_workouts[0]["date"].toDate())
+                                  .toString() +
+                              ", " +
+                              DateFormat.Hm()
+                                  .format(_workouts[0]["date"].toDate())
+                                  .toString(),
+                          style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w300,
+                              color: Color.fromARGB(255, 93, 87, 168)),
+                        )
+                      : Text(
+                          "N/A" + ", " + "N/A",
+                          style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w300,
+                              color: Color.fromARGB(255, 93, 87, 168)),
+                        )),
             ],
           ),
           const SizedBox(
@@ -172,7 +230,29 @@ class _HomePageState extends State<HomePage> {
           ),
           GestureDetector(
             onLongPress: () {
-              openEndDatePicker();
+              //openEndDatePicker();
+              DatePicker.showDatePicker(context,
+                  showTitleActions: true,
+                  minTime: DateTime(2000, 1, 1),
+                  maxTime: DateTime(DateTime.now().year + 10, 12, 31),
+                  theme: DatePickerTheme(
+                      headerColor: Color(0xFF020A0B),
+                      backgroundColor: Color(0xFF020A0B),
+                      itemStyle: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18),
+                      doneStyle: TextStyle(color: Colors.white, fontSize: 16)),
+                  onChanged: (date) {
+                print('change $date');
+              }, onConfirm: (date) {
+                FirebaseFirestore.instance
+                    .collection("UserData")
+                    .doc(userId)
+                    .update({
+                  'endDate': date,
+                });
+              }, currentTime: DateTime.now(), locale: LocaleType.no);
             },
             child: Padding(
               padding: const EdgeInsets.only(left: 40, right: 40),
@@ -213,6 +293,8 @@ class _HomePageState extends State<HomePage> {
         builder: (context) => AlertDialog(
           title: const Text("Økter"),
           backgroundColor: hexStringtoColor("041416"),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(26.0)),
           content: numInputField(_okterController, "Skriv antall økter"),
           actions: [
             TextButton(
@@ -265,12 +347,38 @@ class _HomePageState extends State<HomePage> {
     FirebaseFirestore.instance.collection("UserData").doc(userId).update({
       'workouts': displayOkter + 1,
       'lastWorkout': Timestamp.now(),
+      'detailedWorkouts': FieldValue.arrayUnion([
+        {'date': Timestamp.now(), 'workoutProgram': "Annen aktivitet"}
+      ])
+    });
+  }
+
+  void increaseDetailedWorkouts(program) async {
+    FirebaseFirestore.instance.collection("UserData").doc(userId).update({
+      'workouts': displayOkter + 1,
+      'lastWorkout': Timestamp.now(),
+      'detailedWorkouts': FieldValue.arrayUnion([
+        {'date': Timestamp.now(), 'workoutProgram': program}
+      ])
     });
   }
 
   void decreaseWorkouts() async {
     FirebaseFirestore.instance.collection("UserData").doc(userId).update({
       'workouts': displayOkter - 1,
+      if (_workouts.length > 0)
+        'detailedWorkouts': FieldValue.arrayRemove([
+          _workouts[0],
+        ])
+    });
+  }
+
+  void setLastWorkout(DateTime date) async {
+    print(date);
+    var tempWorkout = _workouts[0];
+    _workouts[0]["date"] = Timestamp.fromDate(date);
+    FirebaseFirestore.instance.collection("UserData").doc(userId).update({
+      'detailedWorkouts': _workouts,
     });
   }
 
@@ -279,6 +387,8 @@ class _HomePageState extends State<HomePage> {
         builder: (context) => AlertDialog(
           title: const Text("Mål"),
           backgroundColor: hexStringtoColor("041416"),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(26.0)),
           content: numInputField(
               _okterGoalController, "Skriv antall økter du ønsker å nå"),
           actions: [
@@ -291,70 +401,6 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       );
-
-  void openDatePicker() {
-    showDatePicker(
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: hexStringtoColor("041416"), // <-- SEE HERE
-              onPrimary: Colors.white, // <-- SEE HERE
-              onSurface: Colors.white, // <-- SEE HERE
-            ),
-            dialogBackgroundColor: Colors.black,
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                primary: Colors.white, // button text color
-              ),
-            ),
-          ),
-          child: child!,
-        );
-      },
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime.now(),
-    ).then((value) {
-      _lastWorkout = Timestamp.fromDate(value!);
-      FirebaseFirestore.instance.collection("UserData").doc(userId).update({
-        'lastWorkout': _lastWorkout,
-      });
-    });
-  }
-
-  void openEndDatePicker() {
-    showDatePicker(
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: hexStringtoColor("041416"), // <-- SEE HERE
-              onPrimary: Colors.white, // <-- SEE HERE
-              onSurface: Colors.white, // <-- SEE HERE
-            ),
-            dialogBackgroundColor: Colors.black,
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                primary: Colors.white, // button text color
-              ),
-            ),
-          ),
-          child: child!,
-        );
-      },
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2050),
-    ).then((value) {
-      _endDate = Timestamp.fromDate(value!);
-      FirebaseFirestore.instance.collection("UserData").doc(userId).update({
-        'endDate': _endDate,
-      });
-    });
-  }
 
   num getDaysLeft() {
     var now = DateTime.now();
@@ -369,6 +415,38 @@ class _HomePageState extends State<HomePage> {
     var difference = end.difference(now).inDays;
     return difference / 7;
   }
+
+  Future workoutProgramDialog() => showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            title: const Text("Treningsprogram"),
+            backgroundColor: hexStringtoColor("041416"),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(26.0)),
+            content: Container(
+              height: 100,
+              width: 300,
+              child: ListView.builder(
+                itemCount: _programs.length,
+                itemBuilder: (context, index) {
+                  if (_programs.length > 0) {
+                    return TextButton(
+                        onPressed: () {
+                          increaseDetailedWorkouts(
+                              _programs[index]["name"].toString());
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          _programs[index]["name"].toString(),
+                          style: TextStyle(color: Colors.white),
+                        ));
+                  } else {
+                    return Text("Ingen treningsprogrammer tilgjengelig");
+                  }
+                },
+              ),
+            ),
+          ));
 }
 
 SfCircularChart _buildElevationDoughnutChart(okter, goal) {

@@ -6,12 +6,14 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:okter/color_utils.dart';
+import 'package:okter/screens/calender_page.dart';
 import 'package:okter/screens/friends_page.dart';
 import 'package:okter/screens/groups_page.dart';
 import 'package:okter/screens/home_page.dart';
 import 'package:okter/screens/login_page.dart';
 import 'package:okter/screens/personalBest_page.dart';
 import 'package:okter/screens/settings_page.dart';
+import 'package:okter/screens/programs_page.dart';
 
 Widget okterDrawerScaffold(context, bodycontent) {
   return Scaffold(
@@ -319,7 +321,7 @@ Widget homePageDrawer(context) {
                       padding:
                           EdgeInsets.only(left: 14.0, right: 14.0, top: 16),
                       child: TextButton(
-                        child: Text("Grupper",
+                        child: Text("Kalender",
                             style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.normal,
@@ -329,7 +331,24 @@ Widget homePageDrawer(context) {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const GroupsPage()));
+                                  builder: (context) => const CalenderPage()));
+                        },
+                      )),
+                  Padding(
+                      padding:
+                          EdgeInsets.only(left: 14.0, right: 14.0, top: 16),
+                      child: TextButton(
+                        child: Text("Programmer",
+                            style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.white)),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const ProgramsPage()));
                         },
                       )),
                   Spacer(),

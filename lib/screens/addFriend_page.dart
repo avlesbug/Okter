@@ -174,7 +174,7 @@ class _AddFriendsPageState extends State<AddFriendsPage> {
       context: context,
       builder: (context) => Padding(
         padding: EdgeInsets.fromLTRB(
-            width * 0.1, height * 0.23, width * 0.1, height * 0.6),
+            width * 0.1, height * 0.23, width * 0.1, height * 0.55),
         child: Container(
             color: hexStringtoColor("041416"),
             child: Padding(

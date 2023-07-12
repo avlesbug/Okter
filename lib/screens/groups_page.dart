@@ -85,7 +85,7 @@ class _GroupsPageState extends State<GroupsPage> {
     getUserData();
     getGroupMap();
     return okterAddButtonScaffold(
-        "Groups",
+        "Grupper",
         [
           IconButton(
               onPressed: (() {
