@@ -8,7 +8,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:okter/color_utils.dart';
 import 'package:okter/screens/calender_page.dart';
 import 'package:okter/screens/friends_page.dart';
-import 'package:okter/screens/groups_page.dart';
 import 'package:okter/screens/home_page.dart';
 import 'package:okter/screens/login_page.dart';
 import 'package:okter/screens/personalBest_page.dart';
@@ -58,7 +57,7 @@ Widget okterScaffold(name, context, bodycontent) {
         elevation: 0,
         title: Text(
           name,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.bold,
           ),
@@ -101,7 +100,7 @@ Widget okterAddButtonScaffold(
         actions: actions,
         title: Text(
           name,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.bold,
           ),
@@ -159,7 +158,7 @@ Widget homePageDrawer(context) {
                 hexStringtoColor("020A0B")
                 //hexStringtoColor("1d8a99") //hexStringtoColor("7c77b9")
               ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
-              padding: const EdgeInsets.only(top: 40),
+              padding: const EdgeInsets.only(top: 60),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -179,7 +178,7 @@ Widget homePageDrawer(context) {
                               Reference storageReference = FirebaseStorage
                                   .instance
                                   .ref()
-                                  .child('profileImages/' + userId);
+                                  .child('profileImages/$userId');
 
                               try {
                                 storageReference.putFile(File(image!.path));
@@ -197,7 +196,7 @@ Widget homePageDrawer(context) {
                                     foregroundImage: NetworkImage(
                                         snapshot.data!.get("profileImage")),
                                   )
-                                : CircleAvatar(
+                                : const CircleAvatar(
                                     backgroundColor:
                                         Color.fromARGB(255, 29, 138, 153),
                                     radius: 40,
@@ -253,12 +252,12 @@ Widget homePageDrawer(context) {
                     ),
                   ),
                   Padding(
-                      padding:
-                          EdgeInsets.only(left: 14.0, right: 14.0, top: 16),
+                      padding: const EdgeInsets.only(
+                          left: 14.0, right: 14.0, top: 16),
                       child: Stack(children: [
                         TextButton(
-                          child: Text("Venner",
-                              style: const TextStyle(
+                          child: const Text("Venner",
+                              style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.normal,
                                   color: Colors.white)),
@@ -274,13 +273,13 @@ Widget homePageDrawer(context) {
                             ? Positioned(
                                 right: 0,
                                 top: 0,
-                                child: new Container(
-                                  padding: EdgeInsets.all(2),
-                                  decoration: new BoxDecoration(
+                                child: Container(
+                                  padding: const EdgeInsets.all(2),
+                                  decoration: BoxDecoration(
                                     color: Colors.red,
                                     borderRadius: BorderRadius.circular(6),
                                   ),
-                                  constraints: BoxConstraints(
+                                  constraints: const BoxConstraints(
                                     minWidth: 14,
                                     minHeight: 14,
                                   ),
@@ -289,7 +288,7 @@ Widget homePageDrawer(context) {
                                         .get("friendRequests")
                                         .length
                                         .toString(),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 8,
                                     ),
@@ -300,11 +299,11 @@ Widget homePageDrawer(context) {
                             : Container()
                       ])),
                   Padding(
-                      padding:
-                          EdgeInsets.only(left: 14.0, right: 14.0, top: 16),
+                      padding: const EdgeInsets.only(
+                          left: 14.0, right: 14.0, top: 16),
                       child: TextButton(
-                        child: Text("Rekorder",
-                            style: const TextStyle(
+                        child: const Text("Rekorder",
+                            style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.normal,
                                 color: Colors.white)),
@@ -318,11 +317,11 @@ Widget homePageDrawer(context) {
                         },
                       )),
                   Padding(
-                      padding:
-                          EdgeInsets.only(left: 14.0, right: 14.0, top: 16),
+                      padding: const EdgeInsets.only(
+                          left: 14.0, right: 14.0, top: 16),
                       child: TextButton(
-                        child: Text("Kalender",
-                            style: const TextStyle(
+                        child: const Text("Kalender",
+                            style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.normal,
                                 color: Colors.white)),
@@ -335,11 +334,11 @@ Widget homePageDrawer(context) {
                         },
                       )),
                   Padding(
-                      padding:
-                          EdgeInsets.only(left: 14.0, right: 14.0, top: 16),
+                      padding: const EdgeInsets.only(
+                          left: 14.0, right: 14.0, top: 16),
                       child: TextButton(
-                        child: Text("Programmer",
-                            style: const TextStyle(
+                        child: const Text("Programmer",
+                            style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.normal,
                                 color: Colors.white)),
@@ -351,7 +350,7 @@ Widget homePageDrawer(context) {
                                   builder: (context) => const ProgramsPage()));
                         },
                       )),
-                  Spacer(),
+                  const Spacer(),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [

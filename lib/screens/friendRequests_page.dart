@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:okter/basePage.dart';
 import 'package:intl/intl.dart';
 import 'package:okter/color_utils.dart';
-import 'package:okter/screens/addFriend_page.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../reusable_widgets.dart';
 
@@ -27,13 +25,13 @@ class _FriendRequestsPageState extends State<FriendRequestsPage> {
   double height = 700;
   double width = 300;
 
-  var _name = "Name";
-  var _username = "UserName";
+  final _name = "Name";
+  final _username = "UserName";
   var _friendRequests = [];
-  var _requestsMap = [];
-  var _counter = 0;
+  final _requestsMap = [];
+  final _counter = 0;
 
-  String _frindname = "Friend Name";
+  final String _frindname = "Friend Name";
 
   @override
   void initState() {
@@ -86,7 +84,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage> {
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
-    print("h: " + height.toString() + " w: " + width.toString());
+    print("h: $height w: $width");
     initState();
     getUserData();
     getFriendMap();
@@ -97,7 +95,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage> {
         Column(
           children: [
             const SizedBox(height: 20),
-            Container(
+            SizedBox(
               height: MediaQuery.of(context).size.height - 100,
               child: StreamBuilder(
                   stream: FirebaseFirestore.instance
@@ -119,10 +117,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage> {
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   title: Text(_requestsMap[index]["name"]),
-                                  subtitle: Text(_requestsMap[index]["workouts"]
-                                          .toString() +
-                                      " / " +
-                                      _requestsMap[index]["goal"].toString()),
+                                  subtitle: Text("${_requestsMap[index]["workouts"]} / ${_requestsMap[index]["goal"]}"),
                                   tileColor: hexStringtoColor("061E21"),
                                   leading: CircleAvatar(
                                     radius: 30,
@@ -145,7 +140,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage> {
                                   subtitle: Text(
                                       _requestsMap[index]["email"].toString()),
                                   tileColor: hexStringtoColor("061E21"),
-                                  leading: CircleAvatar(
+                                  leading: const CircleAvatar(
                                     backgroundColor:
                                         Color.fromARGB(255, 29, 138, 153),
                                     radius: 30,
@@ -195,13 +190,13 @@ class _FriendRequestsPageState extends State<FriendRequestsPage> {
             answerRequest(_friendRequests[index], true);
             updataPage(context, super.widget);
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.check,
             size: 26,
             color: Color.fromARGB(255, 11, 201, 205),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           width: 10,
         ),
         IconButton(
@@ -209,7 +204,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage> {
             answerRequest(_friendRequests[index], false);
             updataPage(context, super.widget);
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.clear,
             size: 26,
             color: Color.fromARGB(255, 11, 201, 205),

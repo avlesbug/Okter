@@ -27,13 +27,26 @@ class _FriendsPageState extends State<FriendsPage> {
   double height = 700;
   double width = 300;
 
-  var _name = "Name";
-  var _username = "UserName";
+  final _name = "Name";
+  final _username = "UserName";
   var _friends = [];
-  var _friendMap = [];
+  final _friendMap = [];
   var _counter = 0;
+  var _isLoaded = false;
+  List<Color> colorPallet = [
+    Color.fromRGBO(75, 135, 185, 1),
+    Color.fromRGBO(192, 108, 132, 1),
+    Color.fromRGBO(246, 114, 128, 1),
+    Color.fromRGBO(248, 177, 149, 1),
+    Color.fromRGBO(116, 180, 155, 1),
+    Color.fromRGBO(0, 168, 181, 1),
+    Color.fromRGBO(73, 76, 162, 1),
+    Color.fromRGBO(255, 205, 96, 1),
+    Color.fromRGBO(255, 240, 219, 1),
+    Color.fromRGBO(238, 238, 238, 1)
+  ];
 
-  String _frindname = "Friend Name";
+  final String _frindname = "Friend Name";
 
   @override
   void initState() {
@@ -53,6 +66,7 @@ class _FriendsPageState extends State<FriendsPage> {
         setState(() {
           _friends = doc["friendList"];
           _counter = doc["friendRequests"].length;
+          _isLoaded = true;
         });
       });
     } on FirebaseException catch (e) {
@@ -87,7 +101,7 @@ class _FriendsPageState extends State<FriendsPage> {
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
-    print("h: " + height.toString() + " w: " + width.toString());
+    print("h: $height w: $width");
     initState();
     getUserData();
     getFriendMap();
@@ -107,19 +121,19 @@ class _FriendsPageState extends State<FriendsPage> {
                 ? Positioned(
                     right: 5,
                     top: 5,
-                    child: new Container(
-                      padding: EdgeInsets.all(2),
-                      decoration: new BoxDecoration(
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
                         color: Colors.red,
                         borderRadius: BorderRadius.circular(6),
                       ),
-                      constraints: BoxConstraints(
+                      constraints: const BoxConstraints(
                         minWidth: 14,
                         minHeight: 14,
                       ),
                       child: Text(
                         '$_counter',
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 8,
                         ),
@@ -142,16 +156,10 @@ class _FriendsPageState extends State<FriendsPage> {
         Column(
           children: [
             const SizedBox(height: 20),
-            Container(
+            SizedBox(
               height: MediaQuery.of(context).size.height - 100,
-              child: StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection("UserData")
-                      .doc(userId)
-                      .collection("friendList")
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    return ListView.builder(
+              child: _isLoaded
+                  ? ListView.builder(
                       itemCount: _friendMap.length,
                       itemBuilder: (context, index) {
                         if (_friendMap[index]["profileImage"] != "") {
@@ -165,14 +173,45 @@ class _FriendsPageState extends State<FriendsPage> {
                                 ),
                                 title: Text(_friendMap[index]["name"]),
                                 subtitle: Text(
-                                    _friendMap[index]["workouts"].toString() +
-                                        " / " +
-                                        _friendMap[index]["goal"].toString()),
+                                    "${_friendMap[index]["workouts"]} / ${_friendMap[index]["goal"]}"),
                                 tileColor: hexStringtoColor("061E21"),
                                 leading: CircleAvatar(
                                   radius: 30,
                                   foregroundImage: NetworkImage(
                                       _friendMap[index]["profileImage"]),
+                                ),
+                                trailing: Container(
+                                  height: 80,
+                                  width: 80,
+                                  child: SfCircularChart(
+                                    series: [
+                                      RadialBarSeries<WorkoutData, String>(
+                                        dataSource: [
+                                          (WorkoutData(
+                                              _friendMap[index]["workouts"] /
+                                                  _friendMap[index]["goal"] *
+                                                  100,
+                                              "Treninger",
+                                              colorPallet[
+                                                  index % colorPallet.length]))
+                                        ],
+                                        xValueMapper: (WorkoutData data, _) =>
+                                            data.workoutsLable,
+                                        yValueMapper: (WorkoutData data, _) =>
+                                            data.workouts,
+                                        pointColorMapper:
+                                            (WorkoutData data, _) => data.color,
+                                        // Radius of the radial bar
+                                        radius: '100%',
+                                        innerRadius: '68%',
+                                        cornerStyle: CornerStyle.bothCurve,
+                                        trackColor: Color(0xFF086c6a),
+                                        trackOpacity: 0.1,
+                                        maximumValue: 100,
+                                        gap: '3%',
+                                      )
+                                    ],
+                                  ),
                                 ),
                                 onTap: () {
                                   openFriendDialog(_friends[index]);
@@ -191,11 +230,9 @@ class _FriendsPageState extends State<FriendsPage> {
                                 ),
                                 title: Text(_friendMap[index]["name"]),
                                 subtitle: Text(
-                                    _friendMap[index]["workouts"].toString() +
-                                        " / " +
-                                        _friendMap[index]["goal"].toString()),
+                                    "${_friendMap[index]["workouts"]} / ${_friendMap[index]["goal"]}"),
                                 tileColor: hexStringtoColor("061E21"),
-                                leading: CircleAvatar(
+                                leading: const CircleAvatar(
                                   backgroundColor:
                                       Color.fromARGB(255, 29, 138, 153),
                                   radius: 30,
@@ -213,8 +250,17 @@ class _FriendsPageState extends State<FriendsPage> {
                           );
                         }
                       },
-                    );
-                  }),
+                    )
+                  : const Center(
+                      child: SizedBox(
+                        height: 60,
+                        width: 60,
+                        child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.teal),
+                        ),
+                      ),
+                    ),
             ),
           ],
         ));
@@ -227,7 +273,7 @@ class _FriendsPageState extends State<FriendsPage> {
         backgroundColor: hexStringtoColor("041416"),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(26.0)),
-        content: Container(
+        content: SizedBox(
           height: 70,
           width: 200,
           child: TextButton(
@@ -241,7 +287,7 @@ class _FriendsPageState extends State<FriendsPage> {
               Navigator.pop(context);
               deleteFriend(userRef);
             },
-            child: Text("Remove friend",
+            child: const Text("Remove friend",
                 style: TextStyle(color: Colors.white, fontSize: 16)),
           ),
         ),
@@ -266,4 +312,11 @@ class _FriendsPageState extends State<FriendsPage> {
 
     updataPage(context, super.widget);
   }
+}
+
+class WorkoutData {
+  WorkoutData(this.workouts, this.workoutsLable, this.color);
+  final num workouts;
+  final String workoutsLable;
+  final Color color;
 }

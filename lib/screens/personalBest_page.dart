@@ -19,8 +19,8 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
   late String userId;
   late DatabaseReference ref;
 
-  TextEditingController _vektController = TextEditingController();
-  TextEditingController _ovelseController = TextEditingController();
+  final TextEditingController _vektController = TextEditingController();
+  final TextEditingController _ovelseController = TextEditingController();
 
   final String _collection = 'collectionName';
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
@@ -44,7 +44,7 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
         Column(
           children: [
             const SizedBox(height: 20),
-            Container(
+            SizedBox(
               height: 1000,
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
@@ -75,10 +75,8 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
                               snapshot.data!.get("rekorder")[index]["ovelse"],
                               style: const TextStyle(fontSize: 20)),
                           subtitle: Text(
-                              snapshot.data!
-                                      .get("rekorder")[index]["vekt"]
-                                      .toString() +
-                                  " kg",
+                              "${snapshot.data!
+                                      .get("rekorder")[index]["vekt"]} kg",
                               style: const TextStyle(fontSize: 16)),
                         ),
                       );
@@ -136,7 +134,7 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
                         ),
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(64, 0, 64, 0),
                       child: inputField(_ovelseController, false, "Øvelse"),
@@ -194,7 +192,7 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
                   ),
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               Padding(
                 padding: const EdgeInsets.fromLTRB(64, 0, 64, 0),
                 child: inputField(ovelseController, false, "Øvelse"),
@@ -222,7 +220,7 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
                         child: const Text("Legg til",
                             style: TextStyle(color: Colors.white)),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       TextButton(
                         onPressed: () {
                           deleteRekord(param1, param2.toString());

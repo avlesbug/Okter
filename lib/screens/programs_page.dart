@@ -2,13 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl_standalone.dart';
 import 'package:okter/basePage.dart';
 import 'package:okter/screens/addProgram_page.dart';
 import 'package:okter/screens/detailedProgram_page.dart';
 
 import '../color_utils.dart';
-import '../reusable_widgets.dart';
 
 class ProgramsPage extends StatefulWidget {
   const ProgramsPage({super.key});
@@ -22,14 +20,12 @@ class _ProgramsPageState extends State<ProgramsPage> {
   late String userId;
   late DatabaseReference ref;
   List<dynamic> _programs = [];
-  Map<String, dynamic> _userData = {};
+  final Map<String, dynamic> _userData = {};
+  bool _isLoaded = false;
+  final Map<String, dynamic> _dataArray = {};
 
-  int _formCount = 2; //add this
-  final List<Map<String, dynamic>> _dataArray = []; //add this
-  String? _data = '';
-
-  TextEditingController _vektController = TextEditingController();
-  TextEditingController _programController = TextEditingController();
+  final TextEditingController _vektController = TextEditingController();
+  final TextEditingController _programController = TextEditingController();
 
   final String _collection = 'collectionName';
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
@@ -48,48 +44,87 @@ class _ProgramsPageState extends State<ProgramsPage> {
   Widget build(BuildContext context) {
     initState();
     return okterAddButtonScaffold(
-        "Programmer",
-        [
-          IconButton(
-              onPressed: (() {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const AddProgramPage()));
-              }),
-              icon: const Icon(Icons.add)),
-        ],
-        context,
-        Column(
-          children: [
-            const SizedBox(height: 20),
-            Container(
-              height: 1000,
-              child: ListView.builder(
-                itemCount: _programs.length,
-                itemBuilder: (BuildContext context, index) {
-                  return GestureDetector(
-                    child: ListTile(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => DetailedProgramPage(
-                                      workoutNumber: index,
-                                    )));
-                      },
-                      onLongPress: (() {
-                        workoutProgramDialog(index);
-                      }),
-                      title: Text(_programs[index]["name"],
-                          style: const TextStyle(fontSize: 22)),
-                    ),
-                  );
-                },
-              ),
+      "Programmer",
+      [
+        IconButton(
+            onPressed: (() {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const AddProgramPage(
+                          programs: [], workoutNumber: 0)));
+            }),
+            icon: const Icon(Icons.add)),
+      ],
+      context,
+      _isLoaded
+          ? Column(
+              children: [
+                const SizedBox(height: 20),
+                SizedBox(
+                  height: 1000,
+                  child: _programs.isEmpty
+                      ? const Text(
+                          "Ingen programmer lagt til enda",
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        )
+                      : ListView.builder(
+                          itemCount: _programs.length,
+                          itemBuilder: (BuildContext context, index) {
+                            return GestureDetector(
+                              child: Material(
+                                color: Colors.transparent,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ListTile(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    tileColor: const Color(0xFF061E21),
+                                    leading: _programs[index]["isCardio"]
+                                        ? const Icon(
+                                            Icons.directions_run,
+                                            color: Colors.white,
+                                            size: 40,
+                                          )
+                                        : const Icon(
+                                            Icons.fitness_center,
+                                            color: Colors.white,
+                                            size: 40,
+                                          ),
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DetailedProgramPage(
+                                                    workoutNumber: index,
+                                                  )));
+                                    },
+                                    onLongPress: (() {
+                                      workoutProgramDialog(index);
+                                    }),
+                                    title: Text(_programs[index]["name"],
+                                        style: const TextStyle(fontSize: 22)),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                )
+              ],
             )
-          ],
-        ));
+          : const Center(
+              child: SizedBox(
+                height: 60,
+                width: 60,
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.teal),
+                ),
+              ),
+            ),
+    );
   }
 
   Future<void> getUserData() async {
@@ -103,18 +138,6 @@ class _ProgramsPageState extends State<ProgramsPage> {
         // Document does not exist
         return;
       }
-
-      final userData = docSnapshot.data() as Map<String, dynamic>;
-      //final workoutData =
-      //    workoutDocRef.docs.first.data() as Map<String, dynamic>;
-
-      setState(() {
-        try {
-          _userData = userData;
-        } catch (e) {
-          print(e);
-        }
-      });
     } catch (error) {
       print('Error fetching user data: $error');
     }
@@ -126,6 +149,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
         if (!mounted) return;
         setState(() {
           _programs = doc["workoutPrograms"];
+          _isLoaded = true;
         });
       });
     } on FirebaseException catch (e) {
@@ -146,15 +170,6 @@ class _ProgramsPageState extends State<ProgramsPage> {
         .set(data);
   }
 
-  void deleteRekord(String programId) {
-    _fireStore
-        .collection("UserData")
-        .doc(userId)
-        .collection("workoutPrograms")
-        .doc(programId)
-        .delete();
-  }
-
   Future workoutProgramDialog(int index) => showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -162,7 +177,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
             backgroundColor: hexStringtoColor("041416"),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(26.0)),
-            content: Container(
+            content: SizedBox(
                 height: 70,
                 width: 200,
                 child: TextButton(
@@ -178,20 +193,16 @@ class _ProgramsPageState extends State<ProgramsPage> {
                                 RoundedRectangleBorder(
                                     borderRadius:
                                         BorderRadius.circular(18.0)))),
-                    child: Text(
+                    child: const Text(
                       "Slett program",
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     ))),
           ));
 
   void deleteProgram(int index) {
-    Map<String, dynamic> data = {
-      "name": _userData['workoutPrograms'][index]['name'],
-      "exercises": _userData['workoutPrograms'][index]['exercises'],
-    };
-
+    print(_programs[index]);
     _fireStore.collection("UserData").doc(userId).update({
-      "workoutPrograms": FieldValue.arrayRemove([data])
+      "workoutPrograms": FieldValue.arrayRemove([_programs[index]]),
     });
   }
 }

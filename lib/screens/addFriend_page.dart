@@ -49,7 +49,7 @@ class _AddFriendsPageState extends State<AddFriendsPage> {
                   search = value;
                 });
               },
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
                 ),
@@ -65,7 +65,7 @@ class _AddFriendsPageState extends State<AddFriendsPage> {
               cursorColor: Colors.white,
             ),
             const SizedBox(height: 20),
-            Container(
+            SizedBox(
               height: MediaQuery.of(context).size.height - 100,
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
@@ -78,8 +78,7 @@ class _AddFriendsPageState extends State<AddFriendsPage> {
                   return ListView.builder(
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
-                      var data = snapshot.data!.docs[index].data()
-                          as Map<String, dynamic>;
+                      var data = snapshot.data!.docs[index].data();
 
                       if (search.isEmpty) {
                         return Material(
@@ -105,7 +104,7 @@ class _AddFriendsPageState extends State<AddFriendsPage> {
                                               .get("profileImage"),
                                           scale: 0.5),
                                     )
-                                  : CircleAvatar(
+                                  : const CircleAvatar(
                                       backgroundColor:
                                           Color.fromARGB(255, 29, 138, 153),
                                       radius: 30,
@@ -141,7 +140,7 @@ class _AddFriendsPageState extends State<AddFriendsPage> {
                                   Text(snapshot.data!.docs[index].get("name")),
                               subtitle: Text(
                                   snapshot.data!.docs[index].get("username")),
-                              leading: CircleAvatar(
+                              leading: const CircleAvatar(
                                 backgroundColor:
                                     Color.fromARGB(255, 29, 138, 153),
                                 radius: 30,
@@ -188,7 +187,7 @@ class _AddFriendsPageState extends State<AddFriendsPage> {
                   Navigator.pop(context);
                   showToastMessage("Friend Request Sent");
                 },
-                child: Text("Send Friend Request",
+                child: const Text("Send Friend Request",
                     style: TextStyle(color: Colors.white, fontSize: 16)),
               ),
             )),

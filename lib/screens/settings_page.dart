@@ -6,10 +6,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:okter/basePage.dart';
 import 'package:intl/intl.dart';
-import 'package:okter/color_utils.dart';
-import 'package:okter/screens/addFriend_page.dart';
-import 'package:okter/screens/password_page.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../reusable_widgets.dart';
 
@@ -65,82 +61,82 @@ class _SettingsPageState extends State<SettingsPage> {
           children: [
             const SizedBox(height: 20),
             Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     "Name:",
                     style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   GestureDetector(
                     onLongPress: () {
                       openDialog();
                     },
                     child: Text(
                       _name,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.normal,
                       ),
                     ),
                   ),
-                ],
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center),
+                ]),
             const SizedBox(height: 20),
             Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     "Username:",
                     style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   GestureDetector(
                     onLongPress: () {
                       openDialog();
                     },
                     child: Text(
                       _username,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.normal,
                       ),
                     ),
                   ),
-                ],
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center),
+                ]),
             const SizedBox(height: 20),
             Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     "Email:",
                     style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   GestureDetector(
                     onLongPress: () {
                       openDialog();
                     },
                     child: Text(
                       _email,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.normal,
                       ),
                     ),
                   ),
-                ],
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center),
+                ]),
             const SizedBox(height: 20),
             defaultButton(context, "Reset password", () {
               FirebaseAuth.instance.sendPasswordResetEmail(email: _email).then(

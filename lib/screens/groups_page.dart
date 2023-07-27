@@ -24,11 +24,11 @@ class _GroupsPageState extends State<GroupsPage> {
   late String userId;
   late DatabaseReference ref;
 //
-  var _friends = [];
+  final _friends = [];
   var _groups = [];
-  var _groupMembers = [];
-  var _groupMap = [];
-  var _friendMap = [];
+  final _groupMembers = [];
+  final _groupMap = [];
+  final _friendMap = [];
 
   @override
   void initState() {
@@ -100,7 +100,7 @@ class _GroupsPageState extends State<GroupsPage> {
         Column(
           children: [
             const SizedBox(height: 20),
-            Container(
+            SizedBox(
               height: 1000,
               child: ListView.builder(
                 itemCount: _groupMap.length,
@@ -145,20 +145,20 @@ class _GroupsPageState extends State<GroupsPage> {
   void friendDialog(param0, param1) {}
 
   getProgressFromDocRef(DocumentReference docRef) async {
-    var _goal = 0;
+    var goal = 0;
     var progress = 0;
     try {
       docRef.get().then((DocumentSnapshot doc) {
         if (!mounted) return;
         setState(() {
-          _goal = doc.get("goal");
+          goal = doc.get("goal");
         });
       });
     } on FirebaseException catch (e) {
       print(e);
     }
 
-    return _goal.toString();
+    return goal.toString();
   }
 
   Future<List> getData(myArray) async {

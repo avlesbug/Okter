@@ -6,10 +6,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:okter/basePage.dart';
 import 'package:intl/intl.dart';
-import 'package:okter/color_utils.dart';
-import 'package:okter/reusable_widgets.dart';
-import 'package:okter/screens/addFriend_page.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
 class PasswordPage extends StatefulWidget {
   const PasswordPage({super.key});
@@ -26,7 +22,7 @@ class _PasswordPageState extends State<PasswordPage> {
 
   var _name = "Name";
   var _username = "UserName";
-  var _email = "Email";
+  final _email = "Email";
 
   @override
   void initState() {
@@ -63,8 +59,8 @@ class _PasswordPageState extends State<PasswordPage> {
         context,
         Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
+            const Padding(
+              padding: EdgeInsets.all(16.0),
               child: Text(
                 "Settings",
                 style: TextStyle(
@@ -75,8 +71,10 @@ class _PasswordPageState extends State<PasswordPage> {
             ),
             const SizedBox(height: 20),
             Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  FittedBox(
+                  const FittedBox(
                     fit: BoxFit.fitWidth,
                     child: Text(
                       "Name:",
@@ -86,21 +84,21 @@ class _PasswordPageState extends State<PasswordPage> {
                       ),
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Text(
                     _name,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.normal,
                     ),
                   ),
-                ],
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center),
+                ]),
             const SizedBox(height: 20),
             Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  FittedBox(
+                  const FittedBox(
                     fit: BoxFit.fitWidth,
                     child: Text(
                       "Username:",
@@ -110,21 +108,21 @@ class _PasswordPageState extends State<PasswordPage> {
                       ),
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Text(
                     _username,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.normal,
                     ),
                   ),
-                ],
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center),
+                ]),
             const SizedBox(height: 20),
             Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  FittedBox(
+                  const FittedBox(
                     fit: BoxFit.fitWidth,
                     child: Text(
                       "Email:",
@@ -134,17 +132,15 @@ class _PasswordPageState extends State<PasswordPage> {
                       ),
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Text(
                     _email,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.normal,
                     ),
                   ),
-                ],
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center),
+                ]),
             const SizedBox(height: 20),
           ],
         ));

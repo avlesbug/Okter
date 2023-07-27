@@ -3,7 +3,7 @@ import 'package:okter/screens/login_page.dart';
 
 class Provider extends InheritedWidget {
   final AuthService auth;
-  Provider({
+  const Provider({super.key, 
     required Widget child,
     required this.auth,
   }) : super(child: child);

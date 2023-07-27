@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
 }
 
 class HomeController extends StatelessWidget {
-  const HomeController();
+  const HomeController({super.key});
 
   @override
   Widget build(BuildContext context) {

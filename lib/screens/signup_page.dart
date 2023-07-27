@@ -4,7 +4,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:okter/basePage.dart';
 import 'package:okter/screens/home_page.dart';
-import 'package:okter/screens/login_page.dart';
 
 import '../reusable_widgets.dart';
 

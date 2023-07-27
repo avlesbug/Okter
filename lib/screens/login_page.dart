@@ -16,9 +16,13 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  var height = 844;
+  var width = 390;
 
   @override
   Widget build(BuildContext context) {
+    height = MediaQuery.of(context).size.height.toInt();
+    width = MediaQuery.of(context).size.width.toInt();
     bool signedIn = false;
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user == null) {
@@ -36,17 +40,17 @@ class _SignInPageState extends State<SignInPage> {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 200),
+                SizedBox(height: height * 0.16),
                 Icon(
                   Icons.sports_martial_arts,
                   color: hexStringtoColor("1d8a99"),
                   size: 100,
                 ),
-                const SizedBox(height: 40),
+                SizedBox(height: height * 0.05),
                 inputField(emailController, false, "Email"),
-                const SizedBox(height: 40),
+                SizedBox(height: height * 0.04),
                 inputField(passwordController, true, "Password"),
-                const SizedBox(height: 20),
+                SizedBox(height: height * 0.05),
                 signInSignUpButton(context, true, (() async {
                   try {
                     await FirebaseAuth.instance
