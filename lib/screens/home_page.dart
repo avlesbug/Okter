@@ -73,17 +73,6 @@ class _HomePageState extends State<HomePage> {
     _dayInterval = (_maxValueDay / 10).toInt().toDouble();
   }
 
-  void updateChartData() {
-    setState(() {
-      if (workoutData.length == 2) {
-        workoutData[1] = WorkoutData(
-            num.parse(((displayOkter / _goal) * 100).toStringAsFixed(2)),
-            "Meg",
-            Color.fromARGB(255, 93, 87, 168));
-      }
-    });
-  }
-
   Future<void> getUserData() async {
     try {
       final docSnapshot = await FirebaseFirestore.instance
@@ -101,9 +90,10 @@ class _HomePageState extends State<HomePage> {
       //    workoutDocRef.docs.first.data() as Map<String, dynamic>;
 
       setState(() {
+        print("setting state");
         _goal = userData['goal'];
         _endDate = userData['endDate'] ??
-            Timestamp.fromDate(DateTime.utc(2023, 12, 31));
+            Timestamp.fromDate(DateTime.utc(DateTime.now().year, 12, 31));
         displayOkter = userData['workouts'];
         _isLoaded = true;
 
@@ -115,15 +105,6 @@ class _HomePageState extends State<HomePage> {
         _yearProgress = num.parse(
             ((periodeProgresion.inDays / totalDays.inDays) * 100)
                 .toStringAsFixed(1));
-        if (workoutData.length < 2) {
-          workoutData.add(WorkoutData(
-              _yearProgress, "År", Color.fromARGB(255, 87, 117, 168)));
-
-          workoutData.add(WorkoutData(
-              num.parse(((displayOkter / _goal) * 100).toStringAsFixed(2)),
-              "Meg",
-              Color.fromARGB(255, 93, 87, 168)));
-        }
 
         try {
           _workouts = userData['detailedWorkouts'] as List<dynamic>;
@@ -233,7 +214,7 @@ class _HomePageState extends State<HomePage> {
                   child: IconButton(
                     onPressed: () {
                       decreaseWorkouts();
-                      updateChartData();
+                      //updateChartData();
                       //getLastWorkout();
                     },
                     icon: const Icon(Icons.remove),
@@ -256,7 +237,7 @@ class _HomePageState extends State<HomePage> {
                     child: IconButton(
                       onPressed: () {
                         increaseWorkouts();
-                        updateChartData();
+                        //updateChartData();
                         //getLastWorkout();
                       },
                       icon: const Icon(Icons.add),
@@ -377,7 +358,15 @@ class _HomePageState extends State<HomePage> {
                           margin: const EdgeInsets.all(28),
                           series: [
                             RadialBarSeries<WorkoutData, String>(
-                              dataSource: workoutData,
+                              dataSource: [
+                                WorkoutData(_yearProgress, "År",
+                                    Color.fromARGB(255, 87, 117, 168)),
+                                WorkoutData(
+                                    num.parse(((displayOkter / _goal) * 100)
+                                        .toStringAsFixed(2)),
+                                    "Meg",
+                                    Color.fromARGB(255, 93, 87, 168)),
+                              ],
                               xValueMapper: (WorkoutData data, _) =>
                                   data.workoutProgram,
                               yValueMapper: (WorkoutData data, _) =>
@@ -696,7 +685,7 @@ class _HomePageState extends State<HomePage> {
                         onPressed: () {
                           increaseDetailedWorkouts(
                               _programs[index]["name"].toString());
-                          updateChartData();
+                          //updateChartData();
                           Navigator.pop(context);
                         },
                         child: Text(
