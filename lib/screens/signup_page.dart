@@ -28,7 +28,7 @@ class _SignUpPageState extends State<SignUpPage> {
       Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const SizedBox(height: 160),
+          const SizedBox(height: 80),
           inputField(nameController, false, "Name"),
           const SizedBox(height: 30),
           inputField(usernameController, false, "Username"),
@@ -38,7 +38,7 @@ class _SignUpPageState extends State<SignUpPage> {
           inputField(passwordController, true, "Password"),
           const SizedBox(height: 30),
           inputField(passwordReController, true, "Repeat password"),
-          const SizedBox(height: 20),
+          const SizedBox(height: 80),
           signInSignUpButton(context, false, (() {
             signUp(
                 context,

@@ -71,17 +71,46 @@ class _ProgramsPageState extends State<ProgramsPage> {
                       : ListView.builder(
                           itemCount: _programs.length,
                           itemBuilder: (BuildContext context, index) {
-                            return GestureDetector(
-                              child: Material(
-                                color: Colors.transparent,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                            return Material(
+                              color: Colors.transparent,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Dismissible(
+                                  onDismissed: (direction) {
+                                    var tempProgram = _programs[index];
+                                    deleteProgram(tempProgram);
+                                  },
+                                  background: Container(
+                                    color: Colors.red,
+                                    child: Center(
+                                      child: Row(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Icon(Icons.delete,size: 30,),
+                                          ),
+                                          Spacer(),
+                                          Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Icon(Icons.delete, size: 30,),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  key: Key(_programs[index]["name"].toString()),
                                   child: ListTile(
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
-                                    tileColor: const Color(0xFF061E21),
-                                    leading: _programs[index]["isCardio"]
+                                    tileColor: const Color(0xFF031011),
+                                    leading: _programs[index]["name"] == "Håndball" ?
+                                    const Icon(
+                                      Icons.sports_handball,
+                                      color: Colors.white,
+                                      size: 40,
+                                    ) :
+                                    _programs[index]["isCardio"]
                                         ? const Icon(
                                             Icons.directions_run,
                                             color: Colors.white,
@@ -101,9 +130,6 @@ class _ProgramsPageState extends State<ProgramsPage> {
                                                     workoutNumber: index,
                                                   )));
                                     },
-                                    onLongPress: (() {
-                                      workoutProgramDialog(index);
-                                    }),
                                     title: Text(_programs[index]["name"],
                                         style: const TextStyle(fontSize: 22)),
                                   ),
@@ -182,7 +208,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
                 width: 200,
                 child: TextButton(
                     onPressed: () {
-                      deleteProgram(index);
+                      //deleteProgram(index);
                       Navigator.pop(context);
                     },
                     style: ButtonStyle(
@@ -199,10 +225,11 @@ class _ProgramsPageState extends State<ProgramsPage> {
                     ))),
           ));
 
-  void deleteProgram(int index) {
-    print(_programs[index]);
-    _fireStore.collection("UserData").doc(userId).update({
-      "workoutPrograms": FieldValue.arrayRemove([_programs[index]]),
+  Future<void> deleteProgram(var tempProgram) async {
+    //print(_programs[index]);
+
+    await _fireStore.collection("UserData").doc(userId).update({
+      "workoutPrograms": FieldValue.arrayRemove([tempProgram]),
     });
   }
 }

@@ -34,7 +34,7 @@ class _SignInPageState extends State<SignInPage> {
     });
     return signedIn
         ? const HomePage()
-        : okterScaffold(
+        : okterSignInScaffold(
             "",
             context,
             Column(
@@ -101,6 +101,24 @@ class _SignInPageState extends State<SignInPage> {
           );
   }
 
+    Route _createRouteSignUp() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => const SignUpPage(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(0.0, 1.0);
+      const end = Offset.zero;
+      const curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
+}
+
   Row signUpRow() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -111,8 +129,7 @@ class _SignInPageState extends State<SignInPage> {
         ),
         TextButton(
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const SignUpPage()));
+              Navigator.of(context).push(_createRouteSignUp());
             },
             child: const Text(
               "Sign Up",

@@ -38,7 +38,7 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
   Widget build(BuildContext context) {
     initState();
     return okterAddButtonScaffold(
-        "Personlige rekorder",
+        "Personlig beste",
         [IconButton(onPressed: dialog, icon: const Icon(Icons.add))],
         context,
         Column(
@@ -115,51 +115,64 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
     showDialog(
         context: context,
         builder: (context) => Padding(
-              padding: const EdgeInsets.fromLTRB(48.0, 60.0, 48.0, 450.0),
-              child: Card(
-                color: hexStringtoColor("041416"),
-                elevation: 20,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: Column(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.fromLTRB(32.0, 32.0, 32.0, 0),
-                      child: Text(
-                        "Legg til ny personlig rekord",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+              padding: const EdgeInsets.fromLTRB(48.0, 84.0, 48.0, 280),
+              child: Material(
+                color: Colors.transparent,
+                child: Card(
+                  color: hexStringtoColor("030c10"),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  child: Column(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(32.0, 32.0, 32.0, 0),
+                        child: Text(
+                          "Legg til ny personlig rekord",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                    const Spacer(),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(64, 0, 64, 0),
-                      child: inputField(_ovelseController, false, "Øvelse"),
-                    ),
-                    const Spacer(),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(64, 0, 64, 0),
-                      child: numInputField(_vektController, "Vekt"),
-                    ),
-                    const Spacer(),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: TextButton(
-                        onPressed: () {
-                          addRekord(
-                              _ovelseController.text, _vektController.text);
-                          Navigator.pop(context);
-                        },
-                        child: const Text(
-                          "Legg til",
-                          style: TextStyle(color: Colors.white),
+                      const Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(64, 0, 64, 0),
+                        child: inputField(_ovelseController, false, "Øvelse"),
+                      ),
+                      const Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(64, 0, 64, 0),
+                        child: numInputField(_vektController, "Vekt"),
+                      ),
+                      const Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: TextButton(
+                          onPressed: () {
+                            addRekord(
+                                _ovelseController.text, _vektController.text);
+                            Navigator.pop(context);
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Color.fromARGB(155, 0, 150, 135)),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                  ),),
+                          ),
+                          child: const Padding(
+                            padding: EdgeInsets.fromLTRB(16, 4, 16, 4),
+                            child: Text(
+                              "Legg til",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ));
@@ -173,12 +186,12 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
     showDialog(
       context: context,
       builder: (context) => Padding(
-        padding: const EdgeInsets.fromLTRB(48.0, 60.0, 48.0, 450),
+        padding: const EdgeInsets.fromLTRB(48.0, 80.0, 48.0, 280),
         child: Card(
-          color: hexStringtoColor("041416"),
+          color: hexStringtoColor("030c10"),
           elevation: 20,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(30.0),
           ),
           child: Column(
             children: [
@@ -217,8 +230,19 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
                           addRekord(ovelseController.text, vektController.text);
                           Navigator.pop(context);
                         },
-                        child: const Text("Legg til",
-                            style: TextStyle(color: Colors.white)),
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Color.fromARGB(155, 0, 150, 135)),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                  ),),
+                          ),
+                        child: const Padding(
+                          padding: EdgeInsets.fromLTRB(16, 4, 16, 4),
+                          child: Text("Legg til",
+                              style: TextStyle(color: Colors.white)),
+                        ),
                       ),
                       const Spacer(),
                       TextButton(
@@ -226,8 +250,19 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
                           deleteRekord(param1, param2.toString());
                           Navigator.pop(context);
                         },
-                        child: const Text("Slett",
-                            style: TextStyle(color: Colors.white)),
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Color.fromARGB(155, 0, 150, 135),),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                  ),),
+                          ),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(16,4,16,4),
+                          child: const Text("Slett",
+                              style: TextStyle(color: Colors.white)),
+                        ),
                       ),
                     ],
                   ),

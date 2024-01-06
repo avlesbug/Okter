@@ -71,7 +71,7 @@ class _ProgramsPageState extends State<DetailedProgramPage> {
   @override
   Widget build(BuildContext context) {
     initState();
-    return okterAddButtonScaffold(
+    return okterBackAddButtonScaffold(
         _isLoaded ? _programs[widget.workoutNumber]["name"] : "",
         [
           IconButton(

@@ -104,27 +104,26 @@ Container signInSignUpButton(
   );
 }
 
-Container defaultButton(BuildContext context, String text, Function onTap) {
-  return Container(
-    width: MediaQuery.of(context).size.width / 2,
-    height: 50,
-    child: ElevatedButton(
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.pressed)) {
-            return hexStringtoColor("0A2E33");
-          }
+ElevatedButton defaultButton(BuildContext context, String text, Function onTap) {
+  return ElevatedButton(
+    style: ButtonStyle(
+      backgroundColor: MaterialStateProperty.resolveWith((states) {
+        if (states.contains(MaterialState.pressed)) {
           return hexStringtoColor("0A2E33");
-        }),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18.0),
-          ),
+        }
+        return hexStringtoColor("0A2E33");
+      }),
+      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
         ),
       ),
-      onPressed: (() {
-        onTap();
-      }),
+    ),
+    onPressed: (() {
+      onTap();
+    }),
+    child: Padding(
+      padding: const EdgeInsets.fromLTRB(16,16,16,16),
       child: Text(
         text,
         style: const TextStyle(
@@ -170,14 +169,14 @@ void updataPage(context, page) {
 }
 
 List<Color> colorPallet = [
-  Color.fromRGBO(75, 135, 185, 1),
-  Color.fromRGBO(192, 108, 132, 1),
-  Color.fromRGBO(246, 114, 128, 1),
-  Color.fromRGBO(248, 177, 149, 1),
-  Color.fromRGBO(116, 180, 155, 1),
-  Color.fromRGBO(0, 168, 181, 1),
-  Color.fromRGBO(73, 76, 162, 1),
-  Color.fromRGBO(255, 205, 96, 1),
-  Color.fromRGBO(255, 240, 219, 1),
-  Color.fromRGBO(238, 238, 238, 1)
+  const Color.fromRGBO(75, 135, 185, 1),
+  const Color.fromRGBO(192, 108, 132, 1),
+  const Color.fromRGBO(246, 114, 128, 1),
+  const Color.fromRGBO(248, 177, 149, 1),
+  const Color.fromRGBO(116, 180, 155, 1),
+  const Color.fromRGBO(0, 168, 181, 1),
+  const Color.fromRGBO(73, 76, 162, 1),
+  const Color.fromRGBO(255, 205, 96, 1),
+  const Color.fromRGBO(255, 240, 219, 1),
+  const Color.fromRGBO(238, 238, 238, 1)
 ];

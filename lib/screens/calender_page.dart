@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:okter/basePage.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+
 class CalenderPage extends StatefulWidget {
   const CalenderPage({super.key});
 
@@ -88,6 +89,13 @@ class _CalenderPageState extends State<CalenderPage> {
         Builder(builder: (BuildContext context) {
           return IconButton(
               onPressed: () {
+                /*
+                DatePickerDialog(
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000,1,1),
+                          lastDate: DateTime.now(),
+                        );
+                  */
                 DatePicker.showTimePicker(
                   context,
                   showTitleActions: true,
@@ -105,6 +113,7 @@ class _CalenderPageState extends State<CalenderPage> {
                     showPicker(context, time);
                   },
                 );
+                  
               },
               icon: const Icon(Icons.add));
         })
@@ -148,19 +157,46 @@ class _CalenderPageState extends State<CalenderPage> {
                       color: Colors.transparent,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: ListTile(
-                            tileColor: const Color(0xFF061E21),
-                            leading: getIcon(_selectedEvents[index]
-                                    ['workoutProgram']
-                                .toString()),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            title: Text(
-                                '${DateFormat.Hm().format(_selectedEvents[index]['date']).toString()} - ${_selectedEvents[index]['workoutProgram'].toString()}'),
-                            onTap: () {
-                              workoutProgramDialog(_selectedEvents[index]);
-                            }),
+                        child: Dismissible(
+                          key: UniqueKey(),
+                          onDismissed: (direction) {
+                            deleteWorkout(_selectedEvents[index]);
+                            setState(() {
+                              _selectedEvents.removeAt(index);
+                            });
+                          },
+                          background: Container(
+                                    color: Colors.red,
+                                    child: Center(
+                                      child: Row(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Icon(Icons.delete,size: 30,),
+                                          ),
+                                          Spacer(),
+                                          Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Icon(Icons.delete, size: 30,),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                          child: ListTile(
+                              tileColor: const Color(0xFF031011),
+                              leading: getIcon(_selectedEvents[index]
+                                      ['workoutProgram']
+                                  .toString()),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              title: Text(
+                                  '${DateFormat.Hm().format(_selectedEvents[index]['date']).toString()} - ${_selectedEvents[index]['workoutProgram'].toString()}'),
+                              onTap: () {
+                                workoutProgramDialog(_selectedEvents[index]);
+                              }),
+                        ),
                       ),
                     );
                   })),
@@ -275,6 +311,13 @@ class _CalenderPageState extends State<CalenderPage> {
         confirmTextStyle: const TextStyle(color: Colors.white),
         cancelTextStyle: const TextStyle(color: Colors.white),
         onCancel: () {
+          /*
+          DatePickerDialog(
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000,1,1),
+                          lastDate: DateTime.now(),
+                        );
+            */
           DatePicker.showTimePicker(
             context,
             showTitleActions: true,
@@ -299,6 +342,7 @@ class _CalenderPageState extends State<CalenderPage> {
           addWorkout(time, selectedProgram);
           //print(value.toString());
           print(picker.getSelectedValues()[0]);
+            
         });
     picker.showBottomSheet(context);
   }

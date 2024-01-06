@@ -300,7 +300,7 @@ class _ProgramsPageState extends State<AddProgramPage> {
                       setState(() {
                         _formCount++;
                         _exercises.add({
-                          'name': 'Øvelse ${_formCount}',
+                          'name': 'Øvelse $_formCount',
                           'sets': 3,
                           'reps': 8,
                           'weight': 60,

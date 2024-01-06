@@ -4,13 +4,13 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'hide DatePickerTheme;
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:okter/basePage.dart';
 import 'package:okter/color_utils.dart';
 import 'package:okter/reusable_widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -40,16 +40,16 @@ class _HomePageState extends State<HomePage> {
   var width = 375;
 
   List<Color> colorPallet = [
-    Color.fromRGBO(75, 135, 185, 1),
-    Color.fromRGBO(192, 108, 132, 1),
-    Color.fromRGBO(246, 114, 128, 1),
-    Color.fromRGBO(248, 177, 149, 1),
-    Color.fromRGBO(116, 180, 155, 1),
-    Color.fromRGBO(0, 168, 181, 1),
-    Color.fromRGBO(73, 76, 162, 1),
-    Color.fromRGBO(255, 205, 96, 1),
-    Color.fromRGBO(255, 240, 219, 1),
-    Color.fromRGBO(238, 238, 238, 1)
+    const Color.fromRGBO(75, 135, 185, 1),
+    const Color.fromRGBO(192, 108, 132, 1),
+    const Color.fromRGBO(246, 114, 128, 1),
+    const Color.fromRGBO(248, 177, 149, 1),
+    const Color.fromRGBO(116, 180, 155, 1),
+    const Color.fromRGBO(0, 168, 181, 1),
+    const Color.fromRGBO(73, 76, 162, 1),
+    const Color.fromRGBO(255, 205, 96, 1),
+    const Color.fromRGBO(255, 240, 219, 1),
+    const Color.fromRGBO(238, 238, 238, 1)
   ];
 
   bool _isLoaded = false;
@@ -86,8 +86,6 @@ class _HomePageState extends State<HomePage> {
       }
 
       final userData = docSnapshot.data() as Map<String, dynamic>;
-      //final workoutData =
-      //    workoutDocRef.docs.first.data() as Map<String, dynamic>;
 
       setState(() {
         print("setting state");
@@ -95,7 +93,6 @@ class _HomePageState extends State<HomePage> {
         _endDate = userData['endDate'] ??
             Timestamp.fromDate(DateTime.utc(DateTime.now().year, 12, 31));
         displayOkter = userData['workouts'];
-        _isLoaded = true;
 
         Duration totalDays =
             DateTime(DateTime.now().year, 1, 1).difference(_endDate.toDate());
@@ -140,6 +137,7 @@ class _HomePageState extends State<HomePage> {
     } catch (error) {
       print('Error fetching user data: $error');
     }
+        _isLoaded = true;
   }
 
   @override
@@ -147,13 +145,12 @@ class _HomePageState extends State<HomePage> {
     initState();
     height = MediaQuery.of(context).size.height.toInt();
     width = MediaQuery.of(context).size.width.toInt();
-    //initOkter();
     return okterDrawerScaffold(
         context,
         Column(children: [
           SizedBox(height: height * 0.1),
           SizedBox(
-            height: height * 0.03,
+            height: height * 0.04,
             width: width * 0.36,
             child: const FittedBox(
               fit: BoxFit.fitWidth,
@@ -162,60 +159,70 @@ class _HomePageState extends State<HomePage> {
                       color: Colors.white, fontWeight: FontWeight.bold)),
             ),
           ),
-          //firestoreFutureBuilder("name", TextStyle(fontSize: 20)),
           _isLoaded
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: width * 0.2,
-                      height: height * 0.1,
-                      child: FittedBox(
-                        fit: BoxFit.fitWidth,
+              ? Container(
+                width: width * 0.4,
+                height: height * 0.08,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
                         child: GestureDetector(
                             onLongPress: () {
                               openDialog();
                             },
-                            child: Text("$displayOkter / ",
-                                style: TextStyle(
+                            child: Text(displayOkter.toString(),
+                                style: const TextStyle(
+                                  fontSize: 32,
                                     color:
                                         Color.fromARGB(255, 255, 255, 255)))),
                       ),
-                    ),
-                    SizedBox(
-                      width: width * 0.14,
-                      height: height * 0.1,
-                      child: FittedBox(
-                        fit: BoxFit.fitWidth,
+                      Container(
                         child: GestureDetector(
                             onLongPress: () {
-                              openGoalDialog();
+                              openDialog();
                             },
-                            child: Text("$_goal",
+                            child: Text(" / ",
                                 style: const TextStyle(
-                                    color: Color.fromARGB(255, 93, 87, 168),
-                                    fontWeight: FontWeight.w300))),
+                                  fontSize: 32,
+                                    color:
+                                        Color.fromARGB(255, 255, 255, 255)))),
                       ),
+                        SizedBox(
+                          child: GestureDetector(
+                              onLongPress: () {
+                                openGoalDialog();
+                              },
+                              child: Text("$_goal",
+                                  style: const TextStyle(
+                                  fontSize: 32,
+                                      color: Color.fromARGB(255, 93, 87, 168),
+                                      fontWeight: FontWeight.w300))),
+                        ),
+                    ],
+                  ),
+              )
+              : SizedBox(
+                width: width * 0.14,
+                height: height * 0.08,
+                child: Center(
+                  child: const CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Color.fromARGB(255, 93, 87, 168)),
                     ),
-                  ],
-                )
-              : const CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                      Color.fromARGB(255, 93, 87, 168)),
                 ),
+              ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
                 width: width * 0.15,
-                height: height * 0.04,
+                height: height * 0.02,
                 child: FittedBox(
                   fit: BoxFit.fitWidth,
                   child: IconButton(
                     onPressed: () {
                       decreaseWorkouts();
-                      //updateChartData();
-                      //getLastWorkout();
                     },
                     icon: const Icon(Icons.remove),
                     color: const Color.fromARGB(255, 255, 255, 255),
@@ -227,7 +234,7 @@ class _HomePageState extends State<HomePage> {
               ),
               SizedBox(
                 width: width * 0.15,
-                height: height * 0.04,
+                height: height * 0.02,
                 child: FittedBox(
                   fit: BoxFit.fitWidth,
                   child: GestureDetector(
@@ -247,6 +254,9 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ],
+          ),
+          SizedBox(
+            height: height * 0.02,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -272,7 +282,6 @@ class _HomePageState extends State<HomePage> {
                   fit: BoxFit.fitWidth,
                   child: GestureDetector(
                       onLongPress: () {
-                        //openDatePicker();
                         DatePicker.showDateTimePicker(context,
                             showTitleActions: true,
                             minTime: DateTime(2000, 1, 1),
@@ -288,9 +297,11 @@ class _HomePageState extends State<HomePage> {
                                     color: Colors.white,
                                     fontSize: 16)), onChanged: (date) {
                           //print('change $date');
-                        }, onConfirm: (date) {
+                        }, 
+                        onConfirm: (date) {
                           setLastWorkout(date);
                         }, currentTime: DateTime.now(), locale: LocaleType.no);
+                        
                       },
                       child: _workouts.isNotEmpty
                           ? Text(
@@ -299,8 +310,8 @@ class _HomePageState extends State<HomePage> {
                                   fontWeight: FontWeight.w300,
                                   color: Color.fromARGB(255, 93, 87, 168)),
                             )
-                          : const Text(
-                              "N/A, N/A",
+                          : Text(
+                              " ${DateTime(2000,0,0).toString()}, ${DateTime(2000,0,0).hour.toString()}",
                               style: TextStyle(
                                   fontWeight: FontWeight.w300,
                                   color: Color.fromARGB(255, 93, 87, 168)),
@@ -310,7 +321,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           SizedBox(
-            height: height * 0.36,
+            height: height * 0.33,
             width: width * 0.9,
             child: Center(
               child: CarouselSlider(
@@ -321,7 +332,9 @@ class _HomePageState extends State<HomePage> {
                       },
                       child: FittedBox(
                         fit: BoxFit.fitHeight,
-                        child: SfCircularChart(
+                        child: 
+                        _isLoaded ?
+                        SfCircularChart(
                           annotations: <CircularChartAnnotation>[
                             CircularChartAnnotation(
                               widget: !displayYearProg
@@ -353,19 +366,19 @@ class _HomePageState extends State<HomePage> {
                               text: 'Fremgang',
                               textStyle: const TextStyle(
                                 color: Colors.white,
-                                fontSize: 18,
+                                fontSize: 22,
                               )),
                           margin: const EdgeInsets.all(28),
                           series: [
                             RadialBarSeries<WorkoutData, String>(
                               dataSource: [
                                 WorkoutData(_yearProgress, "År",
-                                    Color.fromARGB(255, 87, 117, 168)),
+                                    const Color.fromARGB(255, 87, 117, 168)),
                                 WorkoutData(
                                     num.parse(((displayOkter / _goal) * 100)
                                         .toStringAsFixed(2)),
                                     "Meg",
-                                    Color.fromARGB(255, 93, 87, 168)),
+                                    const Color.fromARGB(255, 93, 87, 168)),
                               ],
                               xValueMapper: (WorkoutData data, _) =>
                                   data.workoutProgram,
@@ -376,19 +389,27 @@ class _HomePageState extends State<HomePage> {
                               // Radius of the radial bar
                               radius: '100%',
                               cornerStyle: CornerStyle.bothCurve,
-                              trackColor: Color(0xFF086c6a),
+                              trackColor: const Color(0xFF086c6a),
                               trackOpacity: 0.1,
                               maximumValue: 100,
                               gap: '3%',
                             )
                           ],
-                        ),
+                        ):
+                        Center(child: Padding(
+                          padding: const EdgeInsets.all(40),
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                        Color.fromARGB(255, 93, 87, 168)),
+                          ),
+                        ))
+                        ,
                       ),
                     ),
                     SfCartesianChart(
                         title: ChartTitle(
                             text: 'Økter etter dag',
-                            textStyle: TextStyle(
+                            textStyle: const TextStyle(
                               color: Colors.white,
                               fontSize: 18,
                             )),
@@ -431,11 +452,11 @@ class _HomePageState extends State<HomePage> {
                           dataLabelMapper: (WorkoutData data, _) =>
                               data.workoutProgram,
                           pointColorMapper: (WorkoutData data, _) => data.color,
-                          dataLabelSettings: DataLabelSettings(
+                          dataLabelSettings: const DataLabelSettings(
                               isVisible: true,
                               showZeroValue: false,
                               labelPosition: ChartDataLabelPosition.outside,
-                              textStyle: const TextStyle(
+                              textStyle: TextStyle(
                                   color: Colors.white, fontSize: 12)),
                         ),
                       ],
@@ -449,12 +470,17 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           SizedBox(
-            height: height * 0.21,
+            height: height * 0.15,
             width: width * 0.8,
             child: Center(
               child: GestureDetector(
                 onLongPress: () {
-                  //openEndDatePicker();
+                  DatePickerDialog(
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000,1,1),
+                          lastDate: DateTime.now(),
+                        );
+
                   DatePicker.showDatePicker(context,
                       showTitleActions: true,
                       minTime: DateTime(2000, 1, 1),
@@ -731,7 +757,7 @@ class _HomePageState extends State<HomePage> {
   Map<String, dynamic> workoutsByProgram() {
     List<String> programsKeys = [];
     Map<String, dynamic> workoutsByProgram = {};
-    if (_workouts.length > 0) {
+    if (_workouts.isNotEmpty) {
       for (var i = 0; i < _workouts.length; i++) {
         //print(_programs[_workouts[i]["workoutProgram"]]);
         /*
