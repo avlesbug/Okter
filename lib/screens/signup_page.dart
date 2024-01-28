@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:okter/basePage.dart';
-import 'package:okter/screens/home_page.dart';
+import 'package:okter/screens/homePage/home_page.dart';
 
-import '../reusable_widgets.dart';
+import '../utils/reusable_widgets.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});

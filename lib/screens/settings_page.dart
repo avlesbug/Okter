@@ -9,10 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:okter/basePage.dart';
 import 'package:intl/intl.dart';
-import 'package:okter/color_utils.dart';
+import 'package:okter/utils/color_utils.dart';
 import 'package:okter/screens/login_page.dart';
 
-import '../reusable_widgets.dart';
+import '../utils/reusable_widgets.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});

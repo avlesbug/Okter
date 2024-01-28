@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:okter/auth_provider.dart';
-import 'package:okter/color_utils.dart';
-import 'package:okter/screens/home_page.dart';
+import 'package:okter/utils/auth_provider.dart';
+import 'package:okter/utils/color_utils.dart';
+import 'package:okter/screens/homePage/home_page.dart';
 import 'package:okter/screens/login_page.dart';
 import 'package:okter/theme_provider.dart';
 import 'firebase_options.dart';

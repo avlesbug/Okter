@@ -5,9 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:okter/basePage.dart';
-import 'package:okter/reusable_widgets.dart';
+import 'package:okter/utils/reusable_widgets.dart';
 
-import '../color_utils.dart';
+import '../utils/color_utils.dart';
 
 class AddFriendsPage extends StatefulWidget {
   const AddFriendsPage({super.key});

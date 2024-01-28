@@ -4,8 +4,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:okter/basePage.dart';
 
-import '../color_utils.dart';
-import '../reusable_widgets.dart';
+import '../utils/color_utils.dart';
+import '../utils/reusable_widgets.dart';
 
 class PersonalBestPage extends StatefulWidget {
   const PersonalBestPage({super.key});

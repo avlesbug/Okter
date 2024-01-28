@@ -6,7 +6,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:okter/basePage.dart';
 import 'package:intl/intl.dart';
-import 'package:okter/color_utils.dart';
+import 'package:okter/utils/color_utils.dart';
 import 'package:okter/screens/addFriend_page.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
