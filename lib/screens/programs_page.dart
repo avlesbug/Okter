@@ -1,13 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:okter/basePage.dart';
 import 'package:okter/screens/addProgram_page.dart';
 import 'package:okter/screens/detailedProgram_page.dart';
 import 'package:okter/utils/color_pallet.dart';
-
-import '../utils/color_utils.dart';
+import 'package:okter/utils/reusable_widgets.dart';
 
 class ProgramsPage extends StatefulWidget {
   const ProgramsPage({super.key});
@@ -28,7 +27,9 @@ class _ProgramsPageState extends State<ProgramsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return okterAddButtonScaffold(
+    return 
+    
+    okterAddButtonScaffold(
       "Programmer",
       [
         IconButton(
@@ -36,8 +37,11 @@ class _ProgramsPageState extends State<ProgramsPage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const AddProgramPage(
-                          programs: [], workoutNumber: 0)));
+                      builder: (context) => AddProgramPage(
+                          editWorkout: const {},
+                          workoutIndex: 0,
+                          updateProgram: updateProgram,
+                          )));
             }),
             icon: const Icon(Icons.add)),
       ],
@@ -92,12 +96,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
                                           borderRadius: BorderRadius.circular(10),
                                         ),
                                         tileColor: const Color(0xFF031011),
-                                        leading: snapshot.data!['workoutPrograms'][index]["name"] == "Håndball" ?
-                                        const Icon(
-                                          Icons.sports_handball,
-                                          color: Colors.white,
-                                          size: 40,
-                                        ) :
+                                        leading: 
                                         snapshot.data!['workoutPrograms'][index]["isCardio"]
                                             ? const Icon(
                                                 Icons.directions_run,
@@ -115,7 +114,9 @@ class _ProgramsPageState extends State<ProgramsPage> {
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       DetailedProgramPage(
-                                                        workoutNumber: index,
+                                                        updateProgram: updateProgram,
+                                                        workoutIndex: index,
+                                                        workout: snapshot.data!['workoutPrograms'][index],
                                                       )));
                                         },
                                         title: Text(snapshot.data!['workoutPrograms'][index]["name"],
@@ -129,18 +130,29 @@ class _ProgramsPageState extends State<ProgramsPage> {
                     )
                   ],
                 )
-          : const Center(
-              child: SizedBox(
-                height: 60,
-                width: 60,
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.teal),
-                ),
-              ),
-            );
+          : loadingComponent();
             }
           ));
   }
+
+    void updateProgram(Map<String,dynamic> newWorkout, int index) async {
+      print("Updating program");
+      print('New program: ${newWorkout}');
+      DocumentSnapshot userDataSnapshot = await _fireStore.collection("UserData").doc(userId).get();
+      Map<String, dynamic>? userData = userDataSnapshot.data() as Map<String, dynamic>?;
+      if (userData != null) {
+        List<dynamic> workoutPrograms = userData['workoutPrograms'];
+        workoutPrograms.removeWhere((value) => 
+          mapEquals(value, workoutPrograms[index])
+        );
+
+        workoutPrograms.add(newWorkout);
+
+        await _fireStore.collection("UserData").doc(userId).update({
+          "workoutPrograms": workoutPrograms,
+        });
+      }
+    }
 
   Future<void> deleteProgram(var tempProgram) async {
     await _fireStore.collection("UserData").doc(userId).update({

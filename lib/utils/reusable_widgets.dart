@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:okter/utils/color_pallet.dart';
 import 'package:okter/utils/color_utils.dart';
 
 TextField inputField(
@@ -102,6 +103,18 @@ Container signInSignUpButton(
       ),
     ),
   );
+}
+
+Widget loadingComponent() {
+  return Center(
+              child: SizedBox(
+                height: 60,
+                width: 60,
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(colorPallet[5]),
+                ),
+              ),
+            );
 }
 
 ElevatedButton defaultButton(BuildContext context, String text, Function onTap) {

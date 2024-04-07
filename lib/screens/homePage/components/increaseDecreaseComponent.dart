@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -30,6 +32,30 @@ class IncreaseDecreaseWidget extends StatelessWidget{
       },
       {
         'name': 'Gåtur',
+        'isCardio': false,
+      },
+      {
+        'name': 'Håndball',
+        'isCardio': false,
+      },
+      {
+        'name': 'Fotball',
+        'isCardio': false,
+      },
+      {
+        'name': 'Alpint',
+        'isCardio': false,
+      },
+      {
+        'name': 'Snowboard',
+        'isCardio': false,
+      },
+      {
+        'name': 'Skitur',
+        'isCardio': false,
+      },
+      {
+        'name': 'Topptur',
         'isCardio': false,
       }
     ];
@@ -129,7 +155,7 @@ class IncreaseDecreaseWidget extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height.toInt();
-    width = MediaQuery.of(context).size.width.toInt();
+    width = min(MediaQuery.of(context).size.width.toInt(),500);
     List<dynamic> workoutPrograms = getWorkoutPrograms(documentRef.data!['workoutPrograms'] as List<dynamic>);
     return 
     Row(

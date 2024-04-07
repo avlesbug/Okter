@@ -1,7 +1,7 @@
+import 'dart:math';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -29,7 +29,7 @@ class _ChartCarouselWidgetState extends State<ChartCarouselWidget> {
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height.toInt();
-    width = MediaQuery.of(context).size.width.toInt();
+    width = min(MediaQuery.of(context).size.width.toInt(),500);
     List<dynamic> workouts = widget.documentRef.data!['detailedWorkouts'] as List<dynamic>;
     _maxValueDay = getMaxWorkouts(workouts);
     _dayInterval = (_maxValueDay / 10).toInt().toDouble();
@@ -48,25 +48,24 @@ class _ChartCarouselWidgetState extends State<ChartCarouselWidget> {
                 child: FittedBox(
                   fit: BoxFit.fitHeight,
                   child: 
-                  true ?
                   SfCircularChart(
                     annotations: <CircularChartAnnotation>[
                       CircularChartAnnotation(
                         widget: !displayYearProg
                             ? SizedBox(
                                 height: height * 0.032,
-                                width: width * 0.14,
+                                width: width * 0.12,
                                 child: FittedBox(
                                   fit: BoxFit.fitWidth,
                                   child: Text(
-                                      (("${((widget.documentRef.data!['workouts'] / widget.documentRef.data!['goal']) * 100).toStringAsFixed(0)}%")),
+                                      (("${((widget.documentRef.data!['workouts'] / widget.documentRef.data!['goal']) * 100).toStringAsFixed(1)}%")),
                                       style: const TextStyle(
                                           color: Colors.white)),
                                 ),
                               )
                             : SizedBox(
                                 height: height * 0.030,
-                                width: width * 0.17,
+                                width: width * 0.16,
                                 child: FittedBox(
                                   fit: BoxFit.fitWidth,
                                   child: Text(
@@ -110,18 +109,10 @@ class _ChartCarouselWidgetState extends State<ChartCarouselWidget> {
                         gap: '3%',
                       )
                     ],
-                  ):
-                  const Center(child: Padding(
-                    padding: EdgeInsets.all(40),
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                  Color.fromARGB(255, 93, 87, 168)),
-                    ),
-                  ))
+                  )
                   ,
                 ),
               ),
-
               SfCartesianChart(
                   title: ChartTitle(
                       text: 'Økter etter dag',
@@ -203,11 +194,13 @@ Map<String, dynamic> getWorkoutsByProgram(List<dynamic> workouts) {
   Map<String, dynamic> workoutsByProgram = {};
   if (workouts.isNotEmpty) {
     for (var i = 0; i < workouts.length; i++) {
+      /*if (workouts[i] != null && workouts[i]["workoutProgram"] != null) {*/
       if (workoutsByProgram.containsKey(workouts[i]["workoutProgram"])) {
         workoutsByProgram[workouts[i]["workoutProgram"]] += 1;
       } else {
         workoutsByProgram[workouts[i]["workoutProgram"]] = 1;
       }
+      /*}*/
     }
   }
   return workoutsByProgram;
@@ -215,6 +208,7 @@ Map<String, dynamic> getWorkoutsByProgram(List<dynamic> workouts) {
 List<WorkoutData> createProgamData(List<dynamic> totalWorkouts) {
   List<WorkoutData> workoutData = [];
   int index = 0;
+  print(getWorkoutsByProgram(totalWorkouts).entries.toList());
   var sortedByValueMap = Map.fromEntries(getWorkoutsByProgram(totalWorkouts).entries.toList()
     ..sort((e2, e1) => e1.value.compareTo(e2.value)));
 
@@ -238,6 +232,7 @@ Map<String, dynamic> getWorkoutsPerDay(List<dynamic> workouts) {
     'Lørdag': 0,
     'Søndag': 0,
   };
+  if(workouts.isNotEmpty){
   List<WeekdayData> weekdayData = [];
   for (var i = 0; i < workouts.length; i++) {
     switch (DateFormat("EEEE").format(workouts[i]["date"].toDate())) {
@@ -263,6 +258,7 @@ Map<String, dynamic> getWorkoutsPerDay(List<dynamic> workouts) {
         workoutsPerDay["Søndag"] += 1;
         break;
     }
+  }
   }
   return workoutsPerDay;
 }

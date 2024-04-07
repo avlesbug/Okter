@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,7 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:okter/screens/homePage/components/increaseDecreaseComponent.dart';
 import 'package:okter/screens/homePage/components/sisteOktComponent.dart';
 import 'package:okter/screens/homePage/components/workoutsGoalComponent.dart';
-import 'package:okter/utils/color_pallet.dart';
+import 'package:okter/utils/reusable_widgets.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -50,7 +51,7 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(height: height * 0.1),
                 SizedBox(
                   height: height * 0.04,
-                  width: width * 0.36,
+                  width: min(width, 500) * 0.36,
                   child: const FittedBox(
                     fit: BoxFit.fitWidth,
                     child: Text("Økter i år:",
@@ -66,10 +67,7 @@ class _HomePageState extends State<HomePage> {
                 SisteOktWidget(documentRef: snapshot, userId: userId),
                 ChartCarouselWidget(documentRef: snapshot, userId: userId),
                 EndGoalComponent(documentRef: snapshot, userId: userId)
-              ]) : Container(
-                height: height*1,
-                width: width*1,
-                child: Center(child: Container(child: CircularProgressIndicator(color: colorPallet[4],)),));
+              ]) : loadingComponent();
           }
         ));
   }

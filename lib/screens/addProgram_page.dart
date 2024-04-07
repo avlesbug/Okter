@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:okter/basePage.dart';
@@ -10,19 +9,19 @@ import '../utils/reusable_widgets.dart';
 
 class AddProgramPage extends StatefulWidget {
   const AddProgramPage(
-      {super.key, required this.programs, required this.workoutNumber});
-  final List<dynamic> programs;
-  final int workoutNumber;
+      {super.key, required this.editWorkout,
+      required this.updateProgram,
+      required this.workoutIndex});
+  final Map<String,dynamic> editWorkout;
+  final Function updateProgram;
+  final int workoutIndex;
 
   @override
   State<AddProgramPage> createState() => _ProgramsPageState();
 }
 
 class _ProgramsPageState extends State<AddProgramPage> {
-  late CollectionReference users;
   late String userId;
-  late DatabaseReference ref;
-  final _switchValue = true;
   var _isCardio = false;
   var _editing = false;
   Map<String, dynamic> _oldProgram = {};
@@ -35,6 +34,85 @@ class _ProgramsPageState extends State<AddProgramPage> {
   final TextEditingController _programController = TextEditingController();
 
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
+
+
+  @override
+  void initState() {
+    super.initState();
+    userId = FirebaseAuth.instance.currentUser!.uid.toString();
+    getData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return okterScaffold(
+        _title,
+        context,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              _isCardio
+                  ? const Icon(Icons.directions_run,
+                      size: 40, color: Colors.white)
+                  : const Icon(Icons.fitness_center,
+                      size: 40, color: Colors.white),
+              const SizedBox(height: 19),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                      width: 200,
+                      height: 50,
+                      child: largerInputField(
+                          _programController, "Navn på program")),
+                  CupertinoSwitch(
+                      thumbColor: Colors.white,
+                      trackColor: const Color.fromARGB(155, 0, 150, 135),
+                      activeColor: const Color.fromARGB(145, 0, 150, 135),
+                      value: _isCardio,
+                      onChanged: (value) {
+                        setState(() {
+                          _isCardio = value;
+                        });
+                      }),
+                ],
+              ),
+              const SizedBox(height: 20),
+              ...List.generate(_formCount, (index) => form(index)),
+              buttonRow(),
+              const SizedBox(height: 30),
+              TextButton(
+                  onPressed: () {
+                    _dataArray.addAll({
+                      'name': _programController.text,
+                      'isCardio': _isCardio,
+                      'exercises': _exercises,
+                    });
+                    if (_editing) {
+                      widget.updateProgram(_dataArray,widget.workoutIndex);
+                    } else {
+                      addProgram();
+                    }
+                    Navigator.pop(context);
+                  },
+                  style: TextButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(
+                        155, 0, 150, 135), // Background Color
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.all(12.0),
+                    child: Text(
+                      "Lagre program",
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                  )),
+            ],
+          ),
+        ));
+  }
 
   Widget form(int key) => SingleChildScrollView(
         child: Padding(
@@ -54,7 +132,6 @@ class _ProgramsPageState extends State<AddProgramPage> {
                               minValue: 1,
                               maxValue: 100,
                               onChanged: (value) {
-                                print("New value: $value");
                                 setState(() {
                                   _exercises[key]['sets'] = value;
                                 });
@@ -75,7 +152,6 @@ class _ProgramsPageState extends State<AddProgramPage> {
                                   setState(() {
                                     _exercises[key]['minutes'] = value;
                                   });
-                                  print("New value: $value");
                                 })),
                         const Expanded(child: Center(child: Text("min"))),
                         Expanded(
@@ -90,7 +166,6 @@ class _ProgramsPageState extends State<AddProgramPage> {
                                   setState(() {
                                     _exercises[key]['seconds'] = value;
                                   });
-                                  print("New value: $value");
                                 })),
                         const Expanded(child: Center(child: Text("sek"))),
                         Expanded(
@@ -169,14 +244,13 @@ class _ProgramsPageState extends State<AddProgramPage> {
                           ),
                           Expanded(
                             child: NumberPicker(
-                                //haptics: true,
+                                haptics: true,
                                 itemHeight: 30,
                                 itemWidth: 20,
                                 value: _exercises[key]['sets'],
                                 minValue: 1,
                                 maxValue: 100,
                                 onChanged: (value) {
-                                  print("New value: $value");
                                   setState(() {
                                     _exercises[key]['sets'] = value;
                                   });
@@ -197,7 +271,6 @@ class _ProgramsPageState extends State<AddProgramPage> {
                                   setState(() {
                                     _exercises[key]['reps'] = value;
                                   });
-                                  print("New value: $value");
                                 }),
                           ),
                           const Expanded(
@@ -257,16 +330,13 @@ class _ProgramsPageState extends State<AddProgramPage> {
                         _formCount++;
                         _exercises.add({
                           'name': 'Løping',
-                          'sets': 3,
-                          'reps': 8,
-                          'weight': 60,
+                          'sets' : 1,
                           'seconds': 0,
                           'minutes': 1,
                           'speed': 10,
                           'pauseM': 1,
                           'pauseS': 0,
                         });
-                        print(_formCount);
                       });
                     },
                     icon: const CircleAvatar(
@@ -304,13 +374,7 @@ class _ProgramsPageState extends State<AddProgramPage> {
                           'sets': 3,
                           'reps': 8,
                           'weight': 60,
-                          'seconds': 0,
-                          'minutes': 1,
-                          'speed': 10,
-                          'pauseM': 1,
-                          'pauseS': 0,
                         });
-                        print(_formCount);
                       });
                     },
                     icon: const CircleAvatar(
@@ -321,93 +385,6 @@ class _ProgramsPageState extends State<AddProgramPage> {
                     ))
               ],
       );
-
-  @override
-  void initState() {
-    super.initState();
-    users = FirebaseFirestore.instance.collection('UserData');
-    userId = FirebaseAuth.instance.currentUser!.uid.toString();
-    //userId = Provider.of(context).auth.getCurrentUID();
-    ref = FirebaseDatabase.instance.ref("UserData");
-    //print(widget.dataArray);
-    getData();
-    //_isCardio = _dataArray['isCardio'];
-    //print("test");
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return okterScaffold(
-        _title,
-        context,
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              _isCardio
-                  ? const Icon(Icons.directions_run,
-                      size: 40, color: Colors.white)
-                  : const Icon(Icons.fitness_center,
-                      size: 40, color: Colors.white),
-              const SizedBox(height: 19),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                      width: 200,
-                      height: 50,
-                      child: largerInputField(
-                          _programController, "Navn på program")),
-                  CupertinoSwitch(
-                      thumbColor: Colors.white,
-                      trackColor: const Color.fromARGB(155, 0, 150, 135),
-                      activeColor: const Color.fromARGB(145, 0, 150, 135),
-                      value: _isCardio,
-                      onChanged: (value) {
-                        setState(() {
-                          _isCardio = value;
-                        });
-                      }),
-                ],
-              ),
-              const SizedBox(height: 20),
-              ...List.generate(_formCount, (index) => form(index)),
-              buttonRow(),
-              const SizedBox(height: 30),
-              TextButton(
-                  onPressed: () {
-                    _dataArray.addAll({
-                      'name': _programController.text,
-                      'isCardio': _isCardio,
-                      'exercises': _exercises,
-                    });
-                    print(_editing);
-                    if (_editing) {
-                      updatePrograms();
-                      print("updated");
-                    } else {
-                      addProgram();
-                    }
-                    Navigator.pop(context);
-                  },
-                  style: TextButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(
-                        155, 0, 150, 135), // Background Color
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(12.0),
-                    child: Text(
-                      "Lagre program",
-                      style: TextStyle(color: Colors.white, fontSize: 18),
-                    ),
-                  )),
-            ],
-          ),
-        ));
-  }
-
   void addProgram() {
     _fireStore.collection("UserData").doc(userId).update({
       'workoutPrograms': FieldValue.arrayUnion([
@@ -416,33 +393,11 @@ class _ProgramsPageState extends State<AddProgramPage> {
     });
   }
 
-  void updatePrograms() {
-    print("Updated");
-    print("Old program: $_oldProgram");
-    _fireStore.collection("UserData").doc(userId).update({
-      'workoutPrograms': FieldValue.arrayRemove([
-        _oldProgram,
-      ])
-    }).then((_) {
-      print("Tried to remove old program");
-      _fireStore.collection("UserData").doc(userId).update({
-        'workoutPrograms': FieldValue.arrayUnion([
-          _dataArray,
-        ]),
-      });
-    });
-  }
 
   void getData() {
-    if (widget.programs.isNotEmpty) {
-      print("Loading data");
-      if (_oldProgram.isEmpty) {
-        print("Loading old program");
-        _oldProgram = widget.programs[widget.workoutNumber];
-        print("Loading... $_oldProgram");
-      }
-      _dataArray = widget.programs[widget.workoutNumber];
-      _exercises = widget.programs[widget.workoutNumber]['exercises'];
+    if (widget.editWorkout.isNotEmpty) {
+      _dataArray = widget.editWorkout;
+      _exercises = widget.editWorkout['exercises'];
       _formCount = _exercises.length;
       _programController.text = _dataArray['name'];
       _isCardio = _dataArray['isCardio'];

@@ -5,6 +5,7 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:okter/basePage.dart';
+import 'package:okter/utils/reusable_widgets.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 
@@ -19,57 +20,23 @@ class _CalenderPageState extends State<CalenderPage> {
   late CollectionReference users;
   late String userId;
 
-  List<dynamic> _workouts = [];
-  List<dynamic> _programs = [];
-  final List<dynamic> _programNames = [];
-  final Map<DateTime, dynamic> _workoutMap = {};
+  final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
+
+  //List<dynamic> _programs = [];
   var _focusedDay = DateTime.now();
   List<Map<String, dynamic>> _selectedEvents = [];
   var _selectedDay = DateTime.now();
 
   @override
   void initState() {
-    users = FirebaseFirestore.instance.collection('UserData');
     userId = FirebaseAuth.instance.currentUser!.uid.toString();
-    getUserData();
-    getNames();
-    //print(_workoutMap);
   }
 
-  Future<void> getUserData() async {
-    try {
-      final docSnapshot = await FirebaseFirestore.instance
-          .collection('UserData')
-          .doc(userId)
-          .get();
 
-      if (!docSnapshot.exists) {
-        // Document does not exist
-        return;
-      }
-    } catch (error) {
-      print('Error fetching user data: $error');
-    }
-
-    final docRef =
-        FirebaseFirestore.instance.collection("UserData").doc(userId);
-    try {
-      docRef.get().then((DocumentSnapshot doc) {
-        if (!mounted) return;
-        setState(() {
-          _workouts = doc["detailedWorkouts"] as List<dynamic>;
-          _programs = doc["workoutPrograms"] as List<dynamic>;
-        });
-      });
-    } on FirebaseException catch (e) {
-      print(e);
-    }
-  }
-
-  List<String> getNames() {
+  List<String> getNames(var workoutPrograms) {
     List<String> programNames = [];
-    for (int i = 0; i < _programs.length; i++) {
-      programNames.add(_programs[i]['name']);
+    for (int i = 0; i < workoutPrograms.length; i++) {
+      programNames.add(workoutPrograms[i]['name']);
     }
     programNames.add("Annen aktivitet");
     programNames.add("Styrketrening");
@@ -82,168 +49,123 @@ class _CalenderPageState extends State<CalenderPage> {
   @override
   Widget build(BuildContext context) {
     initState();
-    //print(_workoutMap);
     return okterAddButtonScaffold(
       "Kalender",
       [
-        Builder(builder: (BuildContext context) {
-          return IconButton(
-              onPressed: () {
-                /*
-                DatePickerDialog(
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2000,1,1),
-                          lastDate: DateTime.now(),
-                        );
-                  */
-                DatePicker.showTimePicker(
-                  context,
-                  showTitleActions: true,
-                  currentTime: DateTime.now(),
-                  theme: const DatePickerTheme(
-                    headerColor: Color(0xFF020A0B),
-                    backgroundColor: Color(0xFF020A0B),
-                    itemStyle: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18),
-                    doneStyle: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
-                  onConfirm: (time) {
-                    showPicker(context, time);
+       StreamBuilder(
+          stream: FirebaseFirestore.instance.collection('UserData').doc(userId).snapshots(),
+          builder: (context, snapshot) {
+            return Builder(builder: (BuildContext context) {
+              return IconButton(
+                  onPressed: () {
+                    DatePicker.showTimePicker(
+                      context,
+                      showTitleActions: true,
+                      currentTime: DateTime.now(),
+                      theme: const DatePickerTheme(
+                        headerColor: Color(0xFF020A0B),
+                        backgroundColor: Color(0xFF020A0B),
+                        itemStyle: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                        doneStyle: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                      onConfirm: (time) {
+                        showPicker(context, time, snapshot);
+                      },
+                    );
+                      
                   },
-                );
-                  
-              },
-              icon: const Icon(Icons.add));
-        })
+                  icon: const Icon(Icons.add));
+            });
+          }
+        )
       ],
       context,
-      Column(
-        children: [
-          TableCalendar(
-            focusedDay: _focusedDay,
-            firstDay: DateTime(2000, 1, 1),
-            lastDay: DateTime(2100, 1, 1),
-            weekNumbersVisible: true,
-            pageJumpingEnabled: true,
-            startingDayOfWeek: StartingDayOfWeek.monday,
-            selectedDayPredicate: (day) {
-              return isSameDay(_selectedDay, day);
-            },
-            onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                _selectedDay = selectedDay;
-                _focusedDay = focusedDay; // update `_focusedDay` here as well
-                _selectedEvents = _getEventsForDay(selectedDay);
-              });
-            },
-            onPageChanged: (focusedDay) {
-              _focusedDay = focusedDay;
-            },
-            eventLoader: (day) {
-              return _getEventsForDay(day);
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 50, 16, 16),
-            child: SizedBox(
-              height: 600,
-              width: 500,
-              child: ListView.builder(
-                  itemCount: _selectedEvents.length,
-                  itemBuilder: ((context, index) {
-                    return Material(
-                      color: Colors.transparent,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Dismissible(
-                          key: UniqueKey(),
-                          onDismissed: (direction) {
-                            deleteWorkout(_selectedEvents[index]);
-                            setState(() {
-                              _selectedEvents.removeAt(index);
-                            });
-                          },
-                          background: Container(
-                                    color: Colors.red,
-                                    child: Center(
-                                      child: Row(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: Icon(Icons.delete,size: 30,),
-                                          ),
-                                          Spacer(),
-                                          Padding(
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: Icon(Icons.delete, size: 30,),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                          child: ListTile(
-                              tileColor: const Color(0xFF031011),
-                              leading: getIcon(_selectedEvents[index]
-                                      ['workoutProgram']
-                                  .toString()),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              title: Text(
-                                  '${DateFormat.Hm().format(_selectedEvents[index]['date']).toString()} - ${_selectedEvents[index]['workoutProgram'].toString()}'),
-                              onTap: () {
-                                workoutProgramDialog(_selectedEvents[index]);
-                              }),
-                        ),
-                      ),
-                    );
-                  })),
-            ),
-          )
-        ],
+     StreamBuilder(
+          stream: FirebaseFirestore.instance.collection('UserData').doc(userId).snapshots(),
+          builder: (context, snapshot) {
+            return 
+            snapshot.hasData ?
+            Column(
+            children: [
+              TableCalendar(
+                focusedDay: _focusedDay,
+                firstDay: DateTime(2000, 1, 1),
+                lastDay: DateTime(2100, 1, 1),
+                weekNumbersVisible: true,
+                pageJumpingEnabled: true,
+                startingDayOfWeek: StartingDayOfWeek.monday,
+                selectedDayPredicate: (day) {
+                  return isSameDay(_selectedDay, day);
+                },
+                onDaySelected: (selectedDay, focusedDay) {
+                  setState(() {
+                    _selectedDay = selectedDay;
+                    _focusedDay = focusedDay; // update `_focusedDay` here as well
+                    _selectedEvents = _getEventsForDay(selectedDay, snapshot.data!['detailedWorkouts']);
+                  });
+                },
+                onPageChanged: (focusedDay) {
+                  _focusedDay = focusedDay;
+                },
+                eventLoader: (day) {
+                  return _getEventsForDay(day,snapshot.data!['detailedWorkouts']);
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 50, 16, 16),
+                child: SizedBox(
+                  height: 600,
+                  width: 500,
+                  child: ListView.builder(
+                      itemCount: _selectedEvents.length,
+                      itemBuilder: ((context, index) {
+                        return Material(
+                          color: Colors.transparent,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ListTile(
+                                tileColor: const Color(0xFF031011),
+                                leading: getIcon(_selectedEvents[index]
+                                        ['workoutProgram']
+                                    .toString()),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                title: Text(
+                                    '${DateFormat.Hm().format(_selectedEvents[index]['date']).toString()} - ${_selectedEvents[index]['workoutProgram'].toString()}'),
+                                onLongPress: () {
+                                  workoutProgramDialog(_selectedEvents[index]);
+                                }),
+                          ),
+                        );
+                      })),
+                ),
+              )
+            ],
+          ):
+          loadingComponent();
+        }
       ),
     );
   }
 
-  List<Map<String, dynamic>> _getEventsForDay(DateTime day) {
+  List<Map<String, dynamic>> _getEventsForDay(DateTime day, List<dynamic> detailedWorkouts) {
     List<Map<String, dynamic>> events = [];
     DateTime calenderDay = DateTime.parse(day.toString().replaceAll('Z', ''));
     DateTime nextDay = calenderDay.add(const Duration(days: 1));
 
-    for (int i = 0; i < _workouts.length; i++) {
-      if (_workouts[i]["date"].toDate().isAfter(calenderDay) &&
-          _workouts[i]["date"].toDate().isBefore(nextDay)) {
-        String formattedTime =
-            DateFormat.Hm().format(_workouts[i]["date"].toDate());
-        //events.add(formattedTime + " - " + _workouts[i]["workoutProgram"]);
+    for (int i = 0; i < detailedWorkouts.length; i++) {
+      if (detailedWorkouts[i]["date"].toDate().isAfter(calenderDay) &&
+          detailedWorkouts[i]["date"].toDate().isBefore(nextDay)) {
         events.add({
-          'date': _workouts[i]["date"].toDate(),
-          'workoutProgram': _workouts[i]["workoutProgram"]
+          'date': detailedWorkouts[i]["date"].toDate(),
+          'workoutProgram': detailedWorkouts[i]["workoutProgram"]
         });
       }
     }
-
-    //events.add(_workoutMap[day]!);
-    return events;
-  }
-
-  List<String> _getEventsForDayAsString(DateTime day) {
-    List<String> events = [];
-    DateTime calenderDay = DateTime.parse(day.toString().replaceAll('Z', ''));
-    DateTime nextDay = calenderDay.add(const Duration(days: 1));
-
-    for (int i = 0; i < _workouts.length; i++) {
-      if (_workouts[i]["date"].toDate().isAfter(calenderDay) &&
-          _workouts[i]["date"].toDate().isBefore(nextDay)) {
-        String formattedTime =
-            DateFormat.Hm().format(_workouts[i]["date"].toDate());
-        events.add(formattedTime + " - " + _workouts[i]["workoutProgram"]);
-      }
-    }
-
-    //events.add(_workoutMap[day]!);
     return events;
   }
 
@@ -296,9 +218,9 @@ class _CalenderPageState extends State<CalenderPage> {
     });
   }
 
-  showPicker(BuildContext context, DateTime time) async {
+  showPicker(BuildContext context, DateTime time, var snapshot) async {
     Picker picker = Picker(
-        adapter: PickerDataAdapter<String>(pickerData: getNames()),
+        adapter: PickerDataAdapter<String>(pickerData: getNames(snapshot.data!['workoutPrograms'])),
         changeToFirst: false,
         containerColor: const Color(0xFF020A0B),
         headerColor: const Color(0xFF020A0B),
@@ -311,13 +233,6 @@ class _CalenderPageState extends State<CalenderPage> {
         confirmTextStyle: const TextStyle(color: Colors.white),
         cancelTextStyle: const TextStyle(color: Colors.white),
         onCancel: () {
-          /*
-          DatePickerDialog(
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2000,1,1),
-                          lastDate: DateTime.now(),
-                        );
-            */
           DatePicker.showTimePicker(
             context,
             showTitleActions: true,
@@ -332,7 +247,7 @@ class _CalenderPageState extends State<CalenderPage> {
               doneStyle: TextStyle(color: Colors.white, fontSize: 16),
             ),
             onConfirm: (time) {
-              showPicker(context, time);
+              //showPicker(context, time);
               //addWorkout(time);
             },
           );
@@ -340,8 +255,7 @@ class _CalenderPageState extends State<CalenderPage> {
         onConfirm: (Picker picker, List value) {
           String selectedProgram = picker.getSelectedValues()[0];
           addWorkout(time, selectedProgram);
-          //print(value.toString());
-          print(picker.getSelectedValues()[0]);
+
             
         });
     picker.showBottomSheet(context);

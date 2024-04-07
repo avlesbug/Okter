@@ -213,7 +213,7 @@ class _FriendsPageState extends State<FriendsPage> {
                                     ],
                                   ),
                                 ),
-                                onTap: () {
+                                onLongPress: () {
                                   openFriendDialog(_friends[index]);
                                 },
                               ),

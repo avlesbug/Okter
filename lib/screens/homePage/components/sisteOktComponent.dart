@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -32,8 +34,9 @@ class SisteOktWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     List<dynamic> sortedWorkouts = getSortedWorkouts(documentRef);
     height = MediaQuery.of(context).size.height.toInt();
-    width = MediaQuery.of(context).size.width.toInt();
-    return Row(
+    width = min(MediaQuery.of(context).size.width.toInt(),500);
+    return 
+    Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
