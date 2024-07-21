@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:okter/basePage.dart';
+import 'package:okter/utils/color_pallet.dart';
 import 'package:okter/utils/color_utils.dart';
 import 'package:okter/utils/reusable_widgets.dart';
 import 'package:okter/screens/homePage/home_page.dart';
@@ -43,7 +44,7 @@ class _SignInPageState extends State<SignInPage> {
                 SizedBox(height: height * 0.16),
                 Icon(
                   Icons.sports_martial_arts,
-                  color: hexStringtoColor("1d8a99"),
+                  color: themeColorPallet['green'],
                   size: 100,
                 ),
                 SizedBox(height: height * 0.05),

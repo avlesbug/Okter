@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:okter/basePage.dart';
+import 'package:okter/utils/color_pallet.dart';
 import 'package:okter/utils/reusable_widgets.dart';
 
 import '../utils/color_utils.dart';
@@ -89,7 +90,7 @@ class _AddFriendsPageState extends State<AddFriendsPage> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              tileColor: hexStringtoColor("061E21"),
+                              tileColor: themeColorPallet['grey light'],
                               title:
                                   Text(snapshot.data!.docs[index].get("name")),
                               subtitle: Text(
@@ -104,15 +105,15 @@ class _AddFriendsPageState extends State<AddFriendsPage> {
                                               .get("profileImage"),
                                           scale: 0.5),
                                     )
-                                  : const CircleAvatar(
+                                  : CircleAvatar(
                                       backgroundColor:
-                                          Color.fromARGB(255, 29, 138, 153),
+                                          themeColorPallet['green'],
                                       radius: 30,
                                       child: Icon(
                                         Icons.person,
                                         size: 30,
                                         color:
-                                            Color.fromARGB(255, 11, 201, 205),
+                                            themeColorPallet['yellow'],
                                       )),
                               onTap: () {
                                 openAddFriendDialog(
@@ -135,19 +136,19 @@ class _AddFriendsPageState extends State<AddFriendsPage> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              tileColor: hexStringtoColor("061E21"),
+                              tileColor: themeColorPallet['grey light'],
                               title:
                                   Text(snapshot.data!.docs[index].get("name")),
                               subtitle: Text(
                                   snapshot.data!.docs[index].get("username")),
-                              leading: const CircleAvatar(
+                              leading: CircleAvatar(
                                 backgroundColor:
-                                    Color.fromARGB(255, 29, 138, 153),
+                                    themeColorPallet['green'],
                                 radius: 30,
                                 child: Icon(
                                   Icons.person,
                                   size: 40,
-                                  color: Color.fromARGB(255, 11, 201, 205),
+                                  color: themeColorPallet['yellow'],
                                 ),
                               ),
                               onTap: () {
@@ -173,15 +174,15 @@ class _AddFriendsPageState extends State<AddFriendsPage> {
       context: context,
       builder: (context) => Padding(
         padding: EdgeInsets.fromLTRB(
-            width * 0.1, height * 0.23, width * 0.1, height * 0.55),
+            width * 0.2, height * 0.30, width * 0.2, height * 0.50),
         child: Container(
-            color: hexStringtoColor("041416"),
+            color: themeColorPallet['grey dark'],
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(32.0, 38.0, 32.0, 38.0),
+              padding: const EdgeInsets.fromLTRB(32.0, 50.0, 32.0, 50.0),
               child: TextButton(
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
-                        hexStringtoColor("061E21"))),
+                        themeColorPallet['green']!)),
                 onPressed: () {
                   sendFriendRequest(userRef);
                   Navigator.pop(context);

@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:okter/basePage.dart';
 import 'package:intl/intl.dart';
-import 'package:okter/utils/color_utils.dart';
+import 'package:okter/utils/color_pallet.dart';
 import 'package:okter/screens/login_page.dart';
 
 import '../utils/reusable_widgets.dart';
@@ -102,14 +102,14 @@ class _SettingsPageState extends State<SettingsPage> {
                                       foregroundImage: NetworkImage(
                                           snapshot.data!.get("profileImage")),
                                     )
-                                  : const CircleAvatar(
+                                  : CircleAvatar(
                                       backgroundColor:
-                                          Color.fromARGB(255, 29, 138, 153),
+                                          themeColorPallet['green'],
                                       radius: 60,
                                       child: Icon(
                                         Icons.person,
                                         size: 70,
-                                        color: Color.fromARGB(255, 11, 201, 205),
+                                        color: themeColorPallet['yellow'],
                                       ),
                                     ),
                             ),

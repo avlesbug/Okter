@@ -13,13 +13,13 @@ class MyTheme {
       brightness: Brightness.light,
       primaryColor: hexStringtoColor("7C77B9"),
       appBarTheme: AppBarTheme(
-        backgroundColor: hexStringtoColor("1D8A99"),
+        backgroundColor: hexStringtoColor("5d8076"),
       ));
 
   static final darkTheme = ThemeData(
       brightness: Brightness.dark,
       primaryColor: hexStringtoColor("0bc9cd"),
       appBarTheme: AppBarTheme(
-        backgroundColor: hexStringtoColor("1D8A99"),
+        backgroundColor: hexStringtoColor("5d8076"),
       ));
 }

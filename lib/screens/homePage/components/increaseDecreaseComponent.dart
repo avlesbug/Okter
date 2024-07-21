@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:okter/utils/color_pallet.dart';
 
 import '../../../utils/color_utils.dart';
 import '../../../utils/reusable_widgets.dart';
@@ -70,7 +71,7 @@ class IncreaseDecreaseWidget extends StatelessWidget{
     context: context,
     builder: (context) => AlertDialog(
           title: const Text("Treningsprogram"),
-          backgroundColor: hexStringtoColor("041416"),
+          backgroundColor: themeColorPallet['grey dark'],
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(26.0)),
           content: SizedBox(
@@ -80,16 +81,17 @@ class IncreaseDecreaseWidget extends StatelessWidget{
               itemCount: workoutPrograms.length,
               itemBuilder: (context, index) {
                 if (workoutPrograms.isNotEmpty) {
-                  return TextButton(
-                      onPressed: () {
-                        increaseDetailedWorkouts(
-                            workoutPrograms[index]["name"].toString());
-                        Navigator.pop(context);
-                      },
-                      child: Text(
-                        workoutPrograms[index]["name"].toString(),
-                        style: const TextStyle(color: Colors.white),
-                      ));
+                  return ListTile(
+                    onTap: () {
+                          increaseDetailedWorkouts(
+                              workoutPrograms[index]["name"].toString());
+                          Navigator.pop(context);
+                        },
+                        title: Text(
+                          workoutPrograms[index]["name"].toString(),
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                  );
                 } else {
                   return const Text("Ingen treningsprogrammer tilgjengelig");
                 }
@@ -171,7 +173,7 @@ class IncreaseDecreaseWidget extends StatelessWidget{
                 decreaseWorkouts();
               },
               icon: const Icon(Icons.remove),
-              color: const Color.fromARGB(255, 255, 255, 255),
+              color: themeColorPallet['white'],
             ),
           ),
         ),
@@ -192,7 +194,7 @@ class IncreaseDecreaseWidget extends StatelessWidget{
                   increaseWorkouts();
                 },
                 icon: const Icon(Icons.add),
-                color: const Color.fromARGB(255, 255, 255, 255),
+                color: themeColorPallet['white'],
               ),
             ),
           ),

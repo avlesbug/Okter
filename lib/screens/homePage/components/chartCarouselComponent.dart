@@ -87,12 +87,12 @@ class _ChartCarouselWidgetState extends State<ChartCarouselWidget> {
                       RadialBarSeries<WorkoutData, String>(
                         dataSource: [
                           WorkoutData(getPeriodeProgress(widget.documentRef.data!['endDate']), "År",
-                              const Color.fromARGB(255, 87, 117, 168)),
+                              themeColorPallet['green']!),
                           WorkoutData(
                               num.parse(((widget.documentRef.data!['workouts'] / widget.documentRef.data!['goal']) * 100)
                                   .toStringAsFixed(2)),
                               "Meg",
-                              const Color.fromARGB(255, 93, 87, 168)),
+                              themeColorPallet['yellow']!),
                         ],
                         xValueMapper: (WorkoutData data, _) =>
                             data.workoutProgram,
@@ -103,7 +103,7 @@ class _ChartCarouselWidgetState extends State<ChartCarouselWidget> {
                         // Radius of the radial bar
                         radius: '100%',
                         cornerStyle: CornerStyle.bothCurve,
-                        trackColor: const Color(0xFF086c6a),
+                        trackColor: themeColorPallet['grey lightest']!,
                         trackOpacity: 0.1,
                         maximumValue: 100,
                         gap: '3%',

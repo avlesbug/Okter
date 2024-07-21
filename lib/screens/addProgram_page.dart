@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:okter/basePage.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:okter/utils/color_pallet.dart';
 
 import '../utils/reusable_widgets.dart';
 
@@ -70,8 +71,8 @@ class _ProgramsPageState extends State<AddProgramPage> {
                           _programController, "Navn på program")),
                   CupertinoSwitch(
                       thumbColor: Colors.white,
-                      trackColor: const Color.fromARGB(155, 0, 150, 135),
-                      activeColor: const Color.fromARGB(145, 0, 150, 135),
+                      trackColor: themeColorPallet['green'],
+                      activeColor: themeColorPallet['green'],
                       value: _isCardio,
                       onChanged: (value) {
                         setState(() {
@@ -99,8 +100,7 @@ class _ProgramsPageState extends State<AddProgramPage> {
                     Navigator.pop(context);
                   },
                   style: TextButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(
-                        155, 0, 150, 135), // Background Color
+                    backgroundColor: themeColorPallet['green'], // Background Color
                   ),
                   child: const Padding(
                     padding: EdgeInsets.all(12.0),
@@ -131,6 +131,8 @@ class _ProgramsPageState extends State<AddProgramPage> {
                               value: _exercises[key]['sets'],
                               minValue: 1,
                               maxValue: 100,
+                              textStyle: TextStyle(color: themeColorPallet['green'], fontSize: 12),
+                              selectedTextStyle: TextStyle(color: themeColorPallet['green light'], fontSize: 20),
                               onChanged: (value) {
                                 setState(() {
                                   _exercises[key]['sets'] = value;
@@ -148,6 +150,8 @@ class _ProgramsPageState extends State<AddProgramPage> {
                                 value: _exercises[key]['minutes'],
                                 minValue: 0,
                                 maxValue: 100,
+                                textStyle: TextStyle(color: themeColorPallet['green'], fontSize: 12),
+                              selectedTextStyle: TextStyle(color: themeColorPallet['green light'], fontSize: 20),
                                 onChanged: (value) {
                                   setState(() {
                                     _exercises[key]['minutes'] = value;
@@ -162,6 +166,8 @@ class _ProgramsPageState extends State<AddProgramPage> {
                                 value: _exercises[key]['seconds'],
                                 minValue: 0,
                                 maxValue: 60,
+                                textStyle: TextStyle(color: themeColorPallet['green'], fontSize: 12),
+                              selectedTextStyle: TextStyle(color: themeColorPallet['green light'], fontSize: 20),
                                 onChanged: (value) {
                                   setState(() {
                                     _exercises[key]['seconds'] = value;
@@ -176,6 +182,8 @@ class _ProgramsPageState extends State<AddProgramPage> {
                               value: _exercises[key]['speed'],
                               minValue: 0,
                               maxValue: 40,
+                              textStyle: TextStyle(color: themeColorPallet['green']),
+                              selectedTextStyle: TextStyle(color: themeColorPallet['green light']),
                               onChanged: (value) {
                                 setState(() {
                                   _exercises[key]['speed'] = value;
@@ -186,8 +194,8 @@ class _ProgramsPageState extends State<AddProgramPage> {
                           child: Center(child: Text("km/t")),
                         )
                       ]),
-                      const Divider(
-                        color: Color(0xFF086c6a),
+                      Divider(
+                        color: themeColorPallet['green'],
                         thickness: 1,
                       ),
                       Row(
@@ -201,6 +209,8 @@ class _ProgramsPageState extends State<AddProgramPage> {
                                 value: _exercises[key]['pauseM'],
                                 minValue: 0,
                                 maxValue: 60,
+                                textStyle: TextStyle(color: themeColorPallet['green'], fontSize: 12),
+                              selectedTextStyle: TextStyle(color: themeColorPallet['green light'], fontSize: 20), 
                                 onChanged: (value) {
                                   setState(() {
                                     _exercises[key]['pauseM'] = value;
@@ -216,6 +226,8 @@ class _ProgramsPageState extends State<AddProgramPage> {
                                 value: _exercises[key]['pauseS'],
                                 minValue: 0,
                                 maxValue: 59,
+                                textStyle: TextStyle(color: themeColorPallet['green'], fontSize: 12),
+                              selectedTextStyle: TextStyle(color: themeColorPallet['green light'], fontSize: 20),
                                 onChanged: (value) {
                                   setState(() {
                                     _exercises[key]['pauseS'] = value;
@@ -250,6 +262,8 @@ class _ProgramsPageState extends State<AddProgramPage> {
                                 value: _exercises[key]['sets'],
                                 minValue: 1,
                                 maxValue: 100,
+                                textStyle: TextStyle(color: themeColorPallet['green'], fontSize: 12),
+                              selectedTextStyle: TextStyle(color: themeColorPallet['green light'], fontSize: 20),
                                 onChanged: (value) {
                                   setState(() {
                                     _exercises[key]['sets'] = value;
@@ -267,6 +281,8 @@ class _ProgramsPageState extends State<AddProgramPage> {
                                 value: _exercises[key]['reps'],
                                 minValue: 1,
                                 maxValue: 100,
+                                textStyle: TextStyle(color: themeColorPallet['green'], fontSize: 12),
+                              selectedTextStyle: TextStyle(color: themeColorPallet['green light'], fontSize: 20),
                                 onChanged: (value) {
                                   setState(() {
                                     _exercises[key]['reps'] = value;
@@ -284,6 +300,8 @@ class _ProgramsPageState extends State<AddProgramPage> {
                                 value: _exercises[key]['weight'],
                                 minValue: 0,
                                 maxValue: 400,
+                                textStyle: TextStyle(color: themeColorPallet['green'], fontSize: 12),
+                              selectedTextStyle: TextStyle(color: themeColorPallet['green light'], fontSize: 20),
                                 onChanged: (value) {
                                   setState(() {
                                     _exercises[key]['weight'] = value;
@@ -317,9 +335,9 @@ class _ProgramsPageState extends State<AddProgramPage> {
                           _formCount--;
                         });
                       },
-                      icon: const CircleAvatar(
-                        backgroundColor: Color.fromARGB(155, 0, 150, 135),
-                        child: Icon(
+                      icon: CircleAvatar(
+                        backgroundColor: themeColorPallet['green'],
+                        child: const Icon(
                           Icons.remove,
                         ),
                       )),
@@ -339,9 +357,9 @@ class _ProgramsPageState extends State<AddProgramPage> {
                         });
                       });
                     },
-                    icon: const CircleAvatar(
-                      backgroundColor: Color.fromARGB(155, 0, 150, 135),
-                      child: Icon(
+                    icon: CircleAvatar(
+                      backgroundColor: themeColorPallet['green'],
+                      child: const Icon(
                         Icons.add,
                       ),
                     ))
@@ -358,9 +376,9 @@ class _ProgramsPageState extends State<AddProgramPage> {
                           _formCount--;
                         });
                       },
-                      icon: const CircleAvatar(
-                        backgroundColor: Color.fromARGB(155, 0, 150, 135),
-                        child: Icon(
+                      icon: CircleAvatar(
+                        backgroundColor: themeColorPallet['green'],
+                        child: const Icon(
                           Icons.remove,
                         ),
                       )),
@@ -377,9 +395,9 @@ class _ProgramsPageState extends State<AddProgramPage> {
                         });
                       });
                     },
-                    icon: const CircleAvatar(
-                      backgroundColor: Color.fromARGB(155, 0, 150, 135),
-                      child: Icon(
+                    icon: CircleAvatar(
+                      backgroundColor: themeColorPallet['green'],
+                      child: const Icon(
                         Icons.add,
                       ),
                     ))

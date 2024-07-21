@@ -2,10 +2,9 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:okter/utils/color_pallet.dart';
 
 class SisteOktWidget extends StatelessWidget {
   var documentRef;
@@ -49,7 +48,7 @@ class SisteOktWidget extends StatelessWidget {
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 255, 255, 255)),
+                  color: Color.fromARGB(250, 250, 250, 250)),
             ),
           ),
         ),
@@ -83,15 +82,15 @@ class SisteOktWidget extends StatelessWidget {
                 child: sortedWorkouts.isNotEmpty
                     ? Text(
                         "${DateFormat.yMMMEd().format(sortedWorkouts[0]["date"].toDate())}, ${DateFormat.Hm().format(sortedWorkouts[0]["date"].toDate())}",
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontWeight: FontWeight.w300,
-                            color: Color.fromARGB(255, 93, 87, 168)),
+                            color: themeColorPallet['yellow']),
                       )
                     : Text(
                         " ${DateTime(2000,0,0).toString()}, ${DateTime(2000,0,0).hour.toString()}",
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontWeight: FontWeight.w300,
-                            color: Color.fromARGB(255, 93, 87, 168)),
+                            color: themeColorPallet['yellow']),
                       )),
           ),
         ),

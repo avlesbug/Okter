@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:okter/utils/auth_provider.dart';
+import 'package:okter/utils/color_pallet.dart';
 import 'package:okter/utils/color_utils.dart';
 import 'package:okter/screens/homePage/home_page.dart';
 import 'package:okter/screens/login_page.dart';
@@ -56,24 +57,23 @@ class HomeController extends StatelessWidget {
             width: constraints.maxWidth,
             decoration: BoxDecoration(
                 gradient: LinearGradient(colors: [
-              hexStringtoColor("041416"),
-              hexStringtoColor("041416"),
-              hexStringtoColor("020A0B")
-              //hexStringtoColor("1d8a99") //hexStringtoColor("7c77b9")
+              themeColorPallet['grey light']!,
+              themeColorPallet['grey light']!,
+              themeColorPallet['grey dark']!,
             ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Center(
+                Center(
                   child: Icon(
                     Icons.sports_martial_arts,
-                    color: Color.fromARGB(255, 29, 138, 153),
+                    color: themeColorPallet['yellow'],
                     size: 100,
                   ),
                 ),
                 CircularProgressIndicator(
                   valueColor:
-                      AlwaysStoppedAnimation<Color>(hexStringtoColor("1d8a99")),
+                      AlwaysStoppedAnimation<Color>(themeColorPallet['yellow']!),
                 )
               ],
             ),

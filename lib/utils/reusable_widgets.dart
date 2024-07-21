@@ -17,10 +17,10 @@ TextField inputField(
         labelText: labelText,
         labelStyle: const TextStyle(color: Colors.white),
         enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: hexStringtoColor("08282D")),
+          borderSide: BorderSide(color: themeColorPallet['green']!),
         ),
         focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: hexStringtoColor("092E33")),
+          borderSide: BorderSide(color: themeColorPallet['green']!),
         ),
       ));
 }
@@ -33,14 +33,15 @@ TextField largerInputField(
       style: const TextStyle(color: Colors.white, fontSize: 20),
       controller: inputController,
       textInputAction: TextInputAction.next,
+      textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(
         labelText: labelText,
         labelStyle: const TextStyle(color: Colors.white),
         enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: hexStringtoColor("08282D")),
+          borderSide: BorderSide(color: themeColorPallet['green']!),
         ),
         focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: hexStringtoColor("092E33")),
+          borderSide: BorderSide(color: themeColorPallet['green']!),
         ),
       ));
 }
@@ -64,10 +65,10 @@ TextField numInputField(
         labelText: labelText,
         labelStyle: const TextStyle(color: Colors.white),
         enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: hexStringtoColor("08282D")),
+          borderSide: BorderSide(color: themeColorPallet['green']!),
         ),
         focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: hexStringtoColor("092E33")),
+          borderSide: BorderSide(color: themeColorPallet['green']!),
         ),
       ));
 }
@@ -81,9 +82,9 @@ Container signInSignUpButton(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.pressed)) {
-            return hexStringtoColor("1d8a99");
+            return themeColorPallet['green'];
           }
-          return hexStringtoColor("1d8a99");
+          return themeColorPallet['green'];
         }),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
@@ -122,9 +123,9 @@ ElevatedButton defaultButton(BuildContext context, String text, Function onTap) 
     style: ButtonStyle(
       backgroundColor: MaterialStateProperty.resolveWith((states) {
         if (states.contains(MaterialState.pressed)) {
-          return hexStringtoColor("0A2E33");
+          return themeColorPallet['green'];
         }
-        return hexStringtoColor("0A2E33");
+        return themeColorPallet['green'];
       }),
       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
         RoundedRectangleBorder(

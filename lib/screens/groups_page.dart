@@ -6,6 +6,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:okter/basePage.dart';
 import 'package:intl/intl.dart';
+import 'package:okter/utils/color_pallet.dart';
 import 'package:okter/utils/color_utils.dart';
 import 'package:okter/screens/addFriend_page.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -106,7 +107,7 @@ class _GroupsPageState extends State<GroupsPage> {
                 itemCount: _groupMap.length,
                 itemBuilder: (context, index) {
                   return Card(
-                    color: hexStringtoColor("1A2123"),
+                    color: themeColorPallet['grey dark'],
                     child: ListTile(title: Text(_groupMap[index]["name"])),
                   );
                 },

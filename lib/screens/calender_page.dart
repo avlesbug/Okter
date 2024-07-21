@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +10,7 @@ import 'package:okter/basePage.dart';
 import 'package:okter/utils/reusable_widgets.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../utils/color_pallet.dart';
 
 class CalenderPage extends StatefulWidget {
   const CalenderPage({super.key});
@@ -19,19 +22,23 @@ class CalenderPage extends StatefulWidget {
 class _CalenderPageState extends State<CalenderPage> {
   late CollectionReference users;
   late String userId;
+  late var snapshot;
 
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
-  //List<dynamic> _programs = [];
   var _focusedDay = DateTime.now();
   List<Map<String, dynamic>> _selectedEvents = [];
   var _selectedDay = DateTime.now();
 
   @override
   void initState() {
+    super.initState();
     userId = FirebaseAuth.instance.currentUser!.uid.toString();
+    snapshot = FirebaseFirestore.instance
+        .collection('UserData')
+        .doc(userId)
+        .snapshots();
   }
-
 
   List<String> getNames(var workoutPrograms) {
     List<String> programNames = [];
@@ -46,113 +53,138 @@ class _CalenderPageState extends State<CalenderPage> {
     return programNames;
   }
 
+  List<String> programNames = [
+    "Annen aktivitet",
+    "Styrketrening",
+    "Kardio",
+    "Fjelltur"
+  ];
+
+  CalendarStyle customCalendarStyle = CalendarStyle(
+    outsideDaysVisible: false,
+    selectedTextStyle: TextStyle(color: themeColorPallet['grey dark']),
+    todayTextStyle: TextStyle(color: themeColorPallet['grey dark']),
+    markerDecoration: BoxDecoration(
+      shape: BoxShape.circle,
+      color: themeColorPallet['green'],
+    ),
+    todayDecoration: BoxDecoration(
+      shape: BoxShape.circle,
+      color: themeColorPallet['yellow light'],
+    ),
+    selectedDecoration: BoxDecoration(
+      shape: BoxShape.circle,
+      color: themeColorPallet['yellow'],
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
-    initState();
     return okterAddButtonScaffold(
       "Kalender",
-      [
-       StreamBuilder(
-          stream: FirebaseFirestore.instance.collection('UserData').doc(userId).snapshots(),
-          builder: (context, snapshot) {
-            return Builder(builder: (BuildContext context) {
-              return IconButton(
-                  onPressed: () {
-                    DatePicker.showTimePicker(
-                      context,
-                      showTitleActions: true,
-                      currentTime: DateTime.now(),
-                      theme: const DatePickerTheme(
-                        headerColor: Color(0xFF020A0B),
-                        backgroundColor: Color(0xFF020A0B),
-                        itemStyle: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18),
-                        doneStyle: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                      onConfirm: (time) {
-                        showPicker(context, time, snapshot);
-                      },
-                    );
-                      
-                  },
-                  icon: const Icon(Icons.add));
-            });
+      BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.expand_more),
+            label: 'Tilbake',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add),
+            label: 'Legg til',
+          ),
+        ],
+        currentIndex: 0,
+        backgroundColor: themeColorPallet['grey dark'],
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white,
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.of(context).pop();
+          } else {
+            showPicker(DateTime.now());
           }
-        )
-      ],
-      context,
-     StreamBuilder(
-          stream: FirebaseFirestore.instance.collection('UserData').doc(userId).snapshots(),
-          builder: (context, snapshot) {
-            return 
-            snapshot.hasData ?
-            Column(
-            children: [
-              TableCalendar(
-                focusedDay: _focusedDay,
-                firstDay: DateTime(2000, 1, 1),
-                lastDay: DateTime(2100, 1, 1),
-                weekNumbersVisible: true,
-                pageJumpingEnabled: true,
-                startingDayOfWeek: StartingDayOfWeek.monday,
-                selectedDayPredicate: (day) {
-                  return isSameDay(_selectedDay, day);
-                },
-                onDaySelected: (selectedDay, focusedDay) {
-                  setState(() {
-                    _selectedDay = selectedDay;
-                    _focusedDay = focusedDay; // update `_focusedDay` here as well
-                    _selectedEvents = _getEventsForDay(selectedDay, snapshot.data!['detailedWorkouts']);
-                  });
-                },
-                onPageChanged: (focusedDay) {
-                  _focusedDay = focusedDay;
-                },
-                eventLoader: (day) {
-                  return _getEventsForDay(day,snapshot.data!['detailedWorkouts']);
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 50, 16, 16),
-                child: SizedBox(
-                  height: 600,
-                  width: 500,
-                  child: ListView.builder(
-                      itemCount: _selectedEvents.length,
-                      itemBuilder: ((context, index) {
-                        return Material(
-                          color: Colors.transparent,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ListTile(
-                                tileColor: const Color(0xFF031011),
-                                leading: getIcon(_selectedEvents[index]
-                                        ['workoutProgram']
-                                    .toString()),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                title: Text(
-                                    '${DateFormat.Hm().format(_selectedEvents[index]['date']).toString()} - ${_selectedEvents[index]['workoutProgram'].toString()}'),
-                                onLongPress: () {
-                                  workoutProgramDialog(_selectedEvents[index]);
-                                }),
-                          ),
-                        );
-                      })),
-                ),
-              )
-            ],
-          ):
-          loadingComponent();
-        }
+        },
       ),
+      context,
+      StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('UserData')
+              .doc(userId)
+              .snapshots(),
+          builder: (context, snapshot) {
+            return snapshot.hasData
+                ? Column(
+                    children: [
+                      TableCalendar(
+                        focusedDay: _focusedDay,
+                        firstDay: DateTime(2000, 1, 1),
+                        lastDay: DateTime(2100, 1, 1),
+                        weekNumbersVisible: true,
+                        pageJumpingEnabled: true,
+                        startingDayOfWeek: StartingDayOfWeek.monday,
+                        selectedDayPredicate: (day) {
+                          return isSameDay(_selectedDay, day);
+                        },
+                        onDaySelected: (selectedDay, focusedDay) {
+                          setState(() {
+                            _selectedDay = selectedDay;
+                            _focusedDay = focusedDay;
+                            _selectedEvents = _getEventsForDay(selectedDay,
+                                snapshot.data!['detailedWorkouts']);
+                          });
+                        },
+                        onPageChanged: (focusedDay) {
+                          _focusedDay = focusedDay;
+                        },
+                        eventLoader: (day) {
+                          return _getEventsForDay(
+                              day, snapshot.data!['detailedWorkouts']);
+                        },
+                        calendarStyle: customCalendarStyle,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 50, 16, 16),
+                        child: SizedBox(
+                          height: 600,
+                          width: 500,
+                          child: ListView.builder(
+                              itemCount: _selectedEvents.length,
+                              itemBuilder: ((context, index) {
+                                return Material(
+                                  color: Colors.transparent,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ListTile(
+                                        tileColor:
+                                            themeColorPallet['grey light'],
+                                        leading: getIcon(_selectedEvents[index]
+                                                ['workoutProgram']
+                                            .toString()),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        title: Text(
+                                            '${DateFormat.Hm().format(_selectedEvents[index]['date']).toString()} - ${_selectedEvents[index]['workoutProgram'].toString()}'),
+                                        onLongPress: () {
+                                          workoutProgramDialog(
+                                              _selectedEvents[index]);
+                                        }),
+                                  ),
+                                );
+                              })),
+                        ),
+                      )
+                    ],
+                  )
+                : loadingComponent();
+          }),
     );
   }
 
-  List<Map<String, dynamic>> _getEventsForDay(DateTime day, List<dynamic> detailedWorkouts) {
+  List<Map<String, dynamic>> _getEventsForDay(
+      DateTime day, List<dynamic> detailedWorkouts) {
     List<Map<String, dynamic>> events = [];
     DateTime calenderDay = DateTime.parse(day.toString().replaceAll('Z', ''));
     DateTime nextDay = calenderDay.add(const Duration(days: 1));
@@ -183,7 +215,7 @@ class _CalenderPageState extends State<CalenderPage> {
       context: context,
       builder: (context) => AlertDialog(
             title: Center(child: Text(workout["workoutProgram"])),
-            backgroundColor: const Color(0xFF041416),
+            backgroundColor: themeColorPallet['grey dark'],
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(26.0)),
             content: SizedBox(
@@ -198,7 +230,7 @@ class _CalenderPageState extends State<CalenderPage> {
                       },
                       style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(
-                              const Color.fromARGB(255, 7, 34, 38)),
+                              themeColorPallet['green']!),
                           shape:
                               MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
@@ -212,19 +244,18 @@ class _CalenderPageState extends State<CalenderPage> {
           ));
 
   void deleteWorkout(workout) {
-    print("Deleting workout: " + workout.toString());
     FirebaseFirestore.instance.collection('UserData').doc(userId).update({
       'detailedWorkouts': FieldValue.arrayRemove([workout])
     });
   }
 
-  showPicker(BuildContext context, DateTime time, var snapshot) async {
+  showPicker(DateTime time) {
     Picker picker = Picker(
-        adapter: PickerDataAdapter<String>(pickerData: getNames(snapshot.data!['workoutPrograms'])),
+        adapter: PickerDataAdapter<String>(pickerData: programNames),
         changeToFirst: false,
-        containerColor: const Color(0xFF020A0B),
-        headerColor: const Color(0xFF020A0B),
-        backgroundColor: const Color(0xFF020A0B),
+        containerColor: themeColorPallet['grey dark'],
+        headerColor: themeColorPallet['grey dark'],
+        backgroundColor: themeColorPallet['grey dark'],
         textAlign: TextAlign.left,
         textStyle: const TextStyle(color: Colors.white, fontSize: 20),
         columnPadding: const EdgeInsets.all(8.0),
@@ -233,30 +264,11 @@ class _CalenderPageState extends State<CalenderPage> {
         confirmTextStyle: const TextStyle(color: Colors.white),
         cancelTextStyle: const TextStyle(color: Colors.white),
         onCancel: () {
-          DatePicker.showTimePicker(
-            context,
-            showTitleActions: true,
-            currentTime: DateTime.now(),
-            theme: const DatePickerTheme(
-              headerColor: Color(0xFF020A0B),
-              backgroundColor: Color(0xFF020A0B),
-              itemStyle: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18),
-              doneStyle: TextStyle(color: Colors.white, fontSize: 16),
-            ),
-            onConfirm: (time) {
-              //showPicker(context, time);
-              //addWorkout(time);
-            },
-          );
+          Navigator.of(context).pop();
         },
         onConfirm: (Picker picker, List value) {
           String selectedProgram = picker.getSelectedValues()[0];
           addWorkout(time, selectedProgram);
-
-            
         });
     picker.showBottomSheet(context);
   }

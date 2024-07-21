@@ -12,6 +12,8 @@ import 'package:okter/screens/addFriend_page.dart';
 import 'package:okter/screens/friendRequests_page.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import '../utils/color_pallet.dart';
+
 class FriendsPage extends StatefulWidget {
   const FriendsPage({super.key});
 
@@ -33,18 +35,6 @@ class _FriendsPageState extends State<FriendsPage> {
   final _friendMap = [];
   var _counter = 0;
   var _isLoaded = false;
-  List<Color> colorPallet = [
-    const Color.fromRGBO(75, 135, 185, 1),
-    const Color.fromRGBO(192, 108, 132, 1),
-    const Color.fromRGBO(246, 114, 128, 1),
-    const Color.fromRGBO(248, 177, 149, 1),
-    const Color.fromRGBO(116, 180, 155, 1),
-    const Color.fromRGBO(0, 168, 181, 1),
-    const Color.fromRGBO(73, 76, 162, 1),
-    const Color.fromRGBO(255, 205, 96, 1),
-    const Color.fromRGBO(255, 240, 219, 1),
-    const Color.fromRGBO(238, 238, 238, 1)
-  ];
 
   final String _frindname = "Friend Name";
 
@@ -174,7 +164,7 @@ class _FriendsPageState extends State<FriendsPage> {
                                 title: Text(_friendMap[index]["name"]),
                                 subtitle: Text(
                                     "${_friendMap[index]["workouts"]} / ${_friendMap[index]["goal"]}"),
-                                tileColor: hexStringtoColor("061E21"),
+                                tileColor: themeColorPallet['grey light'],
                                 leading: CircleAvatar(
                                   radius: 30,
                                   foregroundImage: NetworkImage(
@@ -205,7 +195,7 @@ class _FriendsPageState extends State<FriendsPage> {
                                         radius: '100%',
                                         innerRadius: '68%',
                                         cornerStyle: CornerStyle.bothCurve,
-                                        trackColor: const Color(0xFF086c6a),
+                                        trackColor: themeColorPallet['grey lightest']!,
                                         trackOpacity: 0.1,
                                         maximumValue: 100,
                                         gap: '3%',
@@ -231,15 +221,15 @@ class _FriendsPageState extends State<FriendsPage> {
                                 title: Text(_friendMap[index]["name"]),
                                 subtitle: Text(
                                     "${_friendMap[index]["workouts"]} / ${_friendMap[index]["goal"]}"),
-                                tileColor: hexStringtoColor("061E21"),
-                                leading: const CircleAvatar(
+                                tileColor: themeColorPallet['grey light'],
+                                leading: CircleAvatar(
                                   backgroundColor:
-                                      Color.fromARGB(255, 29, 138, 153),
+                                      themeColorPallet['green'],
                                   radius: 30,
                                   child: Icon(
                                     Icons.person,
                                     size: 40,
-                                    color: Color.fromARGB(255, 11, 201, 205),
+                                    color: themeColorPallet['yellow'],
                                   ),
                                 ),
                                 onTap: () {
@@ -270,7 +260,7 @@ class _FriendsPageState extends State<FriendsPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: hexStringtoColor("041416"),
+        backgroundColor: themeColorPallet['grey dark'],
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(26.0)),
         content: SizedBox(
@@ -282,7 +272,7 @@ class _FriendsPageState extends State<FriendsPage> {
                     RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18.0))),
                 backgroundColor: MaterialStateProperty.all<Color>(
-                    hexStringtoColor("061E21"))),
+                    themeColorPallet['grey dark']!)),
             onPressed: () {
               Navigator.pop(context);
               deleteFriend(userRef);

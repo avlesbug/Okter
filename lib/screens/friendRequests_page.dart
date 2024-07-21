@@ -6,6 +6,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:okter/basePage.dart';
 import 'package:intl/intl.dart';
+import 'package:okter/utils/color_pallet.dart';
 import 'package:okter/utils/color_utils.dart';
 
 import '../utils/reusable_widgets.dart';
@@ -118,7 +119,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage> {
                                   ),
                                   title: Text(_requestsMap[index]["name"]),
                                   subtitle: Text("${_requestsMap[index]["workouts"]} / ${_requestsMap[index]["goal"]}"),
-                                  tileColor: hexStringtoColor("061E21"),
+                                  tileColor: themeColorPallet['grey light'],
                                   leading: CircleAvatar(
                                     radius: 30,
                                     foregroundImage: NetworkImage(
@@ -139,15 +140,15 @@ class _FriendRequestsPageState extends State<FriendRequestsPage> {
                                   title: Text(_requestsMap[index]["name"]),
                                   subtitle: Text(
                                       _requestsMap[index]["email"].toString()),
-                                  tileColor: hexStringtoColor("061E21"),
-                                  leading: const CircleAvatar(
+                                  tileColor: themeColorPallet['grey light'],
+                                  leading: CircleAvatar(
                                     backgroundColor:
-                                        Color.fromARGB(255, 29, 138, 153),
+                                        themeColorPallet['green'],
                                     radius: 30,
                                     child: Icon(
                                       Icons.person,
                                       size: 40,
-                                      color: Color.fromARGB(255, 11, 201, 205),
+                                      color: themeColorPallet['yellow'],
                                     ),
                                   ),
                                   trailing: trailing(index)),
@@ -190,10 +191,10 @@ class _FriendRequestsPageState extends State<FriendRequestsPage> {
             answerRequest(_friendRequests[index], true);
             updataPage(context, super.widget);
           },
-          icon: const Icon(
+          icon: Icon(
             Icons.check,
             size: 26,
-            color: Color.fromARGB(255, 11, 201, 205),
+            color: themeColorPallet['green'],
           ),
         ),
         const SizedBox(
@@ -204,10 +205,10 @@ class _FriendRequestsPageState extends State<FriendRequestsPage> {
             answerRequest(_friendRequests[index], false);
             updataPage(context, super.widget);
           },
-          icon: const Icon(
+          icon: Icon(
             Icons.clear,
             size: 26,
-            color: Color.fromARGB(255, 11, 201, 205),
+            color: themeColorPallet['green'],
           ),
         ),
       ],

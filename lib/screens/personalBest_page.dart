@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:okter/basePage.dart';
+import 'package:okter/utils/color_pallet.dart';
 
 import '../utils/color_utils.dart';
 import '../utils/reusable_widgets.dart';
@@ -115,18 +116,18 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
     showDialog(
         context: context,
         builder: (context) => Padding(
-              padding: const EdgeInsets.fromLTRB(48.0, 84.0, 48.0, 280),
+              padding: const EdgeInsets.fromLTRB(48.0, 84.0, 48.0, 450),
               child: Material(
                 color: Colors.transparent,
                 child: Card(
-                  color: hexStringtoColor("030c10"),
+                  color: themeColorPallet['grey dark'],
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
+                    borderRadius: BorderRadius.circular(12.0),
                   ),
                   child: Column(
                     children: [
                       const Padding(
-                        padding: EdgeInsets.fromLTRB(32.0, 32.0, 32.0, 0),
+                        padding: EdgeInsets.fromLTRB(32.0, 32.0, 32.0, 16),
                         child: Text(
                           "Legg til ny personlig rekord",
                           style: TextStyle(
@@ -135,17 +136,14 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
                           ),
                         ),
                       ),
-                      const Spacer(),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(64, 0, 64, 0),
+                        padding: const EdgeInsets.fromLTRB(64, 16, 64, 16),
                         child: inputField(_ovelseController, false, "Øvelse"),
                       ),
-                      const Spacer(),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(64, 0, 64, 0),
+                        padding: const EdgeInsets.fromLTRB(64, 16, 64, 64),
                         child: numInputField(_vektController, "Vekt"),
                       ),
-                      const Spacer(),
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: TextButton(
@@ -156,14 +154,14 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
-                                Color.fromARGB(155, 0, 150, 135)),
+                                themeColorPallet['green']!),
                                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
+                                    borderRadius: BorderRadius.circular(6.0),
                                   ),),
                           ),
                           child: const Padding(
-                            padding: EdgeInsets.fromLTRB(16, 4, 16, 4),
+                            padding: EdgeInsets.fromLTRB(16, 12, 16, 12),
                             child: Text(
                               "Legg til",
                               style: TextStyle(color: Colors.white),
@@ -186,17 +184,17 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
     showDialog(
       context: context,
       builder: (context) => Padding(
-        padding: const EdgeInsets.fromLTRB(48.0, 80.0, 48.0, 280),
+        padding: const EdgeInsets.fromLTRB(48.0, 80.0, 48.0, 450),
         child: Card(
-          color: hexStringtoColor("030c10"),
+          color: themeColorPallet['grey dark'],
           elevation: 20,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
+            borderRadius: BorderRadius.circular(12.0),
           ),
           child: Column(
             children: [
               const Padding(
-                padding: EdgeInsets.fromLTRB(32.0, 32.0, 32.0, 0),
+                padding: EdgeInsets.fromLTRB(32.0, 32.0, 32.0, 16),
                 child: Text(
                   "Oppdater personlig rekord",
                   style: TextStyle(
@@ -205,19 +203,17 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
                   ),
                 ),
               ),
-              const Spacer(),
               Padding(
-                padding: const EdgeInsets.fromLTRB(64, 0, 64, 0),
+                padding: const EdgeInsets.fromLTRB(64, 16, 64, 16),
                 child: inputField(ovelseController, false, "Øvelse"),
               ),
-              const Spacer(),
               Padding(
-                padding: const EdgeInsets.fromLTRB(64, 0, 64, 0),
+                padding: const EdgeInsets.fromLTRB(64, 16, 64, 16),
                 child: numInputField(vektController, "Vekt"),
               ),
               const Spacer(),
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.fromLTRB(64, 16, 64, 32),
                 child: TextButton(
                   onPressed: () {
                     addRekord(ovelseController.text, vektController.text);
@@ -232,15 +228,15 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
                         },
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
-                                Color.fromARGB(155, 0, 150, 135)),
+                                themeColorPallet['green']!),
                                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
+                                    borderRadius: BorderRadius.circular(6.0),
                                   ),),
                           ),
                         child: const Padding(
-                          padding: EdgeInsets.fromLTRB(16, 4, 16, 4),
-                          child: Text("Legg til",
+                          padding: EdgeInsets.fromLTRB(16, 12, 16, 12),
+                          child: Text("Lagre",
                               style: TextStyle(color: Colors.white)),
                         ),
                       ),
@@ -252,15 +248,15 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
                         },
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
-                                Color.fromARGB(155, 0, 150, 135),),
+                                themeColorPallet['green']!),
                                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
+                                    borderRadius: BorderRadius.circular(6.0),
                                   ),),
                           ),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(16,4,16,4),
-                          child: const Text("Slett",
+                        child: const Padding(
+                          padding: EdgeInsets.fromLTRB(16,12,16,12),
+                          child: Text("Slett",
                               style: TextStyle(color: Colors.white)),
                         ),
                       ),

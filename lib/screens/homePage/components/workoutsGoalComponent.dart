@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../../../utils/color_pallet.dart';
 import '../../../utils/color_utils.dart';
 import '../../../utils/reusable_widgets.dart';
 
@@ -21,7 +22,7 @@ class WorkoutsGoalWidget extends StatelessWidget{
     context: context,
     builder: (context) => AlertDialog(
       title: const Text("Mål"),
-      backgroundColor: hexStringtoColor("041416"),
+      backgroundColor: themeColorPallet['grey dark'],
       shape:
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(26.0)),
       content: numInputField(
@@ -41,7 +42,7 @@ class WorkoutsGoalWidget extends StatelessWidget{
     context: context,
     builder: (context) => AlertDialog(
       title: const Text("Økter"),
-      backgroundColor: hexStringtoColor("041416"),
+      backgroundColor: themeColorPallet['grey dark'],
       shape:
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(26.0)),
       content: numInputField(_okterController, "Skriv antall økter"),
@@ -100,21 +101,21 @@ void submit(BuildContext context) {
                   openDialog(context);
                 },
                 child: Text(documentRef.data!['workouts'].toString(),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 32,
                         color:
-                            Color.fromARGB(255, 255, 255, 255)))),
+                            themeColorPallet['white']))),
           ),
           Container(
             child: GestureDetector(
                 onLongPress: () {
                   openDialog(context);
                 },
-                child: const Text(" / ",
+                child: Text(" / ",
                     style: TextStyle(
                       fontSize: 32,
                         color:
-                            Color.fromARGB(255, 255, 255, 255)))),
+                            themeColorPallet['white']))),
           ),
           SizedBox(
             child: GestureDetector(
@@ -122,10 +123,10 @@ void submit(BuildContext context) {
                   openGoalDialog(context);
                 },
                 child: Text(documentRef.data!['goal'].toString(),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 32,
                       color:
-                          Color.fromARGB(255, 255, 255, 255)))),
+                          themeColorPallet['white']))),
             ),
         ],
       ),

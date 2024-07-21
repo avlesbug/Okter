@@ -95,7 +95,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(10),
                                         ),
-                                        tileColor: const Color(0xFF031011),
+                                        tileColor: themeColorPallet['grey light'],
                                         leading: 
                                         snapshot.data!['workoutPrograms'][index]["isCardio"]
                                             ? const Icon(
