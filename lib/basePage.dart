@@ -15,9 +15,26 @@ Widget okterDrawerScaffold(context, bodycontent) {
             icon: const Icon(Icons.person),
             onPressed: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SettingsPage()));
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      const SettingsPage(),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    const begin = Offset(-1.0, 0.0);
+                    const end = Offset.zero;
+                    const curve = Curves.easeInOut;
+
+                    var tween = Tween(begin: begin, end: end)
+                        .chain(CurveTween(curve: curve));
+
+                    return SlideTransition(
+                      position: animation.drive(tween),
+                      child: child,
+                    );
+                  },
+                ),
+              );
             },
           ),
         ),
@@ -97,7 +114,10 @@ Route _createRoute(int index) {
   );
 }
 
-Widget okterScaffold(name, context, bodycontent) {
+Widget okterScaffold(
+    {required String name,
+    required BuildContext context,
+    required Widget bodycontent}) {
   final currentWidth = MediaQuery.of(context).size.width;
   double paddingWidth = 6.0;
   if (currentWidth > 540) {
@@ -164,7 +184,13 @@ Widget okterSignInScaffold(name, context, bodycontent) {
   }));
 }
 
-Widget okterAddButtonScaffold(name, bottomNavigation, context, bodycontent) {
+Widget okterAddButtonScaffold(
+    {required String name,
+    required Widget bottomNavigation,
+    required BuildContext context,
+    required Widget bodyContent,
+    required Icon leading,
+    Widget? friendRequestIcon}) {
   final currentWidth = MediaQuery.of(context).size.width;
   double paddingWidth = 6.0;
   if (currentWidth > 540) {
@@ -176,7 +202,8 @@ Widget okterAddButtonScaffold(name, bottomNavigation, context, bodycontent) {
   return Scaffold(
       bottomNavigationBar: bottomNavigation,
       appBar: AppBar(
-        leading: Icon(Icons.work_outline),
+        actions: friendRequestIcon != null ? [friendRequestIcon] : [],
+        leading: leading,
         backgroundColor: themeColorPallet['grey dark'],
         elevation: 0,
         title: Text(
@@ -196,7 +223,7 @@ Widget okterAddButtonScaffold(name, bottomNavigation, context, bodycontent) {
           color: themeColorPallet['grey dark'],
           child: Padding(
               padding: const EdgeInsets.all(16),
-              child: SingleChildScrollView(child: bodycontent)),
+              child: SingleChildScrollView(child: bodyContent)),
         );
       }));
 }

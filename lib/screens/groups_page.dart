@@ -86,19 +86,34 @@ class _GroupsPageState extends State<GroupsPage> {
     getUserData();
     getGroupMap();
     return okterAddButtonScaffold(
-        "Grupper",
-        [
-          IconButton(
-              onPressed: (() {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const AddFriendsPage()));
-              }),
-              icon: const Icon(Icons.add))
-        ],
-        context,
-        Column(
+        name: "Grupper",
+        bottomNavigation: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.expand_more),
+              label: 'Tilbake',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.add),
+              label: 'Legg til',
+            ),
+          ],
+          currentIndex: 0,
+          backgroundColor: themeColorPallet['grey dark'],
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.white,
+          onTap: (index) {
+            if (index == 0) {
+              Navigator.of(context).pop();
+            } else {
+              print("Legg til");
+            }
+          },
+        ),
+        context: context,
+        leading: Icon(Icons.calendar_month),
+        bodyContent: Column(
           children: [
             const SizedBox(height: 20),
             SizedBox(

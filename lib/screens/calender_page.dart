@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:okter/basePage.dart';
 import 'package:okter/utils/reusable_widgets.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:uuid/uuid.dart';
 
 import '../utils/color_pallet.dart';
 
@@ -23,6 +22,7 @@ class _CalenderPageState extends State<CalenderPage> {
   late CollectionReference users;
   late String userId;
   late var snapshot;
+  var uuid = Uuid();
 
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
@@ -81,8 +81,8 @@ class _CalenderPageState extends State<CalenderPage> {
   @override
   Widget build(BuildContext context) {
     return okterAddButtonScaffold(
-      "Kalender",
-      BottomNavigationBar(
+      name: "Kalender",
+      bottomNavigation: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -102,17 +102,21 @@ class _CalenderPageState extends State<CalenderPage> {
           if (index == 0) {
             Navigator.of(context).pop();
           } else {
-            showPicker(DateTime.now());
+            showPicker();
           }
         },
       ),
-      context,
-      StreamBuilder(
+      context: context,
+      leading: Icon(Icons.calendar_month),
+      bodyContent: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('UserData')
               .doc(userId)
               .snapshots(),
           builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              programNames = getNames(snapshot.data!['workoutPrograms']);
+            }
             return snapshot.hasData
                 ? Column(
                     children: [
@@ -193,6 +197,7 @@ class _CalenderPageState extends State<CalenderPage> {
       if (detailedWorkouts[i]["date"].toDate().isAfter(calenderDay) &&
           detailedWorkouts[i]["date"].toDate().isBefore(nextDay)) {
         events.add({
+          'id': detailedWorkouts[i]["id"] ?? "",
           'date': detailedWorkouts[i]["date"].toDate(),
           'workoutProgram': detailedWorkouts[i]["workoutProgram"]
         });
@@ -204,10 +209,22 @@ class _CalenderPageState extends State<CalenderPage> {
   void addWorkout(DateTime time, String selectedProgram) {
     DateTime workoutTime = DateTime(_selectedDay.year, _selectedDay.month,
         _selectedDay.day, time.hour, time.minute);
-    FirebaseFirestore.instance.collection('UserData').doc(userId).update({
-      'detailedWorkouts': FieldValue.arrayUnion([
-        {'date': workoutTime, 'workoutProgram': selectedProgram}
-      ])
+
+    FirebaseFirestore.instance
+        .collection("UserData")
+        .doc(userId)
+        .get()
+        .then((value) {
+      FirebaseFirestore.instance.collection("UserData").doc(userId).update({
+        'workouts': value['workouts'] + 1,
+        'detailedWorkouts': FieldValue.arrayUnion([
+          {
+            'id': uuid.v1(),
+            'date': workoutTime,
+            'workoutProgram': selectedProgram
+          }
+        ])
+      });
     });
   }
 
@@ -244,33 +261,66 @@ class _CalenderPageState extends State<CalenderPage> {
           ));
 
   void deleteWorkout(workout) {
-    FirebaseFirestore.instance.collection('UserData').doc(userId).update({
-      'detailedWorkouts': FieldValue.arrayRemove([workout])
+    FirebaseFirestore.instance
+        .collection("UserData")
+        .doc(userId)
+        .get()
+        .then((value) {
+      FirebaseFirestore.instance.collection("UserData").doc(userId).update({
+        'workouts': value['workouts'] - 1,
+        'detailedWorkouts': FieldValue.arrayRemove([workout])
+      });
     });
   }
 
-  showPicker(DateTime time) {
-    Picker picker = Picker(
-        adapter: PickerDataAdapter<String>(pickerData: programNames),
-        changeToFirst: false,
-        containerColor: themeColorPallet['grey dark'],
-        headerColor: themeColorPallet['grey dark'],
-        backgroundColor: themeColorPallet['grey dark'],
-        textAlign: TextAlign.left,
-        textStyle: const TextStyle(color: Colors.white, fontSize: 20),
-        columnPadding: const EdgeInsets.all(8.0),
-        confirmText: "Lagre",
-        cancelText: "Tilbake",
-        confirmTextStyle: const TextStyle(color: Colors.white),
-        cancelTextStyle: const TextStyle(color: Colors.white),
-        onCancel: () {
-          Navigator.of(context).pop();
-        },
-        onConfirm: (Picker picker, List value) {
-          String selectedProgram = picker.getSelectedValues()[0];
-          addWorkout(time, selectedProgram);
-        });
-    picker.showBottomSheet(context);
+  void showPicker() {
+    print("showPicker called");
+    DatePicker.showTimePicker(
+      context,
+      showTitleActions: true,
+      currentTime: DateTime.now(),
+      theme: DatePickerTheme(
+          headerColor: themeColorPallet['grey dark'],
+          backgroundColor: themeColorPallet['grey dark'] ?? Color(0xFF141213),
+          itemStyle: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+          doneStyle: TextStyle(color: Colors.white, fontSize: 16),
+          cancelStyle: TextStyle(color: Colors.white, fontSize: 16)),
+      onConfirm: (time) {
+        print("Time selected: $time");
+        showModalBottomSheet(
+          context: context,
+          builder: (BuildContext context) {
+            return Builder(
+              builder: (BuildContext context) {
+                return Picker(
+                  adapter: PickerDataAdapter<String>(pickerData: programNames),
+                  changeToFirst: false,
+                  containerColor: themeColorPallet['grey dark'],
+                  headerColor: themeColorPallet['grey dark'],
+                  backgroundColor: themeColorPallet['grey dark'],
+                  textAlign: TextAlign.left,
+                  textStyle: const TextStyle(color: Colors.white, fontSize: 20),
+                  columnPadding: const EdgeInsets.all(8.0),
+                  confirmText: "Lagre",
+                  cancelText: "Tilbake",
+                  confirmTextStyle: const TextStyle(color: Colors.white),
+                  cancelTextStyle: const TextStyle(color: Colors.white),
+                  onCancel: () {
+                    showPicker();
+                  },
+                  onConfirm: (Picker picker, List value) {
+                    print("Picker confirmed");
+                    String selectedProgram = picker.getSelectedValues()[0];
+                    addWorkout(time, selectedProgram);
+                  },
+                ).makePicker();
+              },
+            );
+          },
+        );
+      },
+    );
   }
 
   Icon getIcon(String workoutProgram) {

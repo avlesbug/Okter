@@ -91,59 +91,121 @@ class _FriendsPageState extends State<FriendsPage> {
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
-    print("h: $height w: $width");
     initState();
     getUserData();
     getFriendMap();
     return okterAddButtonScaffold(
-        "Friends",
-        [
-          Stack(children: [
-            IconButton(
-                onPressed: (() {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const FriendRequestsPage()));
-                }),
-                icon: const Icon(Icons.notifications)),
-            _counter != 0
-                ? Positioned(
-                    right: 5,
-                    top: 5,
-                    child: Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      constraints: const BoxConstraints(
-                        minWidth: 14,
-                        minHeight: 14,
-                      ),
-                      child: Text(
-                        '$_counter',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 8,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  )
-                : Container(),
-          ]),
+        name: "Friends",
+        bottomNavigation: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.expand_more),
+              label: 'Tilbake',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.add),
+              label: 'Legg til',
+            ),
+          ],
+          currentIndex: 0,
+          backgroundColor: themeColorPallet['grey dark'],
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.white,
+          onTap: (index) {
+            if (index == 0) {
+              Navigator.of(context).pop();
+            } else {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const AddFriendsPage()));
+            }
+          },
+        ),
+        // [
+        // Stack(children: [
+        //   IconButton(
+        //       onPressed: (() {
+        //         Navigator.push(
+        //             context,
+        //             MaterialPageRoute(
+        //                 builder: (context) => const FriendRequestsPage()));
+        //       }),
+        //       icon: const Icon(Icons.notifications)),
+        //   _counter != 0
+        //       ? Positioned(
+        //           right: 5,
+        //           top: 5,
+        //           child: Container(
+        //             padding: const EdgeInsets.all(2),
+        //             decoration: BoxDecoration(
+        //               color: Colors.red,
+        //               borderRadius: BorderRadius.circular(6),
+        //             ),
+        //             constraints: const BoxConstraints(
+        //               minWidth: 14,
+        //               minHeight: 14,
+        //             ),
+        //             child: Text(
+        //               '$_counter',
+        //               style: const TextStyle(
+        //                 color: Colors.white,
+        //                 fontSize: 8,
+        //               ),
+        //               textAlign: TextAlign.center,
+        //             ),
+        //           ),
+        //         )
+        //       : Container(),
+        // ]),
+        //   IconButton(
+        //       onPressed: (() {
+        //         Navigator.push(
+        //             context,
+        //             MaterialPageRoute(
+        //                 builder: (context) => const AddFriendsPage()));
+        //       }),
+        //       icon: const Icon(Icons.add)),
+        // ],
+        context: context,
+        leading: Icon(Icons.groups),
+        friendRequestIcon: Stack(children: [
           IconButton(
               onPressed: (() {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const AddFriendsPage()));
+                        builder: (context) => const FriendRequestsPage()));
               }),
-              icon: const Icon(Icons.add)),
-        ],
-        context,
-        Column(
+              icon: const Icon(Icons.notifications)),
+          _counter != 0
+              ? Positioned(
+                  right: 5,
+                  top: 5,
+                  child: Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 14,
+                      minHeight: 14,
+                    ),
+                    child: Text(
+                      '$_counter',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 8,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                )
+              : Container(),
+        ]),
+        bodyContent: Column(
           children: [
             const SizedBox(height: 20),
             SizedBox(
@@ -195,7 +257,8 @@ class _FriendsPageState extends State<FriendsPage> {
                                         radius: '100%',
                                         innerRadius: '68%',
                                         cornerStyle: CornerStyle.bothCurve,
-                                        trackColor: themeColorPallet['grey lightest']!,
+                                        trackColor:
+                                            themeColorPallet['grey lightest']!,
                                         trackOpacity: 0.1,
                                         maximumValue: 100,
                                         gap: '3%',
@@ -223,8 +286,7 @@ class _FriendsPageState extends State<FriendsPage> {
                                     "${_friendMap[index]["workouts"]} / ${_friendMap[index]["goal"]}"),
                                 tileColor: themeColorPallet['grey light'],
                                 leading: CircleAvatar(
-                                  backgroundColor:
-                                      themeColorPallet['green'],
+                                  backgroundColor: themeColorPallet['green'],
                                   radius: 30,
                                   child: Icon(
                                     Icons.person,

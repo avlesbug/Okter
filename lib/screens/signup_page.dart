@@ -23,9 +23,9 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return okterScaffold(
-      "",
-      context,
-      Column(
+      name: "",
+      context: context,
+      bodycontent: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           const SizedBox(height: 80),

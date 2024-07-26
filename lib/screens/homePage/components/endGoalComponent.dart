@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -25,11 +23,11 @@ class EndGoalComponent extends StatelessWidget {
         child: GestureDetector(
           onLongPress: () {
             DatePickerDialog(
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(2000,1,1),
-                    lastDate: DateTime.now(),
-                  );
-        
+              initialDate: DateTime.now(),
+              firstDate: DateTime(2000, 1, 1),
+              lastDate: DateTime.now(),
+            );
+
             DatePicker.showDatePicker(context,
                 showTitleActions: true,
                 minTime: DateTime(2000, 1, 1),
@@ -39,8 +37,7 @@ class EndGoalComponent extends StatelessWidget {
                     backgroundColor: Color(0xFF020A0B),
                     itemStyle: TextStyle(
                         color: Colors.white, fontWeight: FontWeight.bold),
-                    doneStyle:
-                        TextStyle(color: Colors.white, fontSize: 16)),
+                    doneStyle: TextStyle(color: Colors.white, fontSize: 16)),
                 onChanged: (date) {}, onConfirm: (date) {
               FirebaseFirestore.instance
                   .collection("UserData")
@@ -57,9 +54,9 @@ class EndGoalComponent extends StatelessWidget {
                 ),
                 children: <TextSpan>[
                   TextSpan(
-                      text: "For å nå ${documentRef.data!['goal']} økter innen ",
-                      style:
-                          const TextStyle(fontWeight: FontWeight.bold)),
+                      text:
+                          "For å nå ${documentRef.data!['goal']} økter innen ",
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
                   TextSpan(
                       text: DateFormat.yMMMEd()
                           .format(documentRef.data!['endDate'].toDate())
@@ -67,13 +64,11 @@ class EndGoalComponent extends StatelessWidget {
                   TextSpan(
                       text:
                           " må du trene ${((documentRef.data!['goal'] - documentRef.data!['workouts']) / getWeeksLeft()).toStringAsFixed(1)} ganger i uken, eller ",
-                      style:
-                          const TextStyle(fontWeight: FontWeight.bold)),
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
                   TextSpan(
                       text:
                           "${((documentRef.data!['goal'] - documentRef.data!['workouts']) / getDaysLeft()).toStringAsFixed(1)} ganger per dag",
-                      style:
-                          const TextStyle(fontWeight: FontWeight.bold)),
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
                 ]),
           ),
         ),

@@ -10,10 +10,11 @@ import '../utils/reusable_widgets.dart';
 
 class AddProgramPage extends StatefulWidget {
   const AddProgramPage(
-      {super.key, required this.editWorkout,
+      {super.key,
+      required this.editWorkout,
       required this.updateProgram,
       required this.workoutIndex});
-  final Map<String,dynamic> editWorkout;
+  final Map<String, dynamic> editWorkout;
   final Function updateProgram;
   final int workoutIndex;
 
@@ -36,7 +37,6 @@ class _ProgramsPageState extends State<AddProgramPage> {
 
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
-
   @override
   void initState() {
     super.initState();
@@ -47,9 +47,9 @@ class _ProgramsPageState extends State<AddProgramPage> {
   @override
   Widget build(BuildContext context) {
     return okterScaffold(
-        _title,
-        context,
-        Padding(
+        name: _title,
+        context: context,
+        bodycontent: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -93,14 +93,15 @@ class _ProgramsPageState extends State<AddProgramPage> {
                       'exercises': _exercises,
                     });
                     if (_editing) {
-                      widget.updateProgram(_dataArray,widget.workoutIndex);
+                      widget.updateProgram(_dataArray, widget.workoutIndex);
                     } else {
                       addProgram();
                     }
                     Navigator.pop(context);
                   },
                   style: TextButton.styleFrom(
-                    backgroundColor: themeColorPallet['green'], // Background Color
+                    backgroundColor:
+                        themeColorPallet['green'], // Background Color
                   ),
                   child: const Padding(
                     padding: EdgeInsets.all(12.0),
@@ -131,8 +132,12 @@ class _ProgramsPageState extends State<AddProgramPage> {
                               value: _exercises[key]['sets'],
                               minValue: 1,
                               maxValue: 100,
-                              textStyle: TextStyle(color: themeColorPallet['green'], fontSize: 12),
-                              selectedTextStyle: TextStyle(color: themeColorPallet['green light'], fontSize: 20),
+                              textStyle: TextStyle(
+                                  color: themeColorPallet['green'],
+                                  fontSize: 12),
+                              selectedTextStyle: TextStyle(
+                                  color: themeColorPallet['green light'],
+                                  fontSize: 20),
                               onChanged: (value) {
                                 setState(() {
                                   _exercises[key]['sets'] = value;
@@ -150,8 +155,12 @@ class _ProgramsPageState extends State<AddProgramPage> {
                                 value: _exercises[key]['minutes'],
                                 minValue: 0,
                                 maxValue: 100,
-                                textStyle: TextStyle(color: themeColorPallet['green'], fontSize: 12),
-                              selectedTextStyle: TextStyle(color: themeColorPallet['green light'], fontSize: 20),
+                                textStyle: TextStyle(
+                                    color: themeColorPallet['green'],
+                                    fontSize: 12),
+                                selectedTextStyle: TextStyle(
+                                    color: themeColorPallet['green light'],
+                                    fontSize: 20),
                                 onChanged: (value) {
                                   setState(() {
                                     _exercises[key]['minutes'] = value;
@@ -166,8 +175,12 @@ class _ProgramsPageState extends State<AddProgramPage> {
                                 value: _exercises[key]['seconds'],
                                 minValue: 0,
                                 maxValue: 60,
-                                textStyle: TextStyle(color: themeColorPallet['green'], fontSize: 12),
-                              selectedTextStyle: TextStyle(color: themeColorPallet['green light'], fontSize: 20),
+                                textStyle: TextStyle(
+                                    color: themeColorPallet['green'],
+                                    fontSize: 12),
+                                selectedTextStyle: TextStyle(
+                                    color: themeColorPallet['green light'],
+                                    fontSize: 20),
                                 onChanged: (value) {
                                   setState(() {
                                     _exercises[key]['seconds'] = value;
@@ -182,8 +195,10 @@ class _ProgramsPageState extends State<AddProgramPage> {
                               value: _exercises[key]['speed'],
                               minValue: 0,
                               maxValue: 40,
-                              textStyle: TextStyle(color: themeColorPallet['green']),
-                              selectedTextStyle: TextStyle(color: themeColorPallet['green light']),
+                              textStyle:
+                                  TextStyle(color: themeColorPallet['green']),
+                              selectedTextStyle: TextStyle(
+                                  color: themeColorPallet['green light']),
                               onChanged: (value) {
                                 setState(() {
                                   _exercises[key]['speed'] = value;
@@ -209,8 +224,12 @@ class _ProgramsPageState extends State<AddProgramPage> {
                                 value: _exercises[key]['pauseM'],
                                 minValue: 0,
                                 maxValue: 60,
-                                textStyle: TextStyle(color: themeColorPallet['green'], fontSize: 12),
-                              selectedTextStyle: TextStyle(color: themeColorPallet['green light'], fontSize: 20), 
+                                textStyle: TextStyle(
+                                    color: themeColorPallet['green'],
+                                    fontSize: 12),
+                                selectedTextStyle: TextStyle(
+                                    color: themeColorPallet['green light'],
+                                    fontSize: 20),
                                 onChanged: (value) {
                                   setState(() {
                                     _exercises[key]['pauseM'] = value;
@@ -226,8 +245,12 @@ class _ProgramsPageState extends State<AddProgramPage> {
                                 value: _exercises[key]['pauseS'],
                                 minValue: 0,
                                 maxValue: 59,
-                                textStyle: TextStyle(color: themeColorPallet['green'], fontSize: 12),
-                              selectedTextStyle: TextStyle(color: themeColorPallet['green light'], fontSize: 20),
+                                textStyle: TextStyle(
+                                    color: themeColorPallet['green'],
+                                    fontSize: 12),
+                                selectedTextStyle: TextStyle(
+                                    color: themeColorPallet['green light'],
+                                    fontSize: 20),
                                 onChanged: (value) {
                                   setState(() {
                                     _exercises[key]['pauseS'] = value;
@@ -262,8 +285,12 @@ class _ProgramsPageState extends State<AddProgramPage> {
                                 value: _exercises[key]['sets'],
                                 minValue: 1,
                                 maxValue: 100,
-                                textStyle: TextStyle(color: themeColorPallet['green'], fontSize: 12),
-                              selectedTextStyle: TextStyle(color: themeColorPallet['green light'], fontSize: 20),
+                                textStyle: TextStyle(
+                                    color: themeColorPallet['green'],
+                                    fontSize: 12),
+                                selectedTextStyle: TextStyle(
+                                    color: themeColorPallet['green light'],
+                                    fontSize: 20),
                                 onChanged: (value) {
                                   setState(() {
                                     _exercises[key]['sets'] = value;
@@ -281,8 +308,12 @@ class _ProgramsPageState extends State<AddProgramPage> {
                                 value: _exercises[key]['reps'],
                                 minValue: 1,
                                 maxValue: 100,
-                                textStyle: TextStyle(color: themeColorPallet['green'], fontSize: 12),
-                              selectedTextStyle: TextStyle(color: themeColorPallet['green light'], fontSize: 20),
+                                textStyle: TextStyle(
+                                    color: themeColorPallet['green'],
+                                    fontSize: 12),
+                                selectedTextStyle: TextStyle(
+                                    color: themeColorPallet['green light'],
+                                    fontSize: 20),
                                 onChanged: (value) {
                                   setState(() {
                                     _exercises[key]['reps'] = value;
@@ -300,8 +331,12 @@ class _ProgramsPageState extends State<AddProgramPage> {
                                 value: _exercises[key]['weight'],
                                 minValue: 0,
                                 maxValue: 400,
-                                textStyle: TextStyle(color: themeColorPallet['green'], fontSize: 12),
-                              selectedTextStyle: TextStyle(color: themeColorPallet['green light'], fontSize: 20),
+                                textStyle: TextStyle(
+                                    color: themeColorPallet['green'],
+                                    fontSize: 12),
+                                selectedTextStyle: TextStyle(
+                                    color: themeColorPallet['green light'],
+                                    fontSize: 20),
                                 onChanged: (value) {
                                   setState(() {
                                     _exercises[key]['weight'] = value;
@@ -348,7 +383,7 @@ class _ProgramsPageState extends State<AddProgramPage> {
                         _formCount++;
                         _exercises.add({
                           'name': 'Løping',
-                          'sets' : 1,
+                          'sets': 1,
                           'seconds': 0,
                           'minutes': 1,
                           'speed': 10,
@@ -410,7 +445,6 @@ class _ProgramsPageState extends State<AddProgramPage> {
       ])
     });
   }
-
 
   void getData() {
     if (widget.editWorkout.isNotEmpty) {

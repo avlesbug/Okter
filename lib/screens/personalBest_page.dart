@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:okter/basePage.dart';
 import 'package:okter/utils/color_pallet.dart';
 
-import '../utils/color_utils.dart';
 import '../utils/reusable_widgets.dart';
 
 class PersonalBestPage extends StatefulWidget {
@@ -39,10 +38,34 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
   Widget build(BuildContext context) {
     initState();
     return okterAddButtonScaffold(
-        "Personlig beste",
-        [IconButton(onPressed: dialog, icon: const Icon(Icons.add))],
-        context,
-        Column(
+        name: "Personlig beste",
+        bottomNavigation: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.expand_more),
+              label: 'Tilbake',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.add),
+              label: 'Legg til',
+            ),
+          ],
+          currentIndex: 0,
+          backgroundColor: themeColorPallet['grey dark'],
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.white,
+          onTap: (index) {
+            if (index == 0) {
+              Navigator.of(context).pop();
+            } else {
+              dialog();
+            }
+          },
+        ),
+        context: context,
+        leading: const Icon(Icons.emoji_events),
+        bodyContent: Column(
           children: [
             const SizedBox(height: 20),
             SizedBox(
@@ -76,8 +99,7 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
                               snapshot.data!.get("rekorder")[index]["ovelse"],
                               style: const TextStyle(fontSize: 20)),
                           subtitle: Text(
-                              "${snapshot.data!
-                                      .get("rekorder")[index]["vekt"]} kg",
+                              "${snapshot.data!.get("rekorder")[index]["vekt"]} kg",
                               style: const TextStyle(fontSize: 16)),
                         ),
                       );
@@ -116,7 +138,7 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
     showDialog(
         context: context,
         builder: (context) => Padding(
-              padding: const EdgeInsets.fromLTRB(48.0, 84.0, 48.0, 450),
+              padding: const EdgeInsets.fromLTRB(48.0, 84.0, 48.0, 440),
               child: Material(
                 color: Colors.transparent,
                 child: Card(
@@ -155,10 +177,12 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
                                 themeColorPallet['green']!),
-                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(6.0),
-                                  ),),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6.0),
+                              ),
+                            ),
                           ),
                           child: const Padding(
                             padding: EdgeInsets.fromLTRB(16, 12, 16, 12),
@@ -227,13 +251,15 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
                           Navigator.pop(context);
                         },
                         style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                themeColorPallet['green']!),
-                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(6.0),
-                                  ),),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              themeColorPallet['green']!),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6.0),
+                            ),
                           ),
+                        ),
                         child: const Padding(
                           padding: EdgeInsets.fromLTRB(16, 12, 16, 12),
                           child: Text("Lagre",
@@ -247,15 +273,17 @@ class _PersonalBestPageState extends State<PersonalBestPage> {
                           Navigator.pop(context);
                         },
                         style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                themeColorPallet['green']!),
-                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(6.0),
-                                  ),),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              themeColorPallet['green']!),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6.0),
+                            ),
                           ),
+                        ),
                         child: const Padding(
-                          padding: EdgeInsets.fromLTRB(16,12,16,12),
+                          padding: EdgeInsets.fromLTRB(16, 12, 16, 12),
                           child: Text("Slett",
                               style: TextStyle(color: Colors.white)),
                         ),

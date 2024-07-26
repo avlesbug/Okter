@@ -55,9 +55,9 @@ class _PasswordPageState extends State<PasswordPage> {
     initState();
     getUserData();
     return okterScaffold(
-        "Change passqord",
-        context,
-        Column(
+        name: "Change passqord",
+        context: context,
+        bodycontent: Column(
           children: [
             const Padding(
               padding: EdgeInsets.all(16.0),

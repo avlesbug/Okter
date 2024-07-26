@@ -40,9 +40,9 @@ class _AddFriendsPageState extends State<AddFriendsPage> {
     width = MediaQuery.of(context).size.width;
     initState();
     return okterScaffold(
-        "Add Friends",
-        context,
-        Column(
+        name: "Add Friends",
+        context: context,
+        bodycontent: Column(
           children: [
             TextField(
               onChanged: (value) {
@@ -112,8 +112,7 @@ class _AddFriendsPageState extends State<AddFriendsPage> {
                                       child: Icon(
                                         Icons.person,
                                         size: 30,
-                                        color:
-                                            themeColorPallet['yellow'],
+                                        color: themeColorPallet['yellow'],
                                       )),
                               onTap: () {
                                 openAddFriendDialog(
@@ -142,8 +141,7 @@ class _AddFriendsPageState extends State<AddFriendsPage> {
                               subtitle: Text(
                                   snapshot.data!.docs[index].get("username")),
                               leading: CircleAvatar(
-                                backgroundColor:
-                                    themeColorPallet['green'],
+                                backgroundColor: themeColorPallet['green'],
                                 radius: 30,
                                 child: Icon(
                                   Icons.person,

@@ -4,18 +4,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:okter/utils/color_pallet.dart';
 
-import '../../../utils/color_utils.dart';
-import '../../../utils/reusable_widgets.dart';
+import 'package:uuid/uuid.dart';
 
-class IncreaseDecreaseWidget extends StatelessWidget{
+class IncreaseDecreaseWidget extends StatelessWidget {
   var documentRef;
   final String userId;
+  var uuid = Uuid();
 
   IncreaseDecreaseWidget({required this.documentRef, required this.userId});
 
   final TextEditingController _okterController = TextEditingController();
   final TextEditingController _okterGoalController = TextEditingController();
-
 
   List<dynamic> getWorkoutPrograms(List<dynamic> userPrograms) {
     final List<dynamic> _programs = [
@@ -63,104 +62,105 @@ class IncreaseDecreaseWidget extends StatelessWidget{
     return [...userPrograms, ..._programs];
   }
 
-
   var height = 667;
   var width = 375;
 
   workoutProgramDialog(context, workoutPrograms) => showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-          title: const Text("Treningsprogram"),
-          backgroundColor: themeColorPallet['grey dark'],
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(26.0)),
-          content: SizedBox(
-            height: 200,
-            width: 300,
-            child: ListView.builder(
-              itemCount: workoutPrograms.length,
-              itemBuilder: (context, index) {
-                if (workoutPrograms.isNotEmpty) {
-                  return ListTile(
-                    onTap: () {
-                          increaseDetailedWorkouts(
-                              workoutPrograms[index]["name"].toString());
-                          Navigator.pop(context);
-                        },
-                        title: Text(
-                          workoutPrograms[index]["name"].toString(),
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                  );
-                } else {
-                  return const Text("Ingen treningsprogrammer tilgjengelig");
-                }
-              },
+      context: context,
+      builder: (context) => AlertDialog(
+            title: const Text("Treningsprogram"),
+            backgroundColor: themeColorPallet['grey dark'],
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(26.0)),
+            content: SizedBox(
+              height: 200,
+              width: 300,
+              child: ListView.builder(
+                itemCount: workoutPrograms.length,
+                itemBuilder: (context, index) {
+                  if (workoutPrograms.isNotEmpty) {
+                    return ListTile(
+                      onTap: () {
+                        increaseDetailedWorkouts(
+                            workoutPrograms[index]["name"].toString());
+                        Navigator.pop(context);
+                      },
+                      title: Text(
+                        workoutPrograms[index]["name"].toString(),
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    );
+                  } else {
+                    return const Text("Ingen treningsprogrammer tilgjengelig");
+                  }
+                },
+              ),
             ),
-          ),
-        ));
+          ));
 
   void increaseDetailedWorkouts(program) async {
-      await FirebaseFirestore.instance
-          .collection("UserData")
-          .doc(userId)
-          .get()
-          .then((value) {
-            FirebaseFirestore.instance.collection("UserData").doc(userId).update({
-      'workouts': documentRef.data!['workouts'] + 1,
-      'lastWorkout': Timestamp.now(),
-      'detailedWorkouts': FieldValue.arrayUnion([
-        {'date': Timestamp.now(), 'workoutProgram': program}
-      ])
+    await FirebaseFirestore.instance
+        .collection("UserData")
+        .doc(userId)
+        .get()
+        .then((value) {
+      FirebaseFirestore.instance.collection("UserData").doc(userId).update({
+        'workouts': documentRef.data!['workouts'] + 1,
+        'detailedWorkouts': FieldValue.arrayUnion([
+          {'id': uuid.v1(), 'date': Timestamp.now(), 'workoutProgram': program}
+        ])
+      });
     });
-  });
   }
 
   void increaseWorkouts() async {
     await FirebaseFirestore.instance
-          .collection("UserData")
-          .doc(userId)
-          .get()
-          .then((value) {
-            FirebaseFirestore.instance.collection("UserData").doc(userId).update({
-              'workouts': value['workouts'] + 1,
-              'lastWorkout': Timestamp.now(),
-              'detailedWorkouts': FieldValue.arrayUnion([
-                {'date': Timestamp.now(), 'workoutProgram': "Trening"}
-              ])
-            });
-          });
+        .collection("UserData")
+        .doc(userId)
+        .get()
+        .then((value) {
+      FirebaseFirestore.instance.collection("UserData").doc(userId).update({
+        'workouts': value['workouts'] + 1,
+        'detailedWorkouts': FieldValue.arrayUnion([
+          {
+            'id': uuid.v1(),
+            'date': Timestamp.now(),
+            'workoutProgram': "Trening"
+          }
+        ])
+      });
+    });
   }
 
   void decreaseWorkouts() async {
     var updateList;
     List<dynamic> detailedWorkouts = documentRef.data!['detailedWorkouts'];
-    if(detailedWorkouts.length > 0){
-      updateList = detailedWorkouts.getRange(0, detailedWorkouts.length-1).toList();
+    if (detailedWorkouts.length > 0) {
+      updateList =
+          detailedWorkouts.getRange(0, detailedWorkouts.length - 1).toList();
     } else {
       updateList = [];
     }
     await FirebaseFirestore.instance
-          .collection("UserData")
-          .doc(userId)
-          .get()
-          .then((value) {
-            FirebaseFirestore.instance.collection("UserData").doc(userId).update({
-              'workouts': value['workouts'] - 1,
-              'lastWorkout': Timestamp.now(),
-              'detailedWorkouts':
-               updateList
-            });
-          });
+        .collection("UserData")
+        .doc(userId)
+        .get()
+        .then((value) {
+      FirebaseFirestore.instance.collection("UserData").doc(userId).update({
+        'workouts': value['workouts'] - 1,
+        'lastWorkout': Timestamp.now(),
+        'detailedWorkouts': updateList
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height.toInt();
-    width = min(MediaQuery.of(context).size.width.toInt(),500);
-    List<dynamic> workoutPrograms = getWorkoutPrograms(documentRef.data!['workoutPrograms'] as List<dynamic>);
-    return 
-    Row(
+    width = min(MediaQuery.of(context).size.width.toInt(), 500);
+    List<dynamic> workoutPrograms = getWorkoutPrograms(
+        documentRef.data!['workoutPrograms'] as List<dynamic>);
+    return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
@@ -187,7 +187,7 @@ class IncreaseDecreaseWidget extends StatelessWidget{
             fit: BoxFit.fitWidth,
             child: GestureDetector(
               onLongPress: () {
-                workoutProgramDialog(context,workoutPrograms);
+                workoutProgramDialog(context, workoutPrograms);
               },
               child: IconButton(
                 onPressed: () {

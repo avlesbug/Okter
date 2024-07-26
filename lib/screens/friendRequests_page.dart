@@ -89,11 +89,10 @@ class _FriendRequestsPageState extends State<FriendRequestsPage> {
     initState();
     getUserData();
     getFriendMap();
-    return okterAddButtonScaffold(
-        "Friend Requests",
-        [],
-        context,
-        Column(
+    return okterScaffold(
+        name: "Friend Requests",
+        context: context,
+        bodycontent: Column(
           children: [
             const SizedBox(height: 20),
             SizedBox(
@@ -118,7 +117,8 @@ class _FriendRequestsPageState extends State<FriendRequestsPage> {
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   title: Text(_requestsMap[index]["name"]),
-                                  subtitle: Text("${_requestsMap[index]["workouts"]} / ${_requestsMap[index]["goal"]}"),
+                                  subtitle: Text(
+                                      "${_requestsMap[index]["workouts"]} / ${_requestsMap[index]["goal"]}"),
                                   tileColor: themeColorPallet['grey light'],
                                   leading: CircleAvatar(
                                     radius: 30,
@@ -142,8 +142,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage> {
                                       _requestsMap[index]["email"].toString()),
                                   tileColor: themeColorPallet['grey light'],
                                   leading: CircleAvatar(
-                                    backgroundColor:
-                                        themeColorPallet['green'],
+                                    backgroundColor: themeColorPallet['green'],
                                     radius: 30,
                                     child: Icon(
                                       Icons.person,

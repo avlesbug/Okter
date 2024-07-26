@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:okter/utils/color_pallet.dart';
-import 'package:okter/utils/color_utils.dart';
 
 TextField inputField(
     TextEditingController inputController, bool isPassword, String labelText) {
