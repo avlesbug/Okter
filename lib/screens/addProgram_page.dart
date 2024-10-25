@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:okter/basePage.dart';
-import 'package:numberpicker/numberpicker.dart';
+import 'package:okter/screens/homePage/components/numberPickerWheel.dart';
 import 'package:okter/utils/color_pallet.dart';
 
 import '../utils/reusable_widgets.dart';
@@ -125,86 +125,50 @@ class _ProgramsPageState extends State<AddProgramPage> {
                   ? [
                       Row(children: [
                         Expanded(
-                          child: NumberPicker(
-                              haptics: true,
-                              itemHeight: 30,
-                              itemWidth: 20,
-                              value: _exercises[key]['sets'],
-                              minValue: 1,
-                              maxValue: 100,
-                              textStyle: TextStyle(
-                                  color: themeColorPallet['green'],
-                                  fontSize: 12),
-                              selectedTextStyle: TextStyle(
-                                  color: themeColorPallet['green light'],
-                                  fontSize: 20),
-                              onChanged: (value) {
-                                setState(() {
-                                  _exercises[key]['sets'] = value;
-                                });
-                              }),
-                        ),
+                            child: NumberPickerWheel(
+                          minNumber: 0,
+                          maxNumber: 30,
+                          onSelectedItemChanged: (selectedNumber) {
+                            setState(() {
+                              _exercises[key]['sets'] = selectedNumber;
+                            });
+                          },
+                        )),
                         const Expanded(
                           child: Center(child: Text("x")),
                         ),
                         Expanded(
-                            child: NumberPicker(
-                                haptics: true,
-                                itemHeight: 30,
-                                itemWidth: 20,
-                                value: _exercises[key]['minutes'],
-                                minValue: 0,
-                                maxValue: 100,
-                                textStyle: TextStyle(
-                                    color: themeColorPallet['green'],
-                                    fontSize: 12),
-                                selectedTextStyle: TextStyle(
-                                    color: themeColorPallet['green light'],
-                                    fontSize: 20),
-                                onChanged: (value) {
-                                  setState(() {
-                                    _exercises[key]['minutes'] = value;
-                                  });
-                                })),
+                            child: NumberPickerWheel(
+                          minNumber: 0,
+                          maxNumber: 60,
+                          onSelectedItemChanged: (selectedNumber) {
+                            setState(() {
+                              _exercises[key]['minutes'] = selectedNumber;
+                            });
+                          },
+                        )),
                         const Expanded(child: Center(child: Text("min"))),
                         Expanded(
-                            child: NumberPicker(
-                                haptics: true,
-                                itemHeight: 30,
-                                itemWidth: 20,
-                                value: _exercises[key]['seconds'],
-                                minValue: 0,
-                                maxValue: 60,
-                                textStyle: TextStyle(
-                                    color: themeColorPallet['green'],
-                                    fontSize: 12),
-                                selectedTextStyle: TextStyle(
-                                    color: themeColorPallet['green light'],
-                                    fontSize: 20),
-                                onChanged: (value) {
-                                  setState(() {
-                                    _exercises[key]['seconds'] = value;
-                                  });
-                                })),
+                            child: NumberPickerWheel(
+                          minNumber: 0,
+                          maxNumber: 59,
+                          onSelectedItemChanged: (selectedNumber) {
+                            setState(() {
+                              _exercises[key]['seconds'] = selectedNumber;
+                            });
+                          },
+                        )),
                         const Expanded(child: Center(child: Text("sek"))),
                         Expanded(
-                          child: NumberPicker(
-                              haptics: true,
-                              itemHeight: 30,
-                              itemWidth: 20,
-                              value: _exercises[key]['speed'],
-                              minValue: 0,
-                              maxValue: 40,
-                              textStyle:
-                                  TextStyle(color: themeColorPallet['green']),
-                              selectedTextStyle: TextStyle(
-                                  color: themeColorPallet['green light']),
-                              onChanged: (value) {
-                                setState(() {
-                                  _exercises[key]['speed'] = value;
-                                });
-                              }),
-                        ),
+                            child: NumberPickerWheel(
+                          minNumber: 0,
+                          maxNumber: 35,
+                          onSelectedItemChanged: (selectedNumber) {
+                            setState(() {
+                              _exercises[key]['speed'] = selectedNumber;
+                            });
+                          },
+                        )),
                         const Expanded(
                           child: Center(child: Text("km/t")),
                         )
@@ -217,46 +181,26 @@ class _ProgramsPageState extends State<AddProgramPage> {
                         children: [
                           const Expanded(child: Text("Pause:")),
                           Expanded(
-                            child: NumberPicker(
-                                haptics: true,
-                                itemHeight: 30,
-                                itemWidth: 20,
-                                value: _exercises[key]['pauseM'],
-                                minValue: 0,
-                                maxValue: 60,
-                                textStyle: TextStyle(
-                                    color: themeColorPallet['green'],
-                                    fontSize: 12),
-                                selectedTextStyle: TextStyle(
-                                    color: themeColorPallet['green light'],
-                                    fontSize: 20),
-                                onChanged: (value) {
-                                  setState(() {
-                                    _exercises[key]['pauseM'] = value;
-                                  });
-                                }),
-                          ),
+                              child: NumberPickerWheel(
+                            minNumber: 0,
+                            maxNumber: 10,
+                            onSelectedItemChanged: (selectedNumber) {
+                              setState(() {
+                                _exercises[key]['pauseM'] = selectedNumber;
+                              });
+                            },
+                          )),
                           const Expanded(child: Center(child: Text("min"))),
                           Expanded(
-                            child: NumberPicker(
-                                haptics: true,
-                                itemHeight: 30,
-                                itemWidth: 20,
-                                value: _exercises[key]['pauseS'],
-                                minValue: 0,
-                                maxValue: 59,
-                                textStyle: TextStyle(
-                                    color: themeColorPallet['green'],
-                                    fontSize: 12),
-                                selectedTextStyle: TextStyle(
-                                    color: themeColorPallet['green light'],
-                                    fontSize: 20),
-                                onChanged: (value) {
-                                  setState(() {
-                                    _exercises[key]['pauseS'] = value;
-                                  });
-                                }),
-                          ),
+                              child: NumberPickerWheel(
+                            minNumber: 0,
+                            maxNumber: 59,
+                            onSelectedItemChanged: (selectedNumber) {
+                              setState(() {
+                                _exercises[key]['pauseS'] = selectedNumber;
+                              });
+                            },
+                          )),
                           const Expanded(child: Center(child: Text("sek"))),
                         ],
                       )
@@ -278,71 +222,42 @@ class _ProgramsPageState extends State<AddProgramPage> {
                             ),
                           ),
                           Expanded(
-                            child: NumberPicker(
-                                haptics: true,
-                                itemHeight: 30,
-                                itemWidth: 20,
-                                value: _exercises[key]['sets'],
-                                minValue: 1,
-                                maxValue: 100,
-                                textStyle: TextStyle(
-                                    color: themeColorPallet['green'],
-                                    fontSize: 12),
-                                selectedTextStyle: TextStyle(
-                                    color: themeColorPallet['green light'],
-                                    fontSize: 20),
-                                onChanged: (value) {
-                                  setState(() {
-                                    _exercises[key]['sets'] = value;
-                                  });
-                                }),
-                          ),
+                              child: Container(
+                                  child: NumberPickerWheel(
+                            minNumber: 0,
+                            maxNumber: 500,
+                            onSelectedItemChanged: (selectedNumber) {
+                              setState(() {
+                                _exercises[key]['sets'] = selectedNumber;
+                              });
+                            },
+                          ))),
                           const Expanded(
                             child: Center(child: Text("Sets")),
                           ),
                           Expanded(
-                            child: NumberPicker(
-                                haptics: true,
-                                itemHeight: 30,
-                                itemWidth: 20,
-                                value: _exercises[key]['reps'],
-                                minValue: 1,
-                                maxValue: 100,
-                                textStyle: TextStyle(
-                                    color: themeColorPallet['green'],
-                                    fontSize: 12),
-                                selectedTextStyle: TextStyle(
-                                    color: themeColorPallet['green light'],
-                                    fontSize: 20),
-                                onChanged: (value) {
-                                  setState(() {
-                                    _exercises[key]['reps'] = value;
-                                  });
-                                }),
-                          ),
+                              child: NumberPickerWheel(
+                            minNumber: 0,
+                            maxNumber: 500,
+                            onSelectedItemChanged: (selectedNumber) {
+                              setState(() {
+                                _exercises[key]['reps'] = selectedNumber;
+                              });
+                            },
+                          )),
                           const Expanded(
                             child: Center(child: Text("Reps")),
                           ),
                           Expanded(
-                            child: NumberPicker(
-                                haptics: true,
-                                itemHeight: 30,
-                                itemWidth: 20,
-                                value: _exercises[key]['weight'],
-                                minValue: 0,
-                                maxValue: 400,
-                                textStyle: TextStyle(
-                                    color: themeColorPallet['green'],
-                                    fontSize: 12),
-                                selectedTextStyle: TextStyle(
-                                    color: themeColorPallet['green light'],
-                                    fontSize: 20),
-                                onChanged: (value) {
-                                  setState(() {
-                                    _exercises[key]['weight'] = value;
-                                  });
-                                }),
-                          ),
+                              child: NumberPickerWheel(
+                            minNumber: 0,
+                            maxNumber: 500,
+                            onSelectedItemChanged: (selectedNumber) {
+                              setState(() {
+                                _exercises[key]['weight'] = selectedNumber;
+                              });
+                            },
+                          )),
                           const Expanded(
                             child: Center(child: Text("kg")),
                           )
@@ -458,3 +373,22 @@ class _ProgramsPageState extends State<AddProgramPage> {
     }
   }
 }
+
+    // child: NumberPicker(
+                              //     haptics: true,
+                              //     itemHeight: 30,
+                              //     itemWidth: 20,
+                              //     value: _exercises[key]['weight'],
+                              //     minValue: 0,
+                              //     maxValue: 400,
+                              //     textStyle: TextStyle(
+                              //         color: themeColorPallet['green'],
+                              //         fontSize: 12),
+                              //     selectedTextStyle: TextStyle(
+                              //         color: themeColorPallet['green light'],
+                              //         fontSize: 20),
+                              //     onChanged: (value) {
+                              //       setState(() {
+                              //         _exercises[key]['weight'] = value;
+                              //       });
+                              //     }),

@@ -5,13 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:okter/basePage.dart';
 import 'package:okter/screens/addProgram_page.dart';
 
-
-
 class DetailedProgramPage extends StatefulWidget {
-  const DetailedProgramPage({super.key, required this.workout, required this.updateProgram, required this.workoutIndex});
+  const DetailedProgramPage(
+      {super.key,
+      required this.workout,
+      required this.updateProgram,
+      required this.workoutIndex});
 
-
-  final Map<String,dynamic> workout;
+  final Map<String, dynamic> workout;
   final Function updateProgram;
   final int workoutIndex;
 
@@ -36,71 +37,47 @@ class _ProgramsPageState extends State<DetailedProgramPage> {
     ref = FirebaseDatabase.instance.ref("UserData");
   }
 
-
   @override
   Widget build(BuildContext context) {
     initState();
-        return okterBackAddButtonScaffold(
-            widget.workout["name"],
-            [
-              IconButton(
-                  onPressed: () {
-                    print({
-                      "name": widget.workout["name"],
-                      "isCardio": widget.workout["isCardio"],
-                      "exercises": widget.workout["exercises"]
-                    });
-                    Navigator.pop(context);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AddProgramPage(
-                                editWorkout: widget.workout,
-                                workoutIndex: widget.workoutIndex,
-                                updateProgram: widget.updateProgram)));
+    print(widget.workout);
+    return okterScaffold(
+        name: widget.workout["name"],
+        context: context,
+        bodycontent: Column(
+          children: [
+            const SizedBox(height: 20),
+            SizedBox(
+                height: 1000,
+                child: ListView.builder(
+                  itemCount: widget.workout["exercises"].length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onLongPress: (() {}),
+                      child: !widget.workout['isCardio']
+                          ? ListTile(
+                              title: Text(
+                                  widget.workout["exercises"][index]["name"],
+                                  style: const TextStyle(fontSize: 22)),
+                              subtitle: Text(
+                                  "${widget.workout["exercises"][index]["sets"]} sets x ${widget.workout["exercises"][index]["reps"]} reps - ${widget.workout["exercises"][index]["weight"]} kg",
+                                  style: const TextStyle(fontSize: 18)),
+                            )
+                          : ListTile(
+                              title: const Text("Løping",
+                                  style: TextStyle(fontSize: 22)),
+                              subtitle: Text(stringBuilder(index),
+                                  style: const TextStyle(fontSize: 18)),
+                            ),
+                    );
                   },
-                  icon: const Icon(Icons.edit))
-            ],
-            context,
-            Column(
-              children: [
-                const SizedBox(height: 20),
-                SizedBox(
-                  height: 1000,
-                  child: ListView.builder(
-                          itemCount:
-                              widget.workout["exercises"].length,
-                          itemBuilder: (context, index) {
-                            return GestureDetector(
-                              onLongPress: (() {}),
-                              child: !widget.workout['isCardio']
-                                  ? ListTile(
-                                      title: Text(
-                                          widget.workout
-                                              ["exercises"][index]["name"],
-                                          style: const TextStyle(fontSize: 22)),
-                                      subtitle: Text(
-                                          "${widget.workout["exercises"][index]["sets"]} sets x ${widget.workout["exercises"][index]["reps"]} reps - ${widget.workout["exercises"][index]["weight"]} kg",
-                                          style: const TextStyle(fontSize: 18)),
-                                    )
-                                  : ListTile(
-                                      title: const Text("Løping",
-                                          style: TextStyle(fontSize: 22)),
-                                      subtitle: Text(stringBuilder(index),
-                                          style: const TextStyle(fontSize: 18)),
-                                    ),
-                            );
-                          },
-                        )
-                ),
-              ],
-            ));
-
+                )),
+          ],
+        ));
   }
 
   String stringBuilder(index) {
-    String programString =
-        "${widget.workout["exercises"][index]["sets"]} x ";
+    String programString = "${widget.workout["exercises"][index]["sets"]} x ";
     if (widget.workout["exercises"][index]["minutes"] != 0) {
       programString +=
           "${widget.workout["exercises"][index]["minutes"]} min - ";
@@ -109,8 +86,7 @@ class _ProgramsPageState extends State<DetailedProgramPage> {
       programString +=
           "${widget.workout["exercises"][index]["seconds"]} sek - ";
     }
-    programString +=
-        "${widget.workout["exercises"][index]["speed"]} km/t";
+    programString += "${widget.workout["exercises"][index]["speed"]} km/t";
 
     if (widget.workout["exercises"][index]["pauseM"] != 0) {
       programString +=

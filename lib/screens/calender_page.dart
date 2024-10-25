@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart'
     as dt_picker;
-import 'package:flutter_picker/flutter_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:okter/basePage.dart';
 import 'package:okter/utils/reusable_widgets.dart';
@@ -60,6 +59,51 @@ class _CalenderPageState extends State<CalenderPage> {
     "Kardio",
     "Fjelltur"
   ];
+  List<dynamic> getWorkoutPrograms(List<dynamic> userPrograms) {
+    final List<dynamic> _programs = [
+      {
+        'name': 'Styrketrening',
+        'isCardio': false,
+      },
+      {
+        'name': 'Løping',
+        'isCardio': true,
+      },
+      {
+        'name': 'Fjelltur',
+        'isCardio': false,
+      },
+      {
+        'name': 'Gåtur',
+        'isCardio': false,
+      },
+      {
+        'name': 'Håndball',
+        'isCardio': false,
+      },
+      {
+        'name': 'Fotball',
+        'isCardio': false,
+      },
+      {
+        'name': 'Alpint',
+        'isCardio': false,
+      },
+      {
+        'name': 'Snowboard',
+        'isCardio': false,
+      },
+      {
+        'name': 'Skitur',
+        'isCardio': false,
+      },
+      {
+        'name': 'Topptur',
+        'isCardio': false,
+      }
+    ];
+    return [...userPrograms, ..._programs];
+  }
 
   CalendarStyle customCalendarStyle = CalendarStyle(
     outsideDaysVisible: false,
@@ -78,6 +122,38 @@ class _CalenderPageState extends State<CalenderPage> {
       color: themeColorPallet['yellow'],
     ),
   );
+
+  workoutProgramDialog(time, workoutPrograms) => showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            title: const Text("Treningsprogram"),
+            backgroundColor: themeColorPallet['grey dark'],
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(26.0)),
+            content: SizedBox(
+              height: 200,
+              width: 300,
+              child: ListView.builder(
+                itemCount: workoutPrograms.length,
+                itemBuilder: (context, index) {
+                  if (workoutPrograms.isNotEmpty) {
+                    return ListTile(
+                      onTap: () {
+                        addWorkout(time, workoutPrograms[index].toString());
+                        Navigator.pop(context);
+                      },
+                      title: Text(
+                        workoutPrograms[index].toString(),
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    );
+                  } else {
+                    return const Text("Ingen treningsprogrammer tilgjengelig");
+                  }
+                },
+              ),
+            ),
+          ));
 
   @override
   Widget build(BuildContext context) {
@@ -173,7 +249,7 @@ class _CalenderPageState extends State<CalenderPage> {
                                         title: Text(
                                             '${DateFormat.Hm().format(_selectedEvents[index]['date']).toString()} - ${_selectedEvents[index]['workoutProgram'].toString()}'),
                                         onLongPress: () {
-                                          workoutProgramDialog(
+                                          workoutDeleteDialog(
                                               _selectedEvents[index]);
                                         }),
                                   ),
@@ -229,7 +305,7 @@ class _CalenderPageState extends State<CalenderPage> {
     });
   }
 
-  Future workoutProgramDialog(workout) => showDialog(
+  Future workoutDeleteDialog(workout) => showDialog(
       context: context,
       builder: (context) => AlertDialog(
             title: Center(child: Text(workout["workoutProgram"])),
@@ -288,38 +364,7 @@ class _CalenderPageState extends State<CalenderPage> {
           doneStyle: TextStyle(color: Colors.white, fontSize: 16),
           cancelStyle: TextStyle(color: Colors.white, fontSize: 16)),
       onConfirm: (time) {
-        print("Time selected: $time");
-        showModalBottomSheet(
-          context: context,
-          builder: (BuildContext context) {
-            return Builder(
-              builder: (BuildContext context) {
-                return Picker(
-                  adapter: PickerDataAdapter<String>(pickerData: programNames),
-                  changeToFirst: false,
-                  containerColor: themeColorPallet['grey dark'],
-                  headerColor: themeColorPallet['grey dark'],
-                  backgroundColor: themeColorPallet['grey dark'],
-                  textAlign: TextAlign.left,
-                  textStyle: const TextStyle(color: Colors.white, fontSize: 20),
-                  columnPadding: const EdgeInsets.all(8.0),
-                  confirmText: "Lagre",
-                  cancelText: "Tilbake",
-                  confirmTextStyle: const TextStyle(color: Colors.white),
-                  cancelTextStyle: const TextStyle(color: Colors.white),
-                  onCancel: () {
-                    showPicker();
-                  },
-                  onConfirm: (Picker picker, List value) {
-                    print("Picker confirmed");
-                    String selectedProgram = picker.getSelectedValues()[0];
-                    addWorkout(time, selectedProgram);
-                  },
-                ).makePicker();
-              },
-            );
-          },
-        );
+        workoutProgramDialog(time, programNames);
       },
     );
   }

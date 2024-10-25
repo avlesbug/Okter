@@ -229,7 +229,9 @@ Widget okterAddButtonScaffold(
 }
 
 Widget okterBackAddButtonScaffold(
-    name, List<Widget> actions, context, bodycontent) {
+    {required String name,
+    required BuildContext context,
+    required Widget bodyContent}) {
   final currentWidth = MediaQuery.of(context).size.width;
   double paddingWidth = 6.0;
   if (currentWidth > 540) {
@@ -239,10 +241,9 @@ Widget okterBackAddButtonScaffold(
     paddingWidth = currentWidth / 4;
   }
   return Scaffold(
-      bottomNavigationBar: AppBar(
+      appBar: AppBar(
         backgroundColor: themeColorPallet['grey dark'],
         elevation: 0,
-        actions: actions,
         title: Text(
           name,
           style: const TextStyle(
@@ -260,7 +261,7 @@ Widget okterBackAddButtonScaffold(
           color: themeColorPallet['grey dark'],
           child: Padding(
               padding: const EdgeInsets.all(16),
-              child: SingleChildScrollView(child: bodycontent)),
+              child: SingleChildScrollView(child: Text("Test"))),
         );
       }));
 }
