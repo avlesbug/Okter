@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/material.dart'hide DatePickerTheme;
+import 'package:flutter/material.dart';
 import 'package:okter/basePage.dart';
 import 'package:okter/screens/homePage/components/chartCarouselComponent.dart';
 import 'package:okter/screens/homePage/components/endGoalComponent.dart';
@@ -43,32 +43,37 @@ class _HomePageState extends State<HomePage> {
     return okterDrawerScaffold(
         context,
         StreamBuilder(
-          stream: FirebaseFirestore.instance.collection('UserData').doc(userId).snapshots(),
-          builder: (context, snapshot) {
-            return 
-            snapshot.hasData ?
-                Column(children: [
-                SizedBox(height: height * 0.1),
-                SizedBox(
-                  height: height * 0.04,
-                  width: min(width, 500) * 0.36,
-                  child: const FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: Text("Økter i år:",
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold)),
-                  ),
-                ),
-                WorkoutsGoalWidget(documentRef: snapshot, userId: userId),
-                IncreaseDecreaseWidget(documentRef: snapshot, userId: userId),
-                SizedBox(
-                  height: height * 0.02,
-                ),
-                SisteOktWidget(documentRef: snapshot, userId: userId),
-                ChartCarouselWidget(documentRef: snapshot, userId: userId),
-                EndGoalComponent(documentRef: snapshot, userId: userId)
-              ]) : loadingComponent();
-          }
-        ));
+            stream: FirebaseFirestore.instance
+                .collection('UserData')
+                .doc(userId)
+                .snapshots(),
+            builder: (context, snapshot) {
+              return snapshot.hasData
+                  ? Column(children: [
+                      SizedBox(height: height * 0.1),
+                      SizedBox(
+                        height: height * 0.04,
+                        width: min(width, 500) * 0.36,
+                        child: const FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Text("Økter i år:",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                      ),
+                      WorkoutsGoalWidget(documentRef: snapshot, userId: userId),
+                      IncreaseDecreaseWidget(
+                          documentRef: snapshot, userId: userId),
+                      SizedBox(
+                        height: height * 0.02,
+                      ),
+                      SisteOktWidget(documentRef: snapshot, userId: userId),
+                      ChartCarouselWidget(
+                          documentRef: snapshot, userId: userId),
+                      EndGoalComponent(documentRef: snapshot, userId: userId)
+                    ])
+                  : loadingComponent();
+            }));
   }
 }

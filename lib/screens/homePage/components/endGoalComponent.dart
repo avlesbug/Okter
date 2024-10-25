@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart'
+    as dt_picker;
 import 'package:intl/intl.dart';
 
 class EndGoalComponent extends StatelessWidget {
@@ -28,11 +29,11 @@ class EndGoalComponent extends StatelessWidget {
               lastDate: DateTime.now(),
             );
 
-            DatePicker.showDatePicker(context,
+            dt_picker.DatePicker.showDatePicker(context,
                 showTitleActions: true,
                 minTime: DateTime(2000, 1, 1),
                 maxTime: DateTime(DateTime.now().year + 10, 12, 31),
-                theme: const DatePickerTheme(
+                theme: const dt_picker.DatePickerTheme(
                     headerColor: Color(0xFF020A0B),
                     backgroundColor: Color(0xFF020A0B),
                     itemStyle: TextStyle(
@@ -45,7 +46,7 @@ class EndGoalComponent extends StatelessWidget {
                   .update({
                 'endDate': date,
               });
-            }, currentTime: DateTime.now(), locale: LocaleType.no);
+            }, currentTime: DateTime.now(), locale: dt_picker.LocaleType.no);
           },
           child: RichText(
             text: TextSpan(

@@ -17,7 +17,6 @@ class ChartCarouselWidget extends StatefulWidget {
   State<ChartCarouselWidget> createState() => _ChartCarouselWidgetState();
 }
 
-
 class _ChartCarouselWidgetState extends State<ChartCarouselWidget> {
   bool displayYearProg = false;
 
@@ -29,8 +28,9 @@ class _ChartCarouselWidgetState extends State<ChartCarouselWidget> {
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height.toInt();
-    width = min(MediaQuery.of(context).size.width.toInt(),500);
-    List<dynamic> workouts = widget.documentRef.data!['detailedWorkouts'] as List<dynamic>;
+    width = min(MediaQuery.of(context).size.width.toInt(), 500);
+    List<dynamic> workouts =
+        widget.documentRef.data!['detailedWorkouts'] as List<dynamic>;
     _maxValueDay = getMaxWorkouts(workouts);
     _dayInterval = (_maxValueDay / 10).toInt().toDouble();
     return SizedBox(
@@ -42,13 +42,12 @@ class _ChartCarouselWidgetState extends State<ChartCarouselWidget> {
               GestureDetector(
                 onTap: () {
                   setState(() {
-                  displayYearProg = !displayYearProg;
+                    displayYearProg = !displayYearProg;
                   });
                 },
                 child: FittedBox(
                   fit: BoxFit.fitHeight,
-                  child: 
-                  SfCircularChart(
+                  child: SfCircularChart(
                     annotations: <CircularChartAnnotation>[
                       CircularChartAnnotation(
                         widget: !displayYearProg
@@ -59,8 +58,8 @@ class _ChartCarouselWidgetState extends State<ChartCarouselWidget> {
                                   fit: BoxFit.fitWidth,
                                   child: Text(
                                       (("${((widget.documentRef.data!['workouts'] / widget.documentRef.data!['goal']) * 100).toStringAsFixed(1)}%")),
-                                      style: const TextStyle(
-                                          color: Colors.white)),
+                                      style:
+                                          const TextStyle(color: Colors.white)),
                                 ),
                               )
                             : SizedBox(
@@ -70,8 +69,8 @@ class _ChartCarouselWidgetState extends State<ChartCarouselWidget> {
                                   fit: BoxFit.fitWidth,
                                   child: Text(
                                       "År: ${getPeriodeProgress(widget.documentRef.data!['endDate'])}%",
-                                      style: const TextStyle(
-                                          color: Colors.white)),
+                                      style:
+                                          const TextStyle(color: Colors.white)),
                                 ),
                               ),
                       )
@@ -86,20 +85,23 @@ class _ChartCarouselWidgetState extends State<ChartCarouselWidget> {
                     series: [
                       RadialBarSeries<WorkoutData, String>(
                         dataSource: [
-                          WorkoutData(getPeriodeProgress(widget.documentRef.data!['endDate']), "År",
+                          WorkoutData(
+                              getPeriodeProgress(
+                                  widget.documentRef.data!['endDate']),
+                              "År",
                               themeColorPallet['green']!),
                           WorkoutData(
-                              num.parse(((widget.documentRef.data!['workouts'] / widget.documentRef.data!['goal']) * 100)
+                              num.parse(((widget.documentRef.data!['workouts'] /
+                                          widget.documentRef.data!['goal']) *
+                                      100)
                                   .toStringAsFixed(2)),
                               "Meg",
                               themeColorPallet['yellow']!),
                         ],
                         xValueMapper: (WorkoutData data, _) =>
                             data.workoutProgram,
-                        yValueMapper: (WorkoutData data, _) =>
-                            data.workouts,
-                        pointColorMapper: (WorkoutData data, _) =>
-                            data.color,
+                        yValueMapper: (WorkoutData data, _) => data.workouts,
+                        pointColorMapper: (WorkoutData data, _) => data.color,
                         // Radius of the radial bar
                         radius: '100%',
                         cornerStyle: CornerStyle.bothCurve,
@@ -109,65 +111,64 @@ class _ChartCarouselWidgetState extends State<ChartCarouselWidget> {
                         gap: '3%',
                       )
                     ],
-                  )
-                  ,
+                  ),
                 ),
               ),
-              SfCartesianChart(
-                  title: ChartTitle(
-                      text: 'Økter etter dag',
-                      textStyle: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                      )),
-                  margin: const EdgeInsets.all(44),
-                  primaryXAxis: CategoryAxis(),
-                  primaryYAxis: NumericAxis(
-                    minimum: 0,
-                    maximum:
-                        (_maxValueDay + 2 > 0) ? _maxValueDay + 2 : 50,
-                    interval: (_dayInterval) > 0 ? _dayInterval : 10,
-                  ),
-                  series: <ChartSeries<WeekdayData, String>>[
-                    ColumnSeries<WeekdayData, String>(
-                      dataSource: createChartData(workouts),
-                      xValueMapper: (WeekdayData data, _) => data.weekday,
-                      yValueMapper: (WeekdayData data, _) =>
-                          data.workoutsOnDay,
-                      borderRadius: BorderRadius.circular(15),
-                      pointColorMapper: (WeekdayData data, _) =>
-                          data.color,
-                    )
-                  ]),
-              SfCircularChart(
-                title: ChartTitle(
-                    text: "Økter per kategori",
-                    textStyle: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                    )),
-                margin: const EdgeInsets.all(30),
-                series: <CircularSeries>[
-                  PieSeries<WorkoutData, String>(
-                    dataSource: createProgamData(workouts),
-                    sortingOrder: SortingOrder.descending,
-                    explodeIndex: 0,
-                    explode: true,
-                    xValueMapper: (WorkoutData data, _) =>
-                        data.workoutProgram,
-                    yValueMapper: (WorkoutData data, _) => data.workouts,
-                    dataLabelMapper: (WorkoutData data, _) =>
-                        data.workoutProgram,
-                    pointColorMapper: (WorkoutData data, _) => data.color,
-                    dataLabelSettings: const DataLabelSettings(
-                        isVisible: true,
-                        showZeroValue: false,
-                        labelPosition: ChartDataLabelPosition.outside,
-                        textStyle: TextStyle(
-                            color: Colors.white, fontSize: 12)),
-                  ),
-                ],
-              )
+              // SfCartesianChart(
+              //     title: ChartTitle(
+              //         text: 'Økter etter dag',
+              //         textStyle: const TextStyle(
+              //           color: Colors.white,
+              //           fontSize: 18,
+              //         )),
+              //     margin: const EdgeInsets.all(44),
+              //     primaryXAxis: CategoryAxis(),
+              //     primaryYAxis: NumericAxis(
+              //       minimum: 0,
+              //       maximum:
+              //           (_maxValueDay + 2 > 0) ? _maxValueDay + 2 : 50,
+              //       interval: (_dayInterval) > 0 ? _dayInterval : 10,
+              //     ),
+              //     series: <ChartSeries<WeekdayData, String>>[
+              //       ColumnSeries<WeekdayData, String>(
+              //         dataSource: createChartData(workouts),
+              //         xValueMapper: (WeekdayData data, _) => data.weekday,
+              //         yValueMapper: (WeekdayData data, _) =>
+              //             data.workoutsOnDay,
+              //         borderRadius: BorderRadius.circular(15),
+              //         pointColorMapper: (WeekdayData data, _) =>
+              //             data.color,
+              //       )
+              //     ]),
+              // SfCircularChart(
+              //   title: ChartTitle(
+              //       text: "Økter per kategori",
+              //       textStyle: const TextStyle(
+              //         fontSize: 18,
+              //         color: Colors.white,
+              //       )),
+              //   margin: const EdgeInsets.all(30),
+              //   series: <CircularSeries>[
+              //     PieSeries<WorkoutData, String>(
+              //       dataSource: createProgamData(workouts),
+              //       sortingOrder: SortingOrder.descending,
+              //       explodeIndex: 0,
+              //       explode: true,
+              //       xValueMapper: (WorkoutData data, _) =>
+              //           data.workoutProgram,
+              //       yValueMapper: (WorkoutData data, _) => data.workouts,
+              //       dataLabelMapper: (WorkoutData data, _) =>
+              //           data.workoutProgram,
+              //       pointColorMapper: (WorkoutData data, _) => data.color,
+              //       dataLabelSettings: const DataLabelSettings(
+              //           isVisible: true,
+              //           showZeroValue: false,
+              //           labelPosition: ChartDataLabelPosition.outside,
+              //           textStyle: TextStyle(
+              //               color: Colors.white, fontSize: 12)),
+              //     ),
+              //   ],
+              // )
             ],
             options: CarouselOptions(
               height: 300,
@@ -180,15 +181,16 @@ class _ChartCarouselWidgetState extends State<ChartCarouselWidget> {
 }
 
 List<WeekdayData> createChartData(List<dynamic> totalWorkouts) {
-    List<WeekdayData> weekdayData = [];
-    int index = 0;
-    getWorkoutsPerDay(totalWorkouts).forEach((day, workouts) {
-      weekdayData.add(WeekdayData((workouts / totalWorkouts.length) * 100, day,
-          colorPallet[index % colorPallet.length]));
-      index++;
-    });
-    return weekdayData;
-  }
+  List<WeekdayData> weekdayData = [];
+  int index = 0;
+  getWorkoutsPerDay(totalWorkouts).forEach((day, workouts) {
+    weekdayData.add(WeekdayData((workouts / totalWorkouts.length) * 100, day,
+        colorPallet[index % colorPallet.length]));
+    index++;
+  });
+  return weekdayData;
+}
+
 Map<String, dynamic> getWorkoutsByProgram(List<dynamic> workouts) {
   List<String> programsKeys = [];
   Map<String, dynamic> workoutsByProgram = {};
@@ -205,12 +207,14 @@ Map<String, dynamic> getWorkoutsByProgram(List<dynamic> workouts) {
   }
   return workoutsByProgram;
 }
+
 List<WorkoutData> createProgamData(List<dynamic> totalWorkouts) {
   List<WorkoutData> workoutData = [];
   int index = 0;
   print(getWorkoutsByProgram(totalWorkouts).entries.toList());
-  var sortedByValueMap = Map.fromEntries(getWorkoutsByProgram(totalWorkouts).entries.toList()
-    ..sort((e2, e1) => e1.value.compareTo(e2.value)));
+  var sortedByValueMap = Map.fromEntries(
+      getWorkoutsByProgram(totalWorkouts).entries.toList()
+        ..sort((e2, e1) => e1.value.compareTo(e2.value)));
 
   sortedByValueMap.forEach((program, workouts) {
     if (workouts != 0) {
@@ -232,33 +236,33 @@ Map<String, dynamic> getWorkoutsPerDay(List<dynamic> workouts) {
     'Lørdag': 0,
     'Søndag': 0,
   };
-  if(workouts.isNotEmpty){
-  List<WeekdayData> weekdayData = [];
-  for (var i = 0; i < workouts.length; i++) {
-    switch (DateFormat("EEEE").format(workouts[i]["date"].toDate())) {
-      case 'Monday':
-        workoutsPerDay["Mandag"] += 1;
-        break;
-      case 'Tuesday':
-        workoutsPerDay["Tirsdag"] += 1;
-        break;
-      case 'Wednesday':
-        workoutsPerDay["Onsdag"] += 1;
-        break;
-      case 'Thursday':
-        workoutsPerDay["Torsdag"] += 1;
-        break;
-      case 'Friday':
-        workoutsPerDay["Fredag"] += 1;
-        break;
-      case 'Saturday':
-        workoutsPerDay["Lørdag"] += 1;
-        break;
-      case 'Sunday':
-        workoutsPerDay["Søndag"] += 1;
-        break;
+  if (workouts.isNotEmpty) {
+    List<WeekdayData> weekdayData = [];
+    for (var i = 0; i < workouts.length; i++) {
+      switch (DateFormat("EEEE").format(workouts[i]["date"].toDate())) {
+        case 'Monday':
+          workoutsPerDay["Mandag"] += 1;
+          break;
+        case 'Tuesday':
+          workoutsPerDay["Tirsdag"] += 1;
+          break;
+        case 'Wednesday':
+          workoutsPerDay["Onsdag"] += 1;
+          break;
+        case 'Thursday':
+          workoutsPerDay["Torsdag"] += 1;
+          break;
+        case 'Friday':
+          workoutsPerDay["Fredag"] += 1;
+          break;
+        case 'Saturday':
+          workoutsPerDay["Lørdag"] += 1;
+          break;
+        case 'Sunday':
+          workoutsPerDay["Søndag"] += 1;
+          break;
+      }
     }
-  }
   }
   return workoutsPerDay;
 }
@@ -277,17 +281,15 @@ double getMaxWorkouts(List<dynamic> workouts) {
   return maxValue;
 }
 
-num getPeriodeProgress(var endDate){
-    Duration totalDays =
-        DateTime(DateTime.now().year, 1, 1).difference(endDate.toDate());
-    Duration periodeProgresion =
-        DateTime(DateTime.now().year, 1, 1).difference(DateTime.now());
+num getPeriodeProgress(var endDate) {
+  Duration totalDays =
+      DateTime(DateTime.now().year, 1, 1).difference(endDate.toDate());
+  Duration periodeProgresion =
+      DateTime(DateTime.now().year, 1, 1).difference(DateTime.now());
 
-    return num.parse(
-        ((periodeProgresion.inDays / totalDays.inDays) * 100)
-            .toStringAsFixed(1));
-
-  }
+  return num.parse(
+      ((periodeProgresion.inDays / totalDays.inDays) * 100).toStringAsFixed(1));
+}
 
 class WorkoutData {
   WorkoutData(this.workouts, this.workoutProgram, this.color);

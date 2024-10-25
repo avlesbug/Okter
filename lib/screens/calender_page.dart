@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart'
+    as dt_picker;
 import 'package:flutter_picker/flutter_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:okter/basePage.dart';
@@ -275,11 +276,11 @@ class _CalenderPageState extends State<CalenderPage> {
 
   void showPicker() {
     print("showPicker called");
-    DatePicker.showTimePicker(
+    dt_picker.DatePicker.showTimePicker(
       context,
       showTitleActions: true,
       currentTime: DateTime.now(),
-      theme: DatePickerTheme(
+      theme: dt_picker.DatePickerTheme(
           headerColor: themeColorPallet['grey dark'],
           backgroundColor: themeColorPallet['grey dark'] ?? Color(0xFF141213),
           itemStyle: TextStyle(
