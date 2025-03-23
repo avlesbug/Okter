@@ -55,12 +55,7 @@ class HomeController extends StatelessWidget {
           return Container(
             height: constraints.maxHeight,
             width: constraints.maxWidth,
-            decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [
-              themeColorPallet['grey light']!,
-              themeColorPallet['grey light']!,
-              themeColorPallet['grey dark']!,
-            ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+            color: themeColorPallet['grey dark'],
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

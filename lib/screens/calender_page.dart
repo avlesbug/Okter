@@ -50,60 +50,19 @@ class _CalenderPageState extends State<CalenderPage> {
     programNames.add("Kardio");
     programNames.add("Fjelltur");
     programNames.add("Gåtur");
+    programNames.add("Ski");
+    programNames.add("Alpint");
+    programNames.add("Snowboard");
+    programNames.add("Fotball");
+    programNames.add("Håndball");
+    programNames.add("Volleyball");
+    programNames.add("Padel");
+    programNames.add("Svømming");
+    programNames.add("Dansing");
     return programNames;
   }
 
-  List<String> programNames = [
-    "Annen aktivitet",
-    "Styrketrening",
-    "Kardio",
-    "Fjelltur"
-  ];
-  List<dynamic> getWorkoutPrograms(List<dynamic> userPrograms) {
-    final List<dynamic> _programs = [
-      {
-        'name': 'Styrketrening',
-        'isCardio': false,
-      },
-      {
-        'name': 'Løping',
-        'isCardio': true,
-      },
-      {
-        'name': 'Fjelltur',
-        'isCardio': false,
-      },
-      {
-        'name': 'Gåtur',
-        'isCardio': false,
-      },
-      {
-        'name': 'Håndball',
-        'isCardio': false,
-      },
-      {
-        'name': 'Fotball',
-        'isCardio': false,
-      },
-      {
-        'name': 'Alpint',
-        'isCardio': false,
-      },
-      {
-        'name': 'Snowboard',
-        'isCardio': false,
-      },
-      {
-        'name': 'Skitur',
-        'isCardio': false,
-      },
-      {
-        'name': 'Topptur',
-        'isCardio': false,
-      }
-    ];
-    return [...userPrograms, ..._programs];
-  }
+  List<String> programNames = [];
 
   CalendarStyle customCalendarStyle = CalendarStyle(
     outsideDaysVisible: false,

@@ -102,8 +102,11 @@ Future<void> signUp(context, String name, String email, String password,
         case "invalid-email":
           showToastMessage("Email address is invalid.");
           break;
+        case "weak-password":
+          showToastMessage("Password should be at least 6 characters long.");
+          break;
         default:
-          showToastMessage("Something went wrong.");
+          showToastMessage(e.message ?? '');
           break;
       }
     }
@@ -132,5 +135,9 @@ void writeFirestore(String uid, String email, String name, String username) {
     'endDate': getLastDayOfCurrentYear(),
     'workouts': 0,
     'profileImage': "",
+    'workoutPrograms' : [],
+    'detailedWorkouts' : [],
+    'friendsList' : [],
+    'friendRequests' : []
   });
 }

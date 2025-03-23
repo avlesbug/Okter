@@ -7,7 +7,10 @@ import 'package:okter/screens/settings_page.dart';
 import 'package:okter/screens/programs_page.dart';
 
 Widget okterDrawerScaffold(context, bodycontent) {
-  return Scaffold(
+  return Container(
+    color: themeColorPallet['grey dark'],
+    padding: EdgeInsets.only(bottom: 18),
+    child: Scaffold(
       appBar: AppBar(
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -61,21 +64,15 @@ Widget okterDrawerScaffold(context, bodycontent) {
             icon: Icon(Icons.emoji_events),
             label: 'Rekorder',
           ),
-          /*
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profil',
-          ),
-          */
         ],
         currentIndex: 0,
         backgroundColor: themeColorPallet['grey dark'],
-        //fixedColor: Colors.transparent,
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.white,
         onTap: (index) {
           Navigator.of(context).push(_createRoute(index));
         },
+        elevation: 32
       ),
       body: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
@@ -87,7 +84,8 @@ Widget okterDrawerScaffold(context, bodycontent) {
               padding: const EdgeInsets.all(16),
               child: SingleChildScrollView(child: bodycontent)),
         );
-      }));
+      }))
+  );
 }
 
 Route _createRoute(int index) {
@@ -126,7 +124,10 @@ Widget okterScaffold(
   if (currentWidth > 700) {
     paddingWidth = currentWidth / 4;
   }
-  return Scaffold(
+  return Container(
+    color: themeColorPallet['grey dark'],
+    padding: EdgeInsets.only(bottom: 18),
+    child: Scaffold(
       appBar: AppBar(
         backgroundColor: themeColorPallet['grey dark'],
         elevation: 0,
@@ -155,10 +156,13 @@ Widget okterScaffold(
           width: constraints.maxWidth,
           color: themeColorPallet['grey dark'],
           child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: SingleChildScrollView(child: bodycontent)),
+            padding: const EdgeInsets.all(16),
+            child: SingleChildScrollView(child: bodycontent),
+          ),
         );
-      }));
+      }),
+    ),
+  );
 }
 
 Widget okterSignInScaffold(name, context, bodycontent) {
@@ -170,18 +174,23 @@ Widget okterSignInScaffold(name, context, bodycontent) {
   if (currentWidth > 700) {
     paddingWidth = currentWidth / 4;
   }
-  return Scaffold(body: LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-    return Container(
-      padding: EdgeInsets.only(left: paddingWidth, right: paddingWidth),
-      height: constraints.maxHeight,
-      width: constraints.maxWidth,
-      color: themeColorPallet['grey dark'],
-      child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: SingleChildScrollView(child: bodycontent)),
-    );
-  }));
+  return SafeArea(
+    child: Scaffold(
+      body: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+        return Container(
+          padding: EdgeInsets.only(left: paddingWidth, right: paddingWidth),
+          height: constraints.maxHeight,
+          width: constraints.maxWidth,
+          color: themeColorPallet['grey dark'],
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: SingleChildScrollView(child: bodycontent),
+          ),
+        );
+      }),
+    ),
+  );
 }
 
 Widget okterAddButtonScaffold(
@@ -199,7 +208,10 @@ Widget okterAddButtonScaffold(
   if (currentWidth > 700) {
     paddingWidth = currentWidth / 4;
   }
-  return Scaffold(
+  return Container(
+    color: themeColorPallet['grey dark'],
+    padding: EdgeInsets.only(bottom: 18),
+    child: Scaffold(
       bottomNavigationBar: bottomNavigation,
       appBar: AppBar(
         actions: friendRequestIcon != null ? [friendRequestIcon] : [],
@@ -222,10 +234,13 @@ Widget okterAddButtonScaffold(
           width: constraints.maxWidth,
           color: themeColorPallet['grey dark'],
           child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: SingleChildScrollView(child: bodyContent)),
+            padding: const EdgeInsets.all(16),
+            child: SingleChildScrollView(child: bodyContent),
+          ),
         );
-      }));
+      }),
+    ),
+  );
 }
 
 Widget okterBackAddButtonScaffold(
@@ -240,7 +255,10 @@ Widget okterBackAddButtonScaffold(
   if (currentWidth > 700) {
     paddingWidth = currentWidth / 4;
   }
-  return Scaffold(
+  return Container(
+    color: themeColorPallet['grey dark'],
+    padding: EdgeInsets.only(bottom: 18),
+    child: Scaffold(
       appBar: AppBar(
         backgroundColor: themeColorPallet['grey dark'],
         elevation: 0,
@@ -259,9 +277,13 @@ Widget okterBackAddButtonScaffold(
           height: constraints.maxHeight,
           width: constraints.maxWidth,
           color: themeColorPallet['grey dark'],
-          child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: SingleChildScrollView(child: Text("Test"))),
+          child: const Padding(
+            padding: EdgeInsets.all(16),
+            child: SingleChildScrollView(child: Text("Test")),
+          ),
         );
-      }));
+      }),
+    ),
+  );
 }
+
