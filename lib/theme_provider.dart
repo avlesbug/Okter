@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:okter/utils/color_pallet.dart';
 
 import 'utils/color_utils.dart';
 
@@ -11,15 +12,17 @@ class ThemeProvider extends ChangeNotifier {
 class MyTheme {
   static final lightTheme = ThemeData(
       brightness: Brightness.light,
-      primaryColor: hexStringtoColor("7C77B9"),
+      primaryColor: themeColorPallet['grey dark'],
+      scaffoldBackgroundColor: themeColorPallet['grey dark'],
       appBarTheme: AppBarTheme(
-        backgroundColor: hexStringtoColor("5d8076"),
+        backgroundColor: themeColorPallet['grey dark'],
       ));
 
   static final darkTheme = ThemeData(
       brightness: Brightness.dark,
-      primaryColor: hexStringtoColor("0bc9cd"),
+      primaryColor: themeColorPallet['grey dark'],
+      scaffoldBackgroundColor: themeColorPallet['grey dark'],
       appBarTheme: AppBarTheme(
-        backgroundColor: hexStringtoColor("5d8076"),
+        backgroundColor: themeColorPallet['grey dark'],
       ));
 }
